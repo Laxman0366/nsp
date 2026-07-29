@@ -1,0 +1,252 @@
+.website-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f8faff;
+}
+
+.website-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 24px;
+    background: #424e55;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.website-logo {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 56px;
+    background-color: #FFF;
+}
+
+.logo-image {
+  max-width: 450px;
+}
+
+.brand-block {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.brand-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.website-nav {
+  display: flex;
+  gap: 28px;
+  align-items: center;
+  flex: 1;
+  margin: 0 32px;
+}
+
+.nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.website-nav a {
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 15px;
+  transition: opacity 0.2s ease;
+  padding: 8px 0;
+}
+
+.dropdown-toggle::after {
+    display: inline-block;
+    margin-left: .255em;
+    vertical-align: .255em;
+    content: "";
+    border-top: .3em solid;
+    border-right: .3em solid transparent;
+    border-bottom: 0;
+    border-left: .3em solid transparent;
+}
+
+.website-nav a:hover {
+  opacity: 0.9;
+}
+
+.submenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #ffffff;
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  min-width: 220px;
+  z-index: 1000;
+  max-height: 300px;
+  overflow: auto;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.submenu a {
+  display: block;
+  padding: 7px 10px;
+  color: #333333;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+  border-bottom: 1px solid #CCC;
+}
+
+.submenu a:hover {
+  background: #f5f5f5;
+  color: #e63946;
+  border-left-color: #e63946;
+  padding-left: 24px;
+}
+.website-nav a:hover {
+    color: #d4272a;
+}
+span.top-bar-item {
+    padding: 0 8px;
+    border-left: 1px solid #CCC;
+}
+.social a {
+    font-size: 14px;
+    padding: 0 8px;
+}
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 50px 4px 56px;
+    font-size: 12px;
+}
+
+.donate-btn {
+  background-color: #fbbf24 !important;
+  color: #1f2937 !important;
+  font-weight: 700 !important;
+  padding: 8px 24px !important;
+}
+
+.donate-btn:hover {
+  background-color: #f59e0b !important;
+}
+
+.apply-btn {
+  background-color: #418fde !important;
+  color: #f4f5f5 !important;
+  font-weight: 700 !important;
+  padding: 8px 24px !important;
+}
+
+.apply-btn:hover {
+  background-color: #214b89 !important;
+}
+
+.body-wrapper {
+  flex: 1;
+  padding: 0 0 10px;
+  margin-right: 0px;
+}
+.donate-apply {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0 16px;
+}
+.nav-item > a:hover {
+    color: #fbbf24;
+}
+.website-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-top: 1px solid #e7ecf5;
+  background: #ffffff;
+  color: #61708a;
+}
+
+.footer-links {
+  display: flex;
+  gap: 16px;
+}
+
+.footer-links a {
+  text-decoration: none;
+  color: #4b5f7b;
+  font-weight: 600;
+}
+
+@media (max-width: 800px) {
+  .website-header,
+  .website-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .website-nav {
+    flex-wrap: wrap;
+    margin: 0;
+  }
+
+  .submenu {
+    position: static;
+    background: #f5f5f5;
+    box-shadow: none;
+    margin-top: 0;
+    border-radius: 0;
+  }
+}
+
+.body-wrapper {
+  flex: 1;
+  padding: 0 0 36px;
+}
+
+.website-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-top: 1px solid #e7ecf5;
+  background: #ffffff;
+  color: #61708a;
+}
+
+.footer-links {
+  display: flex;
+  gap: 16px;
+}
+
+@media (max-width: 800px) {
+  .website-header,
+  .website-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .website-nav {
+    flex-wrap: wrap;
+  }
+}

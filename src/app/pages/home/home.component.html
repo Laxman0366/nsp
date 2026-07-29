@@ -1,0 +1,225 @@
+<app-banner></app-banner>
+<section class="home-shell container" id="home">
+  <!-- <section class="banner-grid" id="about">
+    <mat-card class="banner-card cardWithShadow">
+      <mat-card-content>
+        <p class="eyebrow">Our perspective</p>
+        <p class="title-hint">Thoughtful experiences that feel effortless.</p>
+        <p>
+          The devastating cyclone of 1978, accompanied by a prolonged drought
+          and a huge flood in 1980, left a significant number of people in a
+          state of shock and destitution in Odisha. In the face of such
+          adversity, a team of grass-roots volunteers, inspired by the Gandhian
+          philosophy, came forward to assist thousands of victims by collecting
+          relief materials from individual donors to meet their basic needs and
+          aid their recovery. The tremendous outpouring of humanitarian aid and
+          philanthropic initiative motivated these volunteers to establish
+          "Nilachal Seva Pratisthan (NSP)," an organization dedicated to the
+          values of equality, justice, and peace. Later, NSP was registered
+          under the Indian Societies Registration Act XXI of 1860, vide
+          Registration No.226/13 on 26.04.1981. Since then, NSP has been
+          unwavering in its commitment to implement various welfare activities
+          and programs for socio-economic, health, environmental and human
+          resource development. Seva (service to mankind) and Daya (sympathy and
+          empathy for the destitute and marginalized sections of society) are
+          our core values guiding our social actions. From its inception, NSP
+          has relentlessly pursued welfare and developmental activities to
+          alleviate the concerns, issues and problems affecting the
+          underprivileged and disadvantaged segments of society. NSP has been
+          the recipient of awards and commendations for its exceptional
+          accomplishments and accredited by Credibility Alliance for Good
+          Governance."
+        </p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="banner-card cardWithShadow accent">
+      <mat-card-content>
+        <p class="eyebrow">Momentum</p>
+        <img mat-card-image src="./assets/images/banners/banner4.jpg" alt="NSP" />
+      </mat-card-content>
+    </mat-card>
+  </section> -->
+  <section class="" id="about">
+    <mat-card class="banner-card cardWithShadow">
+      <mat-card-content>
+        <p class="eyebrow">Our perspective</p>
+        <p class="title-hint">Thoughtful experiences that feel effortless.</p>
+        <p>
+          The devastating cyclone of 1978, accompanied by a prolonged drought
+          and a huge flood in 1980, left a significant number of people in a
+          state of shock and destitution in Odisha. In the face of such
+          adversity, a team of grass-roots volunteers, inspired by the Gandhian
+          philosophy, came forward to assist thousands of victims by collecting
+          relief materials from individual donors to meet their basic needs and
+          aid their recovery. The tremendous outpouring of humanitarian aid and
+          philanthropic initiative motivated these volunteers to establish
+          "Nilachal Seva Pratisthan (NSP)," an organization dedicated to the
+          values of equality, justice, and peace. Later, NSP was registered
+          under the Indian Societies Registration Act XXI of 1860, vide
+          Registration No.226/13 on 26.04.1981. Since then, NSP has been
+          unwavering in its commitment to implement various welfare activities
+          and programs for socio-economic, health, environmental and human
+          resource development. Seva (service to mankind) and Daya (sympathy and
+          empathy for the destitute and marginalized sections of society) are
+          our core values guiding our social actions. From its inception, NSP
+          has relentlessly pursued welfare and developmental activities to
+          alleviate the concerns, issues and problems affecting the
+          underprivileged and disadvantaged segments of society. NSP has been
+          the recipient of awards and commendations for its exceptional
+          accomplishments and accredited by Credibility Alliance for Good
+          Governance."
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </section>
+  <section class="stories-section" id="stories">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Recent stories</p>
+        <p class="title-hint">Moments worth sharing</p>
+      </div>
+      <a mat-button color="primary">View all</a>
+    </div>
+    <div id="carousel">
+    <div class="carousel-container">
+      <div class="owl-carousel owl-theme">
+
+      @for (story of stories; track story.title) {
+        <mat-card class="item story-card cardWithShadow">
+          <img mat-card-image [src]="story.image" [alt]="story.title" />
+          <mat-card-content>
+            <span class="story-tag">{{ story.tag }}</span>
+            <h3>{{ story.title }}</h3>
+            <p>{{ story.summary }}</p>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+    </div>
+    </div>
+  </section>
+
+  <section class="notices-section" id="notices">
+    <div class="notices-grid">
+      <!-- Advertisements Column -->
+      <div class="notice-column">
+        <div class="notice-header">
+          <h3 class="notice-title">
+            <i class="ti ti-bell"></i> Advertisements
+          </h3>
+        </div>
+        <div class="notice-marquee-container">
+          <div class="notice-marquee">
+            @for (item of advertisements; track item.id) {
+              <div class="notice-item">
+                <p class="notice-text">{{ item.title }}</p>
+                <a [href]="item.link" class="notice-link">Read more →</a>
+              </div>
+            }
+            @for (item of advertisements; track item.id) {
+              <div class="notice-item">
+                <p class="notice-text">{{ item.title }}</p>
+                <a [href]="item.link" class="notice-link">Read more →</a>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Tenders Notice Column -->
+      <div class="notice-column">
+        <div class="notice-header">
+          <h3 class="notice-title">
+            <i class="ti ti-file-text"></i> Tenders Notice
+          </h3>
+        </div>
+        <div class="notice-marquee-container">
+          <div class="notice-marquee">
+            @for (item of tendersNotice; track item.id) {
+              <div class="notice-item">
+                <p class="notice-text">{{ item.title }}</p>
+                <a [href]="item.link" class="notice-link">Read more →</a>
+              </div>
+            }
+            @for (item of tendersNotice; track item.id) {
+              <div class="notice-item">
+                <p class="notice-text">{{ item.title }}</p>
+                <a [href]="item.link" class="notice-link">Read more →</a>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- News & Events Column -->
+      <div class="notice-column">
+        <div class="notice-header">
+          <h3 class="notice-title">
+            <i class="ti ti-news"></i> News & Events
+          </h3>
+        </div>
+        <div class="notice-marquee-container">
+          <div class="notice-marquee">
+            @for (item of newsAndEvents; track item.id) {
+              <div class="notice-item">
+                <p class="notice-text">{{ item.title }}</p>
+                <a [href]="item.link" class="notice-link">Read more →</a>
+              </div>
+            }
+            @for (item of newsAndEvents; track item.id) {
+              <div class="notice-item">
+                <p class="notice-text">{{ item.title }}</p>
+                <a [href]="item.link" class="notice-link">Read more →</a>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="counter-section row" id="cta">
+    <div class="col-sm-4 col-md-2">
+      <div class="card border-end border-primary">
+        <div class="card-body">
+          <div class="d-flex align-items-center justify-content-between">
+            <span class="text-primary display-6">
+              <i class="ti ti-clock-hour-4"></i>
+            </span>
+            <div>
+              <h2 class="fs-7">471</h2>
+              <p class="fw-medium text-primary mb-0">Sales</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4 col-md-2">
+      <div class="card border-top border-success">
+        <div class="card-body">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <h2 class="fs-7">120</h2>
+              <p class="fw-medium text-success mb-0">Locations</p>
+            </div>
+            <span class="text-success display-6">
+              <i class="ti ti-map"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>
+
+<footer class="footer" id="contact">
+  <div>
+    <h3>Northstar Studio</h3>
+    <p>Crafting modern experiences with calm design and clear direction.</p>
+  </div>
+  <div class="footer-links">
+    <a href="#">Instagram</a>
+    <a href="#">LinkedIn</a>
+    <a href="#">Email</a>
+  </div>
+</footer>

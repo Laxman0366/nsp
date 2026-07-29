@@ -1,0 +1,186 @@
+<div class="blue_theme light-theme website-shell" dir="ltr">
+  <header>
+    <div class="top-bar">
+      <div class="top-bar-left">
+        <div class="social">
+          <a href="#">f</a>
+          <a href="#">𝕏</a>
+          <a href="#">◎</a>
+        </div>
+      </div>
+      <div class="top-bar-right">
+        <span class="top-bar-item">✉ nspodisha@gmail.com</span>
+        <span class="top-bar-item">☎ 9437524416</span>
+        <span class="top-bar-item">📍 AT-Benagaon(Dayavihar), P.O-Gadasahi,P.S-Kanas, Dist-Puri, Odisha-752017</span>
+      </div>
+    </div>
+    <div class="website-logo">
+      <a class="brand-block" routerLink="/home">
+        <img
+          src="/assets/images/logos/nsp_logo.jpeg"
+          alt="NSP logo"
+          class="logo-image"
+        />
+      </a>
+      <div class="donate-apply">
+        <div class="donate-now" routerLink="/donations/donate-now">
+          <a mat-flat-button class="donate-btn">Donate</a>
+        </div>
+        <div class="apply-now" routerLink="/career/apply-now">
+          <a mat-flat-button class="apply-btn">Apply Now</a>
+        </div>
+      </div>
+
+    </div>
+    <div class="website-header">
+      <nav class="website-nav" aria-label="Primary navigation">
+        <a style="font-size:20px;" class="nav-link" routerLink="/home">
+              <i class="fa fa-home"></i>
+        </a>
+        <div
+          class="nav-item"
+          (mouseenter)="toggleDropdown('about')"
+          (mouseleave)="openDropdown = null"
+        >
+          <a routerLink="/about" class="dropdown-toggle">About</a>
+          <div class="submenu" *ngIf="openDropdown === 'about'">
+            <a routerLink="/about/organization">About Organization</a>
+            <a routerLink="/about/brief-profile">Brief Profile</a>
+            <a routerLink="/about/founder-message"
+              >Founder Cum Secretary Message</a
+            >
+            <a routerLink="/about/governing-body">Governing Body</a>
+            <a routerLink="/about/general-body">General Body</a>
+            <a routerLink="/about/legal-document">Legal Document</a>
+            <a routerLink="/about/legal-status">Legal Status</a>
+          </div>
+        </div>
+
+        <div
+          class="nav-item"
+          (mouseenter)="toggleDropdown('programmes')"
+          (mouseleave)="openDropdown = null"
+        >
+          <a routerLink="/programmes" class="dropdown-toggle">Programmes</a>
+          <div class="submenu" *ngIf="openDropdown === 'programmes'">
+            <a routerLink="/programmes/overview">Programme Overview</a>
+            <a routerLink="/programmes/childrens-welfare">Children's Welfare</a>
+            <a routerLink="/programmes/womens-welfare">Women's Welfare</a>
+            <a routerLink="/programmes/pwd-welfare">PWD's Welfare</a>
+            <a routerLink="/programmes/vocational-training"
+              >Vocational Training & Livelihood</a
+            >
+            <a routerLink="/programmes/mental-health"
+              >Mentally Ill People's Welfare</a
+            >
+            <a routerLink="/programmes/senior-citizen"
+              >Senior Citizen's Welfare</a
+            >
+            <a routerLink="/programmes/substance-abuse"
+              >Prevention of Alcoholism & Drug Abuse</a
+            >
+            <a routerLink="/programmes/education-hrw"
+              >Education & Human Resource Welfare</a
+            >
+            <a routerLink="/programmes/animal-welfare"
+              >Animals & Livestock Welfare</a
+            >
+            <a routerLink="/programmes/capacity-building"
+              >Capacity Building of PRI's</a
+            >
+            <a routerLink="/programmes/water-sanitation"
+              >Water Sanitation & Hygiene</a
+            >
+            <a routerLink="/programmes/advocacy"
+              >Advocacy & Awareness Program</a
+            >
+          </div>
+        </div>
+
+        <div
+          class="nav-item"
+          (mouseenter)="toggleDropdown('donations')"
+          (mouseleave)="openDropdown = null"
+        >
+          <a routerLink="/donations" class="dropdown-toggle">Donations</a>
+          <div class="submenu" *ngIf="openDropdown === 'donations'">
+            <a routerLink="/donations/donate-now">Donate Now</a>
+            <a routerLink="/donations/donor-list">Donor List</a>
+          </div>
+        </div>
+
+        <div
+          class="nav-item"
+          (mouseenter)="toggleDropdown('achievements')"
+          (mouseleave)="openDropdown = null"
+        >
+          <a routerLink="/achievements" class="dropdown-toggle">Achievements</a>
+          <div class="submenu" *ngIf="openDropdown === 'achievements'">
+            <a routerLink="/achievements/success-story">Success Story</a>
+            <a routerLink="/achievements/media-coverage">Media Coverage</a>
+            <a routerLink="/achievements/awards-recognition"
+              >Awards & Recognition</a
+            >
+          </div>
+        </div>
+
+        <div
+          class="nav-item"
+          (mouseenter)="toggleDropdown('reports')"
+          (mouseleave)="openDropdown = null"
+        >
+          <a routerLink="/reports"  class="dropdown-toggle">Reports</a>
+          <div class="submenu" *ngIf="openDropdown === 'reports'">
+            <a routerLink="/reports/annual-report">Annual Report</a>
+            <a routerLink="/reports/audit-report">Audit Reports</a>
+            <a routerLink="/reports/beneficiary-list">Beneficiary List</a>
+            <a routerLink="/reports/staff-list">Staff List</a>
+            <a routerLink="/reports/food-menu">Food Menu</a>
+          </div>
+        </div>
+
+        <div
+          class="nav-item"
+          (mouseenter)="toggleDropdown('gallery')"
+          (mouseleave)="openDropdown = null"
+        >
+          <a routerLink="/gallery">Gallery</a>
+          <div class="submenu" *ngIf="openDropdown === 'gallery'">
+            <a routerLink="/gallery/image-gallery">Image Gallery</a>
+            <a routerLink="/gallery/video-gallery">Video Gallery</a>
+          </div>
+        </div>
+
+        <div
+          class="nav-item"
+          (mouseenter)="toggleDropdown('career')"
+          (mouseleave)="openDropdown = null"
+        >
+          <a routerLink="/career">Career</a>
+          <div class="submenu" *ngIf="openDropdown === 'career'">
+            <a routerLink="/career/opportunities">Career Opportunities</a>
+            <a routerLink="/career/apply-now">Apply Now</a>
+          </div>
+        </div>
+
+        <a routerLink="/contact">Contact</a>
+      </nav>
+    </div>
+
+  </header>
+
+  <main class="body-wrapper">
+    <div class="maxWidth">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+
+  <footer class="website-footer">
+    <p>© 2026 Nilachal Seva Pratisthan. All rights reserved.</p>
+    <div class="footer-links">
+      <a routerLink="/home">Home</a>
+      <a routerLink="/about">About</a>
+      <a routerLink="/contact">Contact</a>
+    </div>
+  </footer>
+</div>
