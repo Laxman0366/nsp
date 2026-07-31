@@ -1,8 +1,40 @@
-<div class="container">
-  <h1>Image Gallery</h1>
-  <mat-card>
-    <mat-card-content>
-      <p>Browse our photo gallery showcasing NSP's activities and events.</p>
-    </mat-card-content>
-  </mat-card>
+<div class="gallery-page container">
+  <section class="gallery-hero">
+    <div>
+      <p class="eyebrow">Image Gallery</p>
+      <p class="title-hint">Have a look at our recent events</p>
+      <p class="hero-text">
+        A simple photo gallery highlighting NSP activities, outreach, and
+        community engagement moments.
+      </p>
+    </div>
+    <img src="/assets/images/banners/banner4.jpg" alt="NSP gallery overview" />
+  </section>
+
+  <section class="gallery-grid">
+    @for (photo of galleryPhotos; track photo.image + photo.caption; let i = $index) {
+      <figure class="gallery-card" (click)="openLightbox(i)">
+        <img [src]="photo.image" [alt]="photo.caption" />
+        <figcaption>{{ photo.caption }}</figcaption>
+      </figure>
+    }
+  </section>
+
+  <div class="lightbox-backdrop" *ngIf="isLightboxOpen" (click)="closeLightbox()">
+    <div class="lightbox-dialog" (click)="$event.stopPropagation()">
+      <button type="button" class="lightbox-close" (click)="closeLightbox()">x</button>
+
+      <button type="button" class="lightbox-nav left" (click)="showPrev()">&#10094;</button>
+
+      <figure class="lightbox-figure">
+        <img [src]="activePhoto.image" [alt]="activePhoto.caption" />
+        <figcaption>
+          {{ activePhoto.caption }}
+          <span>{{ activePhotoIndex + 1 }} / {{ galleryPhotos.length }}</span>
+        </figcaption>
+      </figure>
+
+      <button type="button" class="lightbox-nav right" (click)="showNext()">&#10095;</button>
+    </div>
+  </div>
 </div>

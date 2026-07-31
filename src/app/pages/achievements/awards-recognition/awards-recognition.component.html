@@ -1,8 +1,40 @@
-<div class="container">
-  <h1>Awards & Recognition</h1>
-  <mat-card>
-    <mat-card-content>
-      <p>Awards and recognition received by NSP for its contribution to society.</p>
-    </mat-card-content>
-  </mat-card>
+<div class="gallery-page container">
+  <section class="gallery-hero">
+    <div>
+      <p class="eyebrow">Awards & Recognition</p>
+      <p class="title-hint">Honours received for service and measurable social impact</p>
+      <p class="hero-text">
+        A small showcase of recognitions received by NSP for sustained contribution
+        to education, health, and community empowerment programmes.
+      </p>
+    </div>
+    <img src="/assets/images/banners/banner2.jpeg" alt="Awards and recognition overview" />
+  </section>
+
+  <section class="gallery-grid">
+    @for (item of awardItems; track item.image + item.caption; let i = $index) {
+      <figure class="gallery-card" (click)="openLightbox(i)">
+        <img [src]="item.image" [alt]="item.caption" />
+        <figcaption>{{ item.caption }}</figcaption>
+      </figure>
+    }
+  </section>
+
+  <div class="lightbox-backdrop" *ngIf="isLightboxOpen" (click)="closeLightbox()">
+    <div class="lightbox-dialog" (click)="$event.stopPropagation()">
+      <button type="button" class="lightbox-close" (click)="closeLightbox()">x</button>
+
+      <button type="button" class="lightbox-nav left" (click)="showPrev()">&#10094;</button>
+
+      <figure class="lightbox-figure">
+        <img [src]="activeAward.image" [alt]="activeAward.caption" />
+        <figcaption>
+          {{ activeAward.caption }}
+          <span>{{ activeAwardIndex + 1 }} / {{ awardItems.length }}</span>
+        </figcaption>
+      </figure>
+
+      <button type="button" class="lightbox-nav right" (click)="showNext()">&#10095;</button>
+    </div>
+  </div>
 </div>

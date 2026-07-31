@@ -1,8 +1,57 @@
-<div class="container">
-  <h1>Video Gallery</h1>
-  <mat-card>
-    <mat-card-content>
-      <p>Watch videos of NSP's programmes and activities.</p>
-    </mat-card-content>
-  </mat-card>
+<div class="gallery-page container">
+  <section class="gallery-hero">
+    <div>
+      <p class="eyebrow">Video Gallery</p>
+      <p class="title-hint">Watch our programme moments</p>
+      <p class="hero-text">
+        Play videos directly in the gallery or open them in popup slider mode
+        for a larger viewing experience.
+      </p>
+    </div>
+    <img src="/assets/images/banners/banner3.jpeg" alt="NSP video gallery overview" />
+  </section>
+
+  <section class="gallery-grid">
+    @for (video of galleryVideos; track video.embedUrl + video.caption; let i = $index) {
+      <figure class="gallery-card">
+        <div class="video-frame">
+          <iframe
+            [src]="video.safeUrl"
+            [title]="video.caption"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <figcaption class="caption-open" (click)="openLightbox(i)">
+          {{ video.caption }}
+        </figcaption>
+      </figure>
+    }
+  </section>
+
+  <div class="lightbox-backdrop" *ngIf="isLightboxOpen" (click)="closeLightbox()">
+    <div class="lightbox-dialog" (click)="$event.stopPropagation()">
+      <button type="button" class="lightbox-close" (click)="closeLightbox()">x</button>
+
+      <button type="button" class="lightbox-nav" (click)="showPrev()">&#10094;</button>
+
+      <figure class="lightbox-figure">
+        <div class="lightbox-video-frame">
+          <iframe
+            [src]="activeVideo.safeUrl"
+            [title]="activeVideo.caption"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <figcaption>
+          {{ activeVideo.caption }}
+          <span>{{ activeVideoIndex + 1 }} / {{ galleryVideos.length }}</span>
+        </figcaption>
+      </figure>
+
+      <button type="button" class="lightbox-nav" (click)="showNext()">&#10095;</button>
+    </div>
+  </div>
 </div>

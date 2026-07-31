@@ -1,8 +1,40 @@
-<div class="container">
-  <h1>Media Coverage</h1>
-  <mat-card>
-    <mat-card-content>
-      <p>See NSP's achievements featured in media and news coverage.</p>
-    </mat-card-content>
-  </mat-card>
+<div class="gallery-page container">
+  <section class="gallery-hero">
+    <div>
+      <p class="eyebrow">Media Coverage</p>
+      <p class="title-hint">News stories and published highlights of NSP initiatives</p>
+      <p class="hero-text">
+        Browse selected media snapshots featuring NSP programmes, public events,
+        and impact stories covered by local and regional outlets.
+      </p>
+    </div>
+    <img src="/assets/images/banners/banner4.jpg" alt="Media coverage overview" />
+  </section>
+
+  <section class="gallery-grid">
+    @for (item of mediaItems; track item.image + item.caption; let i = $index) {
+      <figure class="gallery-card" (click)="openLightbox(i)">
+        <img [src]="item.image" [alt]="item.caption" />
+        <figcaption>{{ item.caption }}</figcaption>
+      </figure>
+    }
+  </section>
+
+  <div class="lightbox-backdrop" *ngIf="isLightboxOpen" (click)="closeLightbox()">
+    <div class="lightbox-dialog" (click)="$event.stopPropagation()">
+      <button type="button" class="lightbox-close" (click)="closeLightbox()">x</button>
+
+      <button type="button" class="lightbox-nav left" (click)="showPrev()">&#10094;</button>
+
+      <figure class="lightbox-figure">
+        <img [src]="activeMedia.image" [alt]="activeMedia.caption" />
+        <figcaption>
+          {{ activeMedia.caption }}
+          <span>{{ activeMediaIndex + 1 }} / {{ mediaItems.length }}</span>
+        </figcaption>
+      </figure>
+
+      <button type="button" class="lightbox-nav right" (click)="showNext()">&#10095;</button>
+    </div>
+  </div>
 </div>

@@ -4,6 +4,7 @@ html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .body-wrapper {
   background-color: #fff !important;
+  margin-bottom: 0px !important;
 }
 .mat-mdc-card-content {
   background-color: #f4f7fb !important;
@@ -30,4 +31,20 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 .owl-nav .owl-next {
     right: -20px;
+}
+.eyebrow {
+  margin: 0 0 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #d8252c;
+}
+.title-hint {
+  font-size: 15px;
+    font-style: italic;
+    color: #424e55;
+    letter-spacing: 1px;
+}
+.transparent {
+  background-color: transparent !important;
 }

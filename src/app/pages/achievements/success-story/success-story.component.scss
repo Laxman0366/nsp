@@ -4,7 +4,87 @@
   padding: 24px;
 }
 
-h1 {
-  color: #e63946;
-  margin-bottom: 24px;
+.intro-card {
+  margin-top: 18px;
+  border-radius: 18px;
+  border: 1px solid #dbe6f3;
+}
+
+.intro-card p {
+  margin: 0;
+  color: #425b76;
+  line-height: 1.7;
+}
+
+.story-list {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.story-row {
+  border-radius: 16px;
+  border: 1px solid #e3ebf6;
+  background: #ffffff;
+}
+
+.story-row mat-card-content {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.story-media img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid #dbe6f3;
+}
+
+.story-body {
+  display: grid;
+  gap: 8px;
+}
+
+.story-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #173153;
+}
+
+.story-proverb {
+  margin: 0;
+  color: #244d7a;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.story-body p {
+  margin: 0;
+  color: #4e647d;
+  line-height: 1.65;
+}
+
+@media (max-width: 992px) {
+  .story-row mat-card-content {
+    grid-template-columns: 180px 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 20px 14px;
+  }
+
+  .story-row mat-card-content {
+    grid-template-columns: 1fr;
+  }
+
+  .story-media img {
+    height: 210px;
+  }
 }

@@ -72,54 +72,67 @@
       </mat-card-content>
     </mat-card>
   </section>
-  <section class="stories-section" id="stories">
-    <div class="section-heading">
-      <div>
-        <p class="eyebrow">Recent stories</p>
-        <p class="title-hint">Moments worth sharing</p>
-      </div>
-      <a mat-button color="primary">View all</a>
-    </div>
-    <div id="carousel">
-    <div class="carousel-container">
-      <div class="owl-carousel owl-theme">
-
-      @for (story of stories; track story.title) {
-        <mat-card class="item story-card cardWithShadow">
-          <img mat-card-image [src]="story.image" [alt]="story.title" />
-          <mat-card-content>
-            <span class="story-tag">{{ story.tag }}</span>
-            <h3>{{ story.title }}</h3>
-            <p>{{ story.summary }}</p>
-          </mat-card-content>
-        </mat-card>
-      }
-    </div>
-    </div>
-    </div>
-  </section>
-
   <section class="notices-section" id="notices">
     <div class="notices-grid">
       <!-- Advertisements Column -->
       <div class="notice-column">
         <div class="notice-header">
-          <h3 class="notice-title">
+          <p class="notice-title eyebrow">
             <i class="ti ti-bell"></i> Advertisements
-          </h3>
+          </p>
         </div>
         <div class="notice-marquee-container">
           <div class="notice-marquee">
             @for (item of advertisements; track item.id) {
               <div class="notice-item">
-                <p class="notice-text">{{ item.title }}</p>
-                <a [href]="item.link" class="notice-link">Read more →</a>
+                <p class="notice-text notice-headline">{{ item.title }}</p>
+                <p class="notice-desc">{{ item.description }}</p>
+                <div class="notice-meta">
+                  <div class="notice-dates">
+                    <span class="notice-date"
+                      >Opening:
+                      {{ item.openingDate | date: "dd MMM yyyy" }}</span
+                    >
+                    <span class="notice-date"
+                      >Closing:
+                      {{ item.closingDate | date: "dd MMM yyyy" }}</span
+                    >
+                  </div>
+                  <a
+                    [href]="item.pdfLink || item.link"
+                    class="notice-link notice-download"
+                    download
+                  >
+                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                    Download
+                  </a>
+                </div>
               </div>
             }
             @for (item of advertisements; track item.id) {
               <div class="notice-item">
-                <p class="notice-text">{{ item.title }}</p>
-                <a [href]="item.link" class="notice-link">Read more →</a>
+                <p class="notice-text notice-headline">{{ item.title }}</p>
+                <p class="notice-desc">{{ item.description }}</p>
+                <div class="notice-meta">
+                  <div class="notice-dates">
+                    <span class="notice-date"
+                      >Opening:
+                      {{ item.openingDate | date: "dd MMM yyyy" }}</span
+                    >
+                    <span class="notice-date"
+                      >Closing:
+                      {{ item.closingDate | date: "dd MMM yyyy" }}</span
+                    >
+                  </div>
+                  <a
+                    [href]="item.pdfLink || item.link"
+                    class="notice-link notice-download"
+                    download
+                  >
+                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                    Download
+                  </a>
+                </div>
               </div>
             }
           </div>
@@ -129,22 +142,60 @@
       <!-- Tenders Notice Column -->
       <div class="notice-column">
         <div class="notice-header">
-          <h3 class="notice-title">
+          <p class="notice-title eyebrow">
             <i class="ti ti-file-text"></i> Tenders Notice
-          </h3>
+          </p>
         </div>
         <div class="notice-marquee-container">
           <div class="notice-marquee">
             @for (item of tendersNotice; track item.id) {
               <div class="notice-item">
-                <p class="notice-text">{{ item.title }}</p>
-                <a [href]="item.link" class="notice-link">Read more →</a>
+                <p class="notice-text notice-headline">{{ item.title }}</p>
+                <p class="notice-desc">{{ item.description }}</p>
+                <div class="notice-meta">
+                  <div class="notice-dates">
+                    <span class="notice-date"
+                      >Opening:
+                      {{ item.openingDate | date: "dd MMM yyyy" }}</span
+                    >
+                    <span class="notice-date"
+                      >Closing:
+                      {{ item.closingDate | date: "dd MMM yyyy" }}</span
+                    >
+                  </div>
+                  <a
+                    [href]="item.pdfLink || item.link"
+                    class="notice-link notice-download"
+                    download
+                  >
+                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i> Download
+                  </a>
+                </div>
               </div>
             }
             @for (item of tendersNotice; track item.id) {
               <div class="notice-item">
-                <p class="notice-text">{{ item.title }}</p>
-                <a [href]="item.link" class="notice-link">Read more →</a>
+                <p class="notice-text notice-headline">{{ item.title }}</p>
+                <p class="notice-desc">{{ item.description }}</p>
+                <div class="notice-meta">
+                  <div class="notice-dates">
+                    <span class="notice-date"
+                      >Opening:
+                      {{ item.openingDate | date: "dd MMM yyyy" }}</span
+                    >
+                    <span class="notice-date"
+                      >Closing:
+                      {{ item.closingDate | date: "dd MMM yyyy" }}</span
+                    >
+                  </div>
+                  <a
+                    [href]="item.pdfLink || item.link"
+                    class="notice-link notice-download"
+                    download
+                  >
+                    Download <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                  </a>
+                </div>
               </div>
             }
           </div>
@@ -154,22 +205,34 @@
       <!-- News & Events Column -->
       <div class="notice-column">
         <div class="notice-header">
-          <h3 class="notice-title">
+          <p class="notice-title eyebrow">
             <i class="ti ti-news"></i> News & Events
-          </h3>
+          </p>
         </div>
         <div class="notice-marquee-container">
           <div class="notice-marquee">
             @for (item of newsAndEvents; track item.id) {
               <div class="notice-item">
-                <p class="notice-text">{{ item.title }}</p>
-                <a [href]="item.link" class="notice-link">Read more →</a>
+                <p class="notice-text notice-headline">{{ item.title }}</p>
+                <p class="notice-desc">{{ item.description }}</p>
+                <div class="notice-meta">
+                  <span class="notice-date"
+                    >Posted: {{ item.date | date: "dd MMM yyyy" }}</span
+                  >
+                  <a [href]="item.link" class="notice-link">Read more →</a>
+                </div>
               </div>
             }
             @for (item of newsAndEvents; track item.id) {
               <div class="notice-item">
-                <p class="notice-text">{{ item.title }}</p>
-                <a [href]="item.link" class="notice-link">Read more →</a>
+                <p class="notice-text notice-headline">{{ item.title }}</p>
+                <p class="notice-desc">{{ item.description }}</p>
+                <div class="notice-meta">
+                  <span class="notice-date"
+                    >Posted: {{ item.date | date: "dd MMM yyyy" }}</span
+                  >
+                  <a [href]="item.link" class="notice-link">Read more →</a>
+                </div>
               </div>
             }
           </div>
@@ -178,48 +241,110 @@
     </div>
   </section>
 
-  <section class="counter-section row" id="cta">
-    <div class="col-sm-4 col-md-2">
-      <div class="card border-end border-primary">
-        <div class="card-body">
-          <div class="d-flex align-items-center justify-content-between">
-            <span class="text-primary display-6">
-              <i class="ti ti-clock-hour-4"></i>
-            </span>
-            <div>
-              <h2 class="fs-7">471</h2>
-              <p class="fw-medium text-primary mb-0">Sales</p>
-            </div>
-          </div>
-        </div>
+  <section class="partners-section" id="partners">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Our partners</p>
+        <p class="title-hint">Organizations supporting our mission</p>
       </div>
     </div>
-    <div class="col-sm-4 col-md-2">
-      <div class="card border-top border-success">
-        <div class="card-body">
-          <div class="d-flex align-items-center justify-content-between">
-            <div>
-              <h2 class="fs-7">120</h2>
-              <p class="fw-medium text-success mb-0">Locations</p>
-            </div>
-            <span class="text-success display-6">
-              <i class="ti ti-map"></i>
-            </span>
+
+    <div class="partners-carousel-wrap">
+      <div class="owl-carousel owl-theme partners-logos-carousel">
+        @for (partner of partnerLogos; track partner.name + partner.image) {
+          <div class="partner-logo-item">
+            <img [src]="partner.image" [alt]="partner.name" />
           </div>
+        }
+      </div>
+    </div>
+  </section>
+  <section class="gallery-section" id="gallery">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Photo gallery</p>
+        <p class="title-hint">Snapshots from our field initiatives</p>
+      </div>
+      <a mat-button color="primary">Explore gallery</a>
+    </div>
+
+    <div class="gallery-grid">
+      @for (photo of galleryPhotos; track photo.image; let i = $index) {
+        <mat-card
+          class="gallery-card cardWithShadow"
+          [class.gallery-card-featured]="i === 0"
+        >
+          <img [src]="photo.image" [alt]="photo.title" />
+          <div class="gallery-overlay">
+            <p>{{ photo.title }}</p>
+          </div>
+        </mat-card>
+      }
+    </div>
+  </section>
+  <section class="stories-section" id="stories">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Recent stories</p>
+        <p class="title-hint">Moments worth sharing</p>
+      </div>
+      <a mat-button color="primary">View all</a>
+    </div>
+    <div id="carousel">
+      <div class="carousel-container">
+        <div class="owl-carousel owl-theme stories-carousel">
+          @for (story of stories; track story.title) {
+            <mat-card class="item story-card cardWithShadow">
+              <img mat-card-image [src]="story.image" [alt]="story.title" />
+              <mat-card-content>
+                <!-- <span class="story-tag">{{ story.tag }}</span> -->
+                <p class="story-title">{{ story.title }}</p>
+                <p class="story-text">{{ story.summary }}</p>
+              </mat-card-content>
+            </mat-card>
+          }
         </div>
       </div>
     </div>
   </section>
-</section>
+  <section class="impact-counts-section" id="impact-counts">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Our impact</p>
+        <p class="title-hint">Scale of work across years and communities</p>
+      </div>
+    </div>
 
-<footer class="footer" id="contact">
-  <div>
-    <h3>Northstar Studio</h3>
-    <p>Crafting modern experiences with calm design and clear direction.</p>
-  </div>
-  <div class="footer-links">
-    <a href="#">Instagram</a>
-    <a href="#">LinkedIn</a>
-    <a href="#">Email</a>
-  </div>
-</footer>
+    <div class="impact-counts-grid">
+      <mat-card class="impact-count-card cardWithShadow">
+        <p class="impact-count-value">41</p>
+        <p class="impact-count-label">Years of presence</p>
+      </mat-card>
+
+      <mat-card class="impact-count-card cardWithShadow">
+        <p class="impact-count-value">104,895</p>
+        <p class="impact-count-label">Beneficiaries</p>
+      </mat-card>
+
+      <mat-card class="impact-count-card cardWithShadow">
+        <p class="impact-count-value">15</p>
+        <p class="impact-count-label">Volunteers</p>
+      </mat-card>
+
+      <mat-card class="impact-count-card cardWithShadow">
+        <p class="impact-count-value">38</p>
+        <p class="impact-count-label">Projects</p>
+      </mat-card>
+
+      <mat-card class="impact-count-card cardWithShadow">
+        <p class="impact-count-value">5</p>
+        <p class="impact-count-label">Locations serving</p>
+      </mat-card>
+
+      <mat-card class="impact-count-card cardWithShadow">
+        <p class="impact-count-value">315</p>
+        <p class="impact-count-label">Work force</p>
+      </mat-card>
+    </div>
+  </section>
+</section>

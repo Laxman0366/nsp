@@ -1,10 +1,134 @@
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 24px;
+:host {
+  display: block;
+  padding: 24px 0 40px;
 }
 
-h1 {
-  color: #e63946;
-  margin-bottom: 24px;
+.governing-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.hero-panel {
+  display: grid;
+  grid-template-columns: 1fr 0.9fr;
+  gap: 24px;
+  align-items: center;
+  padding: 28px;
+  border-radius: 28px;
+  background: linear-gradient(135deg, #f4f8ff 0%, #ffffff 56%, #f8fbf5 100%);
+  box-shadow: 0 24px 60px rgba(27, 46, 74, 0.08);
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #c81f2b;
+}
+
+.hero-panel h1,
+.member-card h3 {
+  margin: 0;
+  color: #173153;
+  line-height: 1.15;
+}
+
+.hero-panel h1 {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+}
+
+.lead,
+.member-card p {
+  color: #4e647d;
+  line-height: 1.8;
+}
+.member-card {
+      background-color: #f4f7fb !important;
+}
+.hero-panel img {
+  width: 100%;
+  min-height: 320px;
+  object-fit: cover;
+  border-radius: 24px;
+  box-shadow: 0 18px 36px rgba(27, 46, 74, 0.16);
+}
+
+.member-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.member-card {
+  border-radius: 20px;
+  border: 1px solid #dbe6f3;
+  box-shadow: 0 12px 32px rgba(24, 49, 83, 0.06);
+}
+
+.member-card mat-card-content {
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+.member-photo {
+  width: 70px;
+  height: 70px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid #dbe6f3;
+}
+
+.member-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.member-name {
+  margin: 0;
+  text-transform: none;
+  letter-spacing: 0.03em;
+  font-size: 0.86rem;
+}
+
+.member-role,
+.member-qualification,
+.member-message {
+  margin: 0;
+  line-height: 1.5;
+  color: #4e647d;
+}
+
+.member-role {
+  font-weight: 600;
+  color: #173153;
+}
+
+.member-qualification {
+  font-size: 0.92rem;
+}
+
+.member-message {
+  font-size: 0.9rem;
+}
+
+@media (max-width: 992px) {
+  .hero-panel,
+  .member-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .member-card mat-card-content {
+    grid-template-columns: 60px minmax(0, 1fr);
+  }
+
+  .member-photo {
+    width: 56px;
+    height: 56px;
+  }
 }
