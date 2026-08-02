@@ -38,6 +38,8 @@
                             matInput
                             [rows]="field.rows || 4"
                             [placeholder]="field.placeholder || field.label"
+                            [value]="getAnnualReportInputValue(field.label)"
+                            (input)="onAnnualReportInputChange(field.label, $any($event.target).value)"
                           ></textarea>
                         </mat-form-field>
                       }
@@ -129,7 +131,7 @@
                   mat-raised-button
                   color="primary"
                   type="button"
-                  [disabled]="isSavingAnnualReport || isUploadingAnnualReportFile || (isAnnualReportPage() && !isAnnualReportFormValid())"
+                  [disabled]="isSavingAnnualReport || isUploadingAnnualReportFile || (isReportPage() && !isAnnualReportFormValid())"
                   (click)="onPrimaryActionClick()"
                 >
                   {{ page.form?.primaryAction || "Save changes" }}

@@ -13,6 +13,7 @@ export interface AdminField {
     | 'tel'
     | 'number'
     | 'date'
+    | 'datetime-local'
     | 'textarea'
     | 'select'
     | 'file'
@@ -83,6 +84,16 @@ export interface AdminMenuGroup {
 const annualReportRows: AdminTableRow[] = [];
 
 const auditReportRows: AdminTableRow[] = [];
+
+const successStoryRows: AdminTableRow[] = [];
+
+const mediaCoverageRows: AdminTableRow[] = [];
+
+const awardsRecognitionRows: AdminTableRow[] = [];
+
+const imageGalleryRows: AdminTableRow[] = [];
+
+const videoGalleryRows: AdminTableRow[] = [];
 
 const beneficiaryRows: AdminTableRow[] = [];
 
@@ -1065,25 +1076,60 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
         page: {
           title: 'Success Story',
           eyebrow: 'Achievements',
-          summary: 'Spotlight stories that show the impact of NSP programmes.',
-          kind: 'cards',
-          cards: [
-            {
-              title: 'From dropout to graduate',
-              text: 'A student regains confidence and moves into professional training.',
-              tag: 'Impact',
-            },
-            {
-              title: 'A new livelihood for a family',
-              text: 'Skills support helps a household build steady income.',
-              tag: 'Impact',
-            },
-            {
-              title: 'Health awareness to healthy living',
-              text: 'Community education improves routines and child health.',
-              tag: 'Impact',
-            },
-          ],
+          summary: 'Create and manage beneficiary success stories.',
+          kind: 'form',
+          form: {
+            primaryAction: 'Save Success Story',
+            sections: [
+              {
+                title: 'Success Story Details',
+                columns: 3,
+                fields: [
+                  {
+                    label: 'title',
+                    type: 'text',
+                    placeholder: 'Enter story title',
+                  },
+                  {
+                    label: 'beneficiary_name',
+                    type: 'text',
+                    placeholder: 'Enter beneficiary name',
+                  },
+                  {
+                    label: 'details',
+                    type: 'textarea',
+                    rows: 4,
+                    span: 2,
+                    placeholder: 'Enter success story details',
+                  },
+                  {
+                    label: 'image_path',
+                    type: 'file',
+                    note: 'No file chosen',
+                  },
+                  {
+                    label: 'display_order',
+                    type: 'number',
+                    placeholder: 'Enter display order',
+                  },
+                  { label: 'is_active', type: 'checkbox' },
+                ],
+              },
+            ],
+          },
+          table: {
+            columns: [
+              { key: 'slNo', label: 'Sl No' },
+              { key: 'title', label: 'title' },
+              { key: 'beneficiary_name', label: 'beneficiary_name' },
+              { key: 'details', label: 'details' },
+              { key: 'image_path', label: 'image_path' },
+              { key: 'display_order', label: 'display_order' },
+              { key: 'is_active', label: 'is_active', type: 'status' },
+              { key: 'action', label: 'Action' },
+            ],
+            rows: successStoryRows,
+          },
         },
       },
       {
@@ -1093,20 +1139,52 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
         page: {
           title: 'Media Coverage',
           eyebrow: 'Achievements',
-          summary: 'Press mentions and public visibility highlights.',
-          kind: 'cards',
-          cards: [
-            {
-              title: 'Local press feature',
-              text: 'Coverage of community outreach and volunteer work.',
-              tag: 'Media',
-            },
-            {
-              title: 'Digital publication',
-              text: 'Stories about programme results and event highlights.',
-              tag: 'Media',
-            },
-          ],
+          summary: 'Create and manage media coverage entries.',
+          kind: 'form',
+          form: {
+            primaryAction: 'Save Media Coverage',
+            sections: [
+              {
+                title: 'Media Coverage Details',
+                columns: 3,
+                fields: [
+                  {
+                    label: 'title',
+                    type: 'text',
+                    placeholder: 'Enter media title',
+                  },
+                  {
+                    label: 'date_time',
+                    type: 'datetime-local',
+                    placeholder: 'Select date and time',
+                  },
+                  {
+                    label: 'image_path',
+                    type: 'file',
+                    note: 'No file chosen',
+                  },
+                  {
+                    label: 'display_order',
+                    type: 'number',
+                    placeholder: 'Enter display order',
+                  },
+                  { label: 'is_active', type: 'checkbox' },
+                ],
+              },
+            ],
+          },
+          table: {
+            columns: [
+              { key: 'slNo', label: 'Sl No' },
+              { key: 'title', label: 'title' },
+              { key: 'date_time', label: 'date_time' },
+              { key: 'image_path', label: 'image_path' },
+              { key: 'display_order', label: 'display_order' },
+              { key: 'is_active', label: 'is_active', type: 'status' },
+              { key: 'action', label: 'Action' },
+            ],
+            rows: mediaCoverageRows,
+          },
         },
       },
       {
@@ -1116,20 +1194,52 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
         page: {
           title: 'Awards Recognition',
           eyebrow: 'Achievements',
-          summary: 'Accolades and recognition panels for the organization.',
-          kind: 'cards',
-          cards: [
-            {
-              title: 'Community service award',
-              text: 'Recognizes sustained local impact and service.',
-              tag: 'Award',
-            },
-            {
-              title: 'Sector recognition',
-              text: 'Acknowledges good governance and social work.',
-              tag: 'Award',
-            },
-          ],
+          summary: 'Create and manage awards and recognitions.',
+          kind: 'form',
+          form: {
+            primaryAction: 'Save Awards Recognition',
+            sections: [
+              {
+                title: 'Awards Recognition Details',
+                columns: 3,
+                fields: [
+                  {
+                    label: 'title',
+                    type: 'text',
+                    placeholder: 'Enter award title',
+                  },
+                  {
+                    label: 'date_time',
+                    type: 'datetime-local',
+                    placeholder: 'Select date and time',
+                  },
+                  {
+                    label: 'image_path',
+                    type: 'file',
+                    note: 'No file chosen',
+                  },
+                  {
+                    label: 'display_order',
+                    type: 'number',
+                    placeholder: 'Enter display order',
+                  },
+                  { label: 'is_active', type: 'checkbox' },
+                ],
+              },
+            ],
+          },
+          table: {
+            columns: [
+              { key: 'slNo', label: 'Sl No' },
+              { key: 'title', label: 'title' },
+              { key: 'date_time', label: 'date_time' },
+              { key: 'image_path', label: 'image_path' },
+              { key: 'display_order', label: 'display_order' },
+              { key: 'is_active', label: 'is_active', type: 'status' },
+              { key: 'action', label: 'Action' },
+            ],
+            rows: awardsRecognitionRows,
+          },
         },
       },
     ],
@@ -1394,25 +1504,46 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
         page: {
           title: 'Image Gallery',
           eyebrow: 'Gallery',
-          summary: 'Curated photo cards for events and outreach work.',
-          kind: 'cards',
-          cards: [
-            {
-              title: 'Outreach day',
-              text: 'Community activity and participation highlights.',
-              tag: 'Photo',
-            },
-            {
-              title: 'Training session',
-              text: 'Workshop moments from skill-building programmes.',
-              tag: 'Photo',
-            },
-            {
-              title: 'Awareness campaign',
-              text: 'Public engagement and visibility from field events.',
-              tag: 'Photo',
-            },
-          ],
+          summary: 'Create and manage image gallery items.',
+          kind: 'form',
+          form: {
+            primaryAction: 'Save Image Gallery',
+            sections: [
+              {
+                title: 'Image Gallery Details',
+                columns: 3,
+                fields: [
+                  {
+                    label: 'title',
+                    type: 'text',
+                    placeholder: 'Enter image title',
+                  },
+                  {
+                    label: 'image_path',
+                    type: 'file',
+                    note: 'No file chosen',
+                  },
+                  {
+                    label: 'display_order',
+                    type: 'number',
+                    placeholder: 'Enter display order',
+                  },
+                  { label: 'is_active', type: 'checkbox' },
+                ],
+              },
+            ],
+          },
+          table: {
+            columns: [
+              { key: 'slNo', label: 'Sl No' },
+              { key: 'title', label: 'title' },
+              { key: 'image_path', label: 'image_path' },
+              { key: 'display_order', label: 'display_order' },
+              { key: 'is_active', label: 'is_active', type: 'status' },
+              { key: 'action', label: 'Action' },
+            ],
+            rows: imageGalleryRows,
+          },
         },
       },
       {
@@ -1422,21 +1553,46 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
         page: {
           title: 'Video Gallery',
           eyebrow: 'Gallery',
-          summary:
-            'Video tiles for campaign clips, interviews, and event recaps.',
-          kind: 'cards',
-          cards: [
-            {
-              title: 'Field report',
-              text: 'Short recap videos from programme visits and outreach.',
-              tag: 'Video',
-            },
-            {
-              title: 'Community story',
-              text: 'Participant voices and local partner interviews.',
-              tag: 'Video',
-            },
-          ],
+          summary: 'Create and manage video gallery items.',
+          kind: 'form',
+          form: {
+            primaryAction: 'Save Video Gallery',
+            sections: [
+              {
+                title: 'Video Gallery Details',
+                columns: 3,
+                fields: [
+                  {
+                    label: 'title',
+                    type: 'text',
+                    placeholder: 'Enter video title',
+                  },
+                  {
+                    label: 'video_path',
+                    type: 'file',
+                    note: 'No file chosen',
+                  },
+                  {
+                    label: 'display_order',
+                    type: 'number',
+                    placeholder: 'Enter display order',
+                  },
+                  { label: 'is_active', type: 'checkbox' },
+                ],
+              },
+            ],
+          },
+          table: {
+            columns: [
+              { key: 'slNo', label: 'Sl No' },
+              { key: 'title', label: 'title' },
+              { key: 'video_path', label: 'video_path' },
+              { key: 'display_order', label: 'display_order' },
+              { key: 'is_active', label: 'is_active', type: 'status' },
+              { key: 'action', label: 'Action' },
+            ],
+            rows: videoGalleryRows,
+          },
         },
       },
     ],

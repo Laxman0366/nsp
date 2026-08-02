@@ -22,6 +22,9 @@ export class AdminContentComponent implements OnInit {
 
   private annualReportForm: AnnualReportFormState = {
     title: '',
+    beneficiaryName: '',
+    details: '',
+    dateTime: '',
     noOfBeneficiaries: '',
     displayOrder: '',
     isActive: true,
@@ -96,7 +99,10 @@ export class AdminContentComponent implements OnInit {
         }
 
         this.annualReportForm = {
-          title: this.isBeneficiaryListPage() ? (report.project_name || '') : (report.title || ''),
+          title: report.title || report.project_name || '',
+          beneficiaryName: report.beneficiary_name || '',
+          details: report.details || '',
+          dateTime: this.toDateTimeLocalValue(report.date_time),
           noOfBeneficiaries:
             report.no_of_beneficiaries === null || report.no_of_beneficiaries === undefined
               ? ''
@@ -107,7 +113,14 @@ export class AdminContentComponent implements OnInit {
           isActive: this.toBoolean(report.is_active),
           file: null,
           existingFileName: this.resolveExistingFileName(report),
-          existingFilePath: report.file_path || report.file_url || report.download_url || report.file || '',
+          existingFilePath:
+            report.video_path ||
+            report.image_path ||
+            report.file_path ||
+            report.file_url ||
+            report.download_url ||
+            report.file ||
+            '',
           existingFileUrl: this.resolveExistingFileUrl(report),
           uploadedFilePath: '',
           hasNewUploadedFile: false,
@@ -146,6 +159,50 @@ export class AdminContentComponent implements OnInit {
   }
 
   isAnnualReportFormValid(): boolean {
+    if (this.isSuccessStoryPage()) {
+      return Boolean(
+        this.annualReportForm.title.trim() &&
+          this.annualReportForm.beneficiaryName.trim() &&
+          this.annualReportForm.details.trim() &&
+          this.annualReportForm.displayOrder.trim() &&
+          this.getAnnualReportFilePathForSave()
+      );
+    }
+
+    if (this.isMediaCoveragePage()) {
+      return Boolean(
+        this.annualReportForm.title.trim() &&
+          this.annualReportForm.dateTime.trim() &&
+          this.annualReportForm.displayOrder.trim() &&
+          this.getAnnualReportFilePathForSave()
+      );
+    }
+
+    if (this.isAwardsRecognitionPage()) {
+      return Boolean(
+        this.annualReportForm.title.trim() &&
+          this.annualReportForm.dateTime.trim() &&
+          this.annualReportForm.displayOrder.trim() &&
+          this.getAnnualReportFilePathForSave()
+      );
+    }
+
+    if (this.isImageGalleryPage()) {
+      return Boolean(
+        this.annualReportForm.title.trim() &&
+          this.annualReportForm.displayOrder.trim() &&
+          this.getAnnualReportFilePathForSave()
+      );
+    }
+
+    if (this.isVideoGalleryPage()) {
+      return Boolean(
+        this.annualReportForm.title.trim() &&
+          this.annualReportForm.displayOrder.trim() &&
+          this.getAnnualReportFilePathForSave()
+      );
+    }
+
     const hasBeneficiaryCount = this.isBeneficiaryListPage()
       ? this.annualReportForm.noOfBeneficiaries.trim()
       : true;
@@ -171,11 +228,23 @@ export class AdminContentComponent implements OnInit {
       return;
     }
 
-    if (label === 'Title' || label === 'Project Name') {
+    if (label === 'Title' || label === 'Project Name' || label === 'title') {
       this.annualReportForm.title = value;
     }
 
-    if (label === 'Display Order') {
+    if (label === 'beneficiary_name') {
+      this.annualReportForm.beneficiaryName = value;
+    }
+
+    if (label === 'details') {
+      this.annualReportForm.details = value;
+    }
+
+    if (label === 'date_time') {
+      this.annualReportForm.dateTime = value;
+    }
+
+    if (label === 'Display Order' || label === 'display_order') {
       this.annualReportForm.displayOrder = value;
     }
 
@@ -189,11 +258,23 @@ export class AdminContentComponent implements OnInit {
       return '';
     }
 
-    if (label === 'Title' || label === 'Project Name') {
+    if (label === 'Title' || label === 'Project Name' || label === 'title') {
       return this.annualReportForm.title;
     }
 
-    if (label === 'Display Order') {
+    if (label === 'beneficiary_name') {
+      return this.annualReportForm.beneficiaryName;
+    }
+
+    if (label === 'details') {
+      return this.annualReportForm.details;
+    }
+
+    if (label === 'date_time') {
+      return this.annualReportForm.dateTime;
+    }
+
+    if (label === 'Display Order' || label === 'display_order') {
       return this.annualReportForm.displayOrder;
     }
 
@@ -213,7 +294,7 @@ export class AdminContentComponent implements OnInit {
   }
 
   getAnnualReportIsActive(label: string): boolean {
-    if (!this.isReportPage() || label !== 'Is Active') {
+    if (!this.isReportPage() || (label !== 'Is Active' && label !== 'is_active')) {
       return false;
     }
 
@@ -221,7 +302,7 @@ export class AdminContentComponent implements OnInit {
   }
 
   onAnnualReportFileSelected(event: Event): void {
-    if (!this.isReportPage()) {
+    if (this.page.kind !== 'form') {
       return;
     }
 
@@ -235,7 +316,7 @@ export class AdminContentComponent implements OnInit {
   }
 
   getAnnualReportFileNote(defaultNote: string | undefined): string {
-    if (!this.isReportPage()) {
+    if (this.page.kind !== 'form') {
       return defaultNote || 'No file chosen';
     }
 
@@ -252,7 +333,7 @@ export class AdminContentComponent implements OnInit {
   }
 
   getAnnualReportDownloadUrl(): string {
-    if (!this.isReportPage()) {
+    if (this.page.kind !== 'form') {
       return '';
     }
 
@@ -261,12 +342,37 @@ export class AdminContentComponent implements OnInit {
 
   isReportPage(): boolean {
     return (
+      this.page.title === 'Success Story' ||
+      this.page.title === 'Media Coverage' ||
+      this.page.title === 'Awards Recognition' ||
+      this.page.title === 'Image Gallery' ||
+      this.page.title === 'Video Gallery' ||
       this.page.title === 'Annual Report' ||
       this.page.title === 'Audit Report' ||
       this.page.title === 'Beneficiary List' ||
       this.page.title === 'Staff List' ||
       this.page.title === 'Food Menu'
     );
+  }
+
+  isSuccessStoryPage(): boolean {
+    return this.page.title === 'Success Story';
+  }
+
+  isMediaCoveragePage(): boolean {
+    return this.page.title === 'Media Coverage';
+  }
+
+  isAwardsRecognitionPage(): boolean {
+    return this.page.title === 'Awards Recognition';
+  }
+
+  isImageGalleryPage(): boolean {
+    return this.page.title === 'Image Gallery';
+  }
+
+  isVideoGalleryPage(): boolean {
+    return this.page.title === 'Video Gallery';
   }
 
   isAnnualReportPage(): boolean {
@@ -290,6 +396,26 @@ export class AdminContentComponent implements OnInit {
   }
 
   private getReportsApiUrl(): string {
+    if (this.isVideoGalleryPage()) {
+      return apiEndpoints.videoGalleries;
+    }
+
+    if (this.isImageGalleryPage()) {
+      return apiEndpoints.imageGalleries;
+    }
+
+    if (this.isAwardsRecognitionPage()) {
+      return apiEndpoints.awardsRecognitions;
+    }
+
+    if (this.isMediaCoveragePage()) {
+      return apiEndpoints.mediaCoverages;
+    }
+
+    if (this.isSuccessStoryPage()) {
+      return apiEndpoints.successStories;
+    }
+
     if (this.isFoodMenuPage()) {
       return apiEndpoints.foodMenus;
     }
@@ -306,6 +432,26 @@ export class AdminContentComponent implements OnInit {
   }
 
   private getReportByIdApiUrl(id: string | number): string {
+    if (this.isVideoGalleryPage()) {
+      return apiEndpoints.videoGalleryById(id);
+    }
+
+    if (this.isImageGalleryPage()) {
+      return apiEndpoints.imageGalleryById(id);
+    }
+
+    if (this.isAwardsRecognitionPage()) {
+      return apiEndpoints.awardsRecognitionById(id);
+    }
+
+    if (this.isMediaCoveragePage()) {
+      return apiEndpoints.mediaCoverageById(id);
+    }
+
+    if (this.isSuccessStoryPage()) {
+      return apiEndpoints.successStoryById(id);
+    }
+
     if (this.isFoodMenuPage()) {
       return apiEndpoints.foodMenuById(id);
     }
@@ -324,6 +470,26 @@ export class AdminContentComponent implements OnInit {
   }
 
   private getReportLabel(): string {
+    if (this.isVideoGalleryPage()) {
+      return 'video gallery';
+    }
+
+    if (this.isImageGalleryPage()) {
+      return 'image gallery';
+    }
+
+    if (this.isAwardsRecognitionPage()) {
+      return 'awards recognition';
+    }
+
+    if (this.isMediaCoveragePage()) {
+      return 'media coverage';
+    }
+
+    if (this.isSuccessStoryPage()) {
+      return 'success story';
+    }
+
     if (this.isFoodMenuPage()) {
       return 'food menu';
     }
@@ -340,6 +506,26 @@ export class AdminContentComponent implements OnInit {
   }
 
   private getReportLabelCapitalized(): string {
+    if (this.isVideoGalleryPage()) {
+      return 'Video gallery';
+    }
+
+    if (this.isImageGalleryPage()) {
+      return 'Image gallery';
+    }
+
+    if (this.isAwardsRecognitionPage()) {
+      return 'Awards recognition';
+    }
+
+    if (this.isMediaCoveragePage()) {
+      return 'Media coverage';
+    }
+
+    if (this.isSuccessStoryPage()) {
+      return 'Success story';
+    }
+
     if (this.isFoodMenuPage()) {
       return 'Food menu';
     }
@@ -366,7 +552,22 @@ export class AdminContentComponent implements OnInit {
     }
 
     const payload = new FormData();
-    if (this.isBeneficiaryListPage()) {
+    if (this.isMediaCoveragePage() || this.isAwardsRecognitionPage()) {
+      payload.append('title', this.annualReportForm.title.trim());
+      payload.append('date_time', this.annualReportForm.dateTime.trim());
+      payload.append('image_path', filePath);
+    } else if (this.isVideoGalleryPage()) {
+      payload.append('title', this.annualReportForm.title.trim());
+      payload.append('video_path', filePath);
+    } else if (this.isImageGalleryPage()) {
+      payload.append('title', this.annualReportForm.title.trim());
+      payload.append('image_path', filePath);
+    } else if (this.isSuccessStoryPage()) {
+      payload.append('title', this.annualReportForm.title.trim());
+      payload.append('beneficiary_name', this.annualReportForm.beneficiaryName.trim());
+      payload.append('details', this.annualReportForm.details.trim());
+      payload.append('image_path', filePath);
+    } else if (this.isBeneficiaryListPage()) {
       payload.append('project_name', this.annualReportForm.title.trim());
       payload.append('no_of_beneficiaries', this.annualReportForm.noOfBeneficiaries.trim());
     } else {
@@ -374,7 +575,15 @@ export class AdminContentComponent implements OnInit {
     }
     payload.append('display_order', this.annualReportForm.displayOrder);
     payload.append('is_active', this.annualReportForm.isActive ? '1' : '0');
-    payload.append('file_path', filePath);
+    if (
+      !this.isSuccessStoryPage() &&
+      !this.isMediaCoveragePage() &&
+      !this.isAwardsRecognitionPage() &&
+      !this.isImageGalleryPage() &&
+      !this.isVideoGalleryPage()
+    ) {
+      payload.append('file_path', filePath);
+    }
     payload.append('is_uploaded_file', this.annualReportForm.hasNewUploadedFile ? 'true' : 'false');
 
     this.isSavingAnnualReport = true;
@@ -414,6 +623,9 @@ export class AdminContentComponent implements OnInit {
 
     this.annualReportForm = {
       title: '',
+      beneficiaryName: '',
+      details: '',
+      dateTime: '',
       noOfBeneficiaries: '',
       displayOrder: '',
       isActive: true,
@@ -466,6 +678,16 @@ export class AdminContentComponent implements OnInit {
       data?: unknown;
       annual_reports?: unknown;
       annualReports?: unknown;
+      success_stories?: unknown;
+      successStories?: unknown;
+      media_coverages?: unknown;
+      mediaCoverages?: unknown;
+      awards_recognitions?: unknown;
+      awardsRecognitions?: unknown;
+      image_galleries?: unknown;
+      imageGalleries?: unknown;
+      video_galleries?: unknown;
+      videoGalleries?: unknown;
     };
 
     if (Array.isArray(payload.data)) {
@@ -480,6 +702,46 @@ export class AdminContentComponent implements OnInit {
       return payload.annualReports as AnnualReportApiItem[];
     }
 
+    if (Array.isArray(payload.success_stories)) {
+      return payload.success_stories as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.successStories)) {
+      return payload.successStories as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.media_coverages)) {
+      return payload.media_coverages as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.mediaCoverages)) {
+      return payload.mediaCoverages as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.awards_recognitions)) {
+      return payload.awards_recognitions as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.awardsRecognitions)) {
+      return payload.awardsRecognitions as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.image_galleries)) {
+      return payload.image_galleries as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.imageGalleries)) {
+      return payload.imageGalleries as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.video_galleries)) {
+      return payload.video_galleries as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.videoGalleries)) {
+      return payload.videoGalleries as AnnualReportApiItem[];
+    }
+
     return [];
   }
 
@@ -492,6 +754,16 @@ export class AdminContentComponent implements OnInit {
       data?: unknown;
       annual_report?: unknown;
       annualReport?: unknown;
+      success_story?: unknown;
+      successStory?: unknown;
+      media_coverage?: unknown;
+      mediaCoverage?: unknown;
+      awards_recognition?: unknown;
+      awardsRecognition?: unknown;
+      image_gallery?: unknown;
+      imageGallery?: unknown;
+      video_gallery?: unknown;
+      videoGallery?: unknown;
     };
 
     if (payload.data && !Array.isArray(payload.data) && typeof payload.data === 'object') {
@@ -514,6 +786,86 @@ export class AdminContentComponent implements OnInit {
       return payload.annualReport as AnnualReportApiItem;
     }
 
+    if (
+      payload.success_story &&
+      !Array.isArray(payload.success_story) &&
+      typeof payload.success_story === 'object'
+    ) {
+      return payload.success_story as AnnualReportApiItem;
+    }
+
+    if (
+      payload.successStory &&
+      !Array.isArray(payload.successStory) &&
+      typeof payload.successStory === 'object'
+    ) {
+      return payload.successStory as AnnualReportApiItem;
+    }
+
+    if (
+      payload.media_coverage &&
+      !Array.isArray(payload.media_coverage) &&
+      typeof payload.media_coverage === 'object'
+    ) {
+      return payload.media_coverage as AnnualReportApiItem;
+    }
+
+    if (
+      payload.mediaCoverage &&
+      !Array.isArray(payload.mediaCoverage) &&
+      typeof payload.mediaCoverage === 'object'
+    ) {
+      return payload.mediaCoverage as AnnualReportApiItem;
+    }
+
+    if (
+      payload.awards_recognition &&
+      !Array.isArray(payload.awards_recognition) &&
+      typeof payload.awards_recognition === 'object'
+    ) {
+      return payload.awards_recognition as AnnualReportApiItem;
+    }
+
+    if (
+      payload.awardsRecognition &&
+      !Array.isArray(payload.awardsRecognition) &&
+      typeof payload.awardsRecognition === 'object'
+    ) {
+      return payload.awardsRecognition as AnnualReportApiItem;
+    }
+
+    if (
+      payload.image_gallery &&
+      !Array.isArray(payload.image_gallery) &&
+      typeof payload.image_gallery === 'object'
+    ) {
+      return payload.image_gallery as AnnualReportApiItem;
+    }
+
+    if (
+      payload.imageGallery &&
+      !Array.isArray(payload.imageGallery) &&
+      typeof payload.imageGallery === 'object'
+    ) {
+      return payload.imageGallery as AnnualReportApiItem;
+    }
+
+    if (
+      payload.video_gallery &&
+      !Array.isArray(payload.video_gallery) &&
+      typeof payload.video_gallery === 'object'
+    ) {
+      return payload.video_gallery as AnnualReportApiItem;
+    }
+
+    if (
+      payload.videoGallery &&
+      !Array.isArray(payload.videoGallery) &&
+      typeof payload.videoGallery === 'object'
+    ) {
+      return payload.videoGallery as AnnualReportApiItem;
+    }
+
     return null;
   }
 
@@ -528,6 +880,16 @@ export class AdminContentComponent implements OnInit {
       id: report.id ?? '',
       slNo: String(index + 1).padStart(2, '0'),
       title: report.title || 'Untitled',
+      beneficiary_name: report.beneficiary_name || '-',
+      details: report.details || '-',
+      date_time: this.formatDateTime(report.date_time),
+      video_path: report.video_path || '-',
+      image_path: report.image_path || '-',
+      display_order:
+        report.display_order === null || report.display_order === undefined
+          ? '-'
+          : String(report.display_order),
+      is_active: this.toBoolean(report.is_active) ? 'Active' : 'Inactive',
       project_name: report.project_name || report.title || 'Untitled',
       noOfBeneficiaries:
         report.no_of_beneficiaries === null || report.no_of_beneficiaries === undefined
@@ -576,6 +938,48 @@ export class AdminContentComponent implements OnInit {
     }).format(date);
   }
 
+  private formatDateTime(value: string | null | undefined): string {
+    if (!value) {
+      return '-';
+    }
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return value;
+    }
+
+    return new Intl.DateTimeFormat('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    }).format(date);
+  }
+
+  private toDateTimeLocalValue(value: string | null | undefined): string {
+    if (!value) {
+      return '';
+    }
+
+    if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(value)) {
+      return value;
+    }
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return '';
+    }
+
+    const year = String(date.getFullYear());
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  }
+
   private resolveActionLabel(report: AnnualReportApiItem): string {
     return report.file || report.file_url || report.download_url
       ? 'Download PDF'
@@ -583,12 +987,26 @@ export class AdminContentComponent implements OnInit {
   }
 
   private resolveExistingFileName(report: AnnualReportApiItem): string {
-    const fallbackPath = report.file_path || report.file_url || report.download_url || report.file || '';
+    const fallbackPath =
+      report.video_path ||
+      report.image_path ||
+      report.file_path ||
+      report.file_url ||
+      report.download_url ||
+      report.file ||
+      '';
     return report.file_name || this.extractFileName(fallbackPath);
   }
 
   private resolveExistingFileUrl(report: AnnualReportApiItem): string {
-    const fileUrl = report.download_url || report.file_url || report.file_path || report.file || '';
+    const fileUrl =
+      report.video_path ||
+      report.image_path ||
+      report.download_url ||
+      report.file_url ||
+      report.file_path ||
+      report.file ||
+      '';
     return apiEndpoints.publicAsset(fileUrl);
   }
 
@@ -677,6 +1095,11 @@ export class AdminContentComponent implements OnInit {
 interface AnnualReportApiItem {
   id?: number | string | null;
   title?: string;
+  beneficiary_name?: string;
+  details?: string;
+  date_time?: string | null;
+  video_path?: string | null;
+  image_path?: string | null;
   project_name?: string;
   no_of_beneficiaries?: number | string | null;
   created_at?: string | null;
@@ -691,6 +1114,9 @@ interface AnnualReportApiItem {
 
 interface AnnualReportFormState {
   title: string;
+  beneficiaryName: string;
+  details: string;
+  dateTime: string;
   noOfBeneficiaries: string;
   displayOrder: string;
   isActive: boolean;
