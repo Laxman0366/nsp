@@ -15,35 +15,24 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>01</td>
-              <td>Staff List 2026</td>
-              <td>20 Jul 2026</td>
-              <td><button type="button" class="download-btn" disabled>Download PDF</button></td>
+            <tr *ngFor="let row of rows">
+              <td>{{ row.slNo }}</td>
+              <td>{{ row.title }}</td>
+              <td>{{ row.createdDate }}</td>
+              <td>
+                <a
+                  class="download-btn"
+                  [class.disabled]="!row.downloadUrl"
+                  [attr.href]="row.downloadUrl || null"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {{ row.downloadLabel }}
+                </a>
+              </td>
             </tr>
-            <tr>
-              <td>02</td>
-              <td>Staff List 2025</td>
-              <td>18 Jul 2025</td>
-              <td><button type="button" class="download-btn" disabled>Download PDF</button></td>
-            </tr>
-            <tr>
-              <td>03</td>
-              <td>Staff List 2024</td>
-              <td>15 Jul 2024</td>
-              <td><button type="button" class="download-btn" disabled>Download PDF</button></td>
-            </tr>
-            <tr>
-              <td>04</td>
-              <td>Staff List 2023</td>
-              <td>12 Jul 2023</td>
-              <td><button type="button" class="download-btn" disabled>Download PDF</button></td>
-            </tr>
-            <tr>
-              <td>05</td>
-              <td>Staff List 2022</td>
-              <td>10 Jul 2022</td>
-              <td><button type="button" class="download-btn" disabled>Download PDF</button></td>
+            <tr *ngIf="!rows.length">
+              <td colspan="4" class="empty-state">No records found.</td>
             </tr>
           </tbody>
         </table>

@@ -9,7 +9,8 @@
   color: #fff;
   display: flex;
   flex-direction: column;
-  padding: 24px 16px;
+  padding: 24px 14px 16px;
+  overflow: auto;
 }
 
 .sidebar-brand {
@@ -57,6 +58,10 @@
   border-radius: 14px;
 }
 
+.sidebar-sub-link {
+  margin-left: 6px;
+}
+
 .sidebar-link mat-icon {
   color: rgba(255, 255, 255, 0.65);
 }
@@ -66,8 +71,68 @@
   background: rgba(255, 255, 255, 0.08);
 }
 
+.sidebar-accordion {
+  display: grid;
+  gap: 10px;
+}
+
+.sidebar-panel {
+  background: transparent;
+  color: #fff;
+  box-shadow: none;
+}
+
+.sidebar-panel .mat-expansion-panel-header {
+  padding-inline: 12px;
+  font-size: 14px;
+      height: 29px;
+}
+
+.sidebar-panel .mat-expansion-panel-header-title,
+.sidebar-panel .mat-expansion-panel-header-description,
+.sidebar-panel mat-icon {
+  color: inherit;
+      height: 14px;
+    width: 14px;
+        margin-right: 10px;
+        font-size: 14px;
+}
+
+.sidebar-panel .mat-expansion-panel-body {
+  padding: 0 0 0 8px;
+}
+
+.mat-expansion-panel.sidebar-panel {
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: none !important;
+}
+
+.mdc-list-item.mdc-list-item--with-one-line {
+    height: 28px !important;
+    font-size: 14px !important;
+}
+
+.mat-expansion-panel-header.mat-expanded {
+  height: 29px !important;
+}
+
+.mat-expansion-panel-spacing {
+  margin: 0 !important;
+}
+
+.mat-accordion .mat-expansion-panel:first-of-type {
+    border-top-right-radius: 0 !important;
+    border-top-left-radius: 0 !important;
+}
+.mat-accordion .mat-expansion-panel:not(.mat-expanded), .mat-accordion .mat-expansion-panel:not(.mat-expansion-panel-spacing) {
+    border-radius: 5px !important;
+}
+
 .sidebar-footer {
   margin-top: auto;
+  display: grid;
+  gap: 12px;
 }
 
 .sidebar-upgrade-box {
@@ -93,6 +158,17 @@
 .upgrade-label {
   font-weight: 600;
   font-size: 0.95rem;
+}
+
+.logout-link {
+  display: inline-flex;
+  justify-content: center;
+  padding: 12px 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
 }
 
 .admin-content {
@@ -137,6 +213,7 @@
 .admin-page-content {
   flex: 1;
   padding: 24px;
+  background-color: #fff !important;
 }
 
 @media (max-width: 1100px) {

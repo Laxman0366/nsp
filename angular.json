@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "Matdash": {
+    "nsp": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -19,7 +19,7 @@
           "options": {
             "allowedCommonJsDependencies": ["apexcharts", "bezier-easing"],
             "outputPath": {
-              "base": "dist/Matdash"
+              "base": "dist/nsp"
             },
             "index": "src/index.html",
             "polyfills": ["zone.js"],
@@ -43,6 +43,12 @@
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "initial",
@@ -70,10 +76,11 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "Matdash:build:production"
+              "buildTarget": "nsp:build:production"
             },
             "development": {
-              "buildTarget": "Matdash:build:development"
+              "buildTarget": "nsp:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
@@ -81,7 +88,7 @@
         "extract-i18n": {
           "builder": "@angular/build:extract-i18n",
           "options": {
-            "buildTarget": "Matdash:build"
+            "buildTarget": "nsp:build"
           }
         },
         "test": {

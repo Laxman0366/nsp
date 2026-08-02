@@ -16,40 +16,25 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>01</td>
-              <td>Women Empowerment Initiative</td>
-              <td>1,240</td>
-              <td>15 Jul 2026</td>
-              <td><button type="button" class="download-btn" disabled>Download PDF</button></td>
+            <tr *ngFor="let row of rows">
+              <td>{{ row.slNo }}</td>
+              <td>{{ row.projectName }}</td>
+              <td>{{ row.noOfBeneficiaries }}</td>
+              <td>{{ row.createdDate }}</td>
+              <td>
+                <a
+                  class="download-btn"
+                  [class.disabled]="!row.downloadUrl"
+                  [attr.href]="row.downloadUrl || null"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {{ row.downloadLabel }}
+                </a>
+              </td>
             </tr>
-            <tr>
-              <td>02</td>
-              <td>Rural Education Support Program</td>
-              <td>890</td>
-              <td>10 Jul 2026</td>
-              <td><button type="button" class="download-btn" disabled>Download PDF</button></td>
-            </tr>
-            <tr>
-              <td>03</td>
-              <td>Community Health Outreach</td>
-              <td>2,180</td>
-              <td>05 Jul 2026</td>
-              <td><button type="button" class="download-btn" disabled>Download PDF</button></td>
-            </tr>
-            <tr>
-              <td>04</td>
-              <td>Youth Skill Development</td>
-              <td>760</td>
-              <td>01 Jul 2026</td>
-              <td><button type="button" class="download-btn" disabled>Download PDF</button></td>
-            </tr>
-            <tr>
-              <td>05</td>
-              <td>Livelihood Enhancement Scheme</td>
-              <td>1,035</td>
-              <td>25 Jun 2026</td>
-              <td><button type="button" class="download-btn" disabled>Download PDF</button></td>
+            <tr *ngIf="!rows.length">
+              <td colspan="5" class="empty-state">No records found.</td>
             </tr>
           </tbody>
         </table>

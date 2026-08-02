@@ -1,0 +1,276 @@
+<div class="admin-page-shell">
+  @switch (page.kind) {
+    @case ("form") {
+      <div class="page-stack">
+        @for (section of page.form?.sections || []; track section.title) {
+          <mat-card class="content-card form-card">
+            <mat-card-header>
+              <mat-card-title class="eyebrow">{{
+                section.title
+              }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              @if (section.note) {
+                <p class="section-note">{{ section.note }}</p>
+              }
+
+              <div
+                class="field-grid"
+                [class.field-grid-2]="(section.columns || 2) === 2"
+                [class.field-grid-3]="(section.columns || 2) === 3"
+                [class.field-grid-4]="(section.columns || 2) === 4"
+              >
+                @for (field of section.fields; track field.label) {
+                  <div
+                    class="field-shell"
+                    [class.span-2]="field.span === 2"
+                    [class.span-3]="field.span === 3"
+                    [class.span-4]="field.span === 4"
+                  >
+                    <mat-label class="f-w-600 m-b-8 d-block">{{
+                      field.label
+                    }}</mat-label>
+
+                    @switch (field.type) {
+                      @case ("textarea") {
+                        <mat-form-field appearance="outline" class="w-100">
+                          <textarea
+                            matInput
+                            [rows]="field.rows || 4"
+                            [placeholder]="field.placeholder || field.label"
+                          ></textarea>
+                        </mat-form-field>
+                      }
+                      @case ("select") {
+                        <mat-form-field appearance="outline" class="w-100">
+                          <mat-select>
+                            @for (
+                              option of field.options || [];
+                              track option.value
+                            ) {
+                              <mat-option [value]="option.value">{{
+                                option.label
+                              }}</mat-option>
+                            }
+                          </mat-select>
+                        </mat-form-field>
+                      }
+                      @case ("file") {
+                        <div class="file-field-shell">
+                          <div class="file-picker">
+                            <input
+                              #annualReportFileInput
+                              type="file"
+                              class="hidden-file-input"
+                              (change)="onAnnualReportFileSelected($event)"
+                            />
+                            <button
+                              mat-stroked-button
+                              type="button"
+                              (click)="annualReportFileInput.click()"
+                            >
+                              Choose file
+                            </button>
+                            <span>{{ getAnnualReportFileNote(field.note) }}</span>
+                          </div>
+
+                          @if (getAnnualReportFileNote(field.note) !== (field.note || "No file chosen")) {
+                            <div class="file-meta">
+                              <span class="file-meta-name">{{ getAnnualReportFileNote(field.note) }}</span>
+                              @if (hasAnnualReportDownload()) {
+                                <a
+                                  class="file-download-link"
+                                  [href]="getAnnualReportDownloadUrl()"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  download
+                                >
+                                  Download
+                                </a>
+                              }
+                            </div>
+                          }
+                        </div>
+                      }
+                      @case ("checkbox") {
+                        <mat-checkbox
+                          [checked]="getAnnualReportIsActive(field.label)"
+                          (change)="onAnnualReportIsActiveChange($event.checked)"
+                        >
+                          {{ field.label }}
+                        </mat-checkbox>
+                      }
+                      @case ("readonly") {
+                        <mat-form-field appearance="outline" class="w-100">
+                          <input
+                            matInput
+                            [placeholder]="field.placeholder || field.label"
+                            readonly
+                          />
+                        </mat-form-field>
+                      }
+                      @default {
+                        <mat-form-field appearance="outline" class="w-100">
+                          <input
+                            matInput
+                            [type]="field.type"
+                            [placeholder]="field.placeholder || field.label"
+                            [value]="getAnnualReportInputValue(field.label)"
+                            (input)="onAnnualReportInputChange(field.label, $any($event.target).value)"
+                          />
+                        </mat-form-field>
+                      }
+                    }
+                  </div>
+                }
+              </div>
+              <div class="form-actions d-flex justify-content-end">
+                <button
+                  mat-raised-button
+                  color="primary"
+                  type="button"
+                  [disabled]="isSavingAnnualReport || isUploadingAnnualReportFile || (isAnnualReportPage() && !isAnnualReportFormValid())"
+                  (click)="onPrimaryActionClick()"
+                >
+                  {{ page.form?.primaryAction || "Save changes" }}
+                </button>
+                @if (page.form?.secondaryAction) {
+                  <button mat-stroked-button color="warn" type="button">
+                    {{ page.form!.secondaryAction }}
+                  </button>
+                }
+              </div>
+            </mat-card-content>
+          </mat-card>
+        }
+
+        @if (page.table) {
+          <mat-card class="content-card table-card">
+            <mat-card-content>
+              <div class="table-wrap">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      @for (column of getTableColumns(); track column.key) {
+                        <th>{{ column.label }}</th>
+                      }
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (row of page.table.rows || []; track row["slNo"]) {
+                      <tr>
+                        @for (column of getTableColumns(); track column.key) {
+                          <td [class]="rowClass(column.type)">
+                            @if (column.key === "action") {
+                              <div class="action-buttons">
+                                <button
+                                  type="button"
+                                  class="table-action-btn edit-btn"
+                                  (click)="onEditRow(row)"
+                                >
+                                  Edit
+                                </button>
+                                <button
+                                  type="button"
+                                  class="table-action-btn delete-btn"
+                                  (click)="onDeleteRow(row)"
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            } @else if (column.type === "download") {
+                              <button type="button" class="download-btn">
+                                {{ row[column.key] || "Download PDF" }}
+                              </button>
+                            } @else if (column.type === "status") {
+                              <span class="status-pill">{{ row[column.key] }}</span>
+                            } @else {
+                              {{ row[column.key] }}
+                            }
+                          </td>
+                        }
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
+    }
+
+    @case ("table") {
+      <mat-card class="content-card table-card">
+        <mat-card-content>
+          <div class="table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  @for (column of getTableColumns(); track column.key) {
+                    <th>{{ column.label }}</th>
+                  }
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of page.table?.rows || []; track row["slNo"]) {
+                  <tr>
+                    @for (column of getTableColumns(); track column.key) {
+                      <td [class]="rowClass(column.type)">
+                        @if (column.key === "action") {
+                          <div class="action-buttons">
+                            <button
+                              type="button"
+                              class="table-action-btn edit-btn"
+                              (click)="onEditRow(row)"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              type="button"
+                              class="table-action-btn delete-btn"
+                              (click)="onDeleteRow(row)"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        } @else if (column.type === "download") {
+                          <button type="button" class="download-btn">
+                            {{ column.label || "Download PDF" }}
+                          </button>
+                        } @else if (column.type === "status") {
+                          <span class="status-pill">{{ row[column.key] }}</span>
+                        } @else {
+                          {{ row[column.key] }}
+                        }
+                      </td>
+                    }
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
+
+    @default {
+      <div class="card-grid">
+        @for (card of page.cards || []; track card.title) {
+          <mat-card class="content-card info-card">
+            @if (card.image) {
+              <img [src]="card.image" [alt]="card.title" class="card-image" />
+            }
+            <mat-card-content>
+              @if (card.tag) {
+                <span class="card-tag">{{ card.tag }}</span>
+              }
+              <h2>{{ card.title }}</h2>
+              <p>{{ card.text }}</p>
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
+    }
+  }
+</div>

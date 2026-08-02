@@ -3,46 +3,40 @@
     <div class="sidebar-brand">
       <img src="/assets/images/logos/nsp_logo.jpeg" alt="NSP logo" class="sidebar-logo" />
       <div>
-        <div class="sidebar-title">MatDash</div>
+        <div class="sidebar-title">nsp</div>
         <div class="sidebar-subtitle">Free</div>
       </div>
     </div>
 
-    <div class="sidebar-section">
-      <div class="sidebar-section-title">HOME</div>
-      <mat-nav-list>
-        <a mat-list-item routerLink="/admin" routerLinkActive="active-link" class="sidebar-link">
-          <mat-icon>dashboard</mat-icon>
-          <span>Dashboard</span>
-        </a>
-      </mat-nav-list>
-    </div>
+    <mat-accordion class="sidebar-accordion" multi>
+      @for (group of menuGroups; track group.path) {
+        <mat-expansion-panel class="sidebar-panel" [expanded]="isGroupActive(group)">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon>{{ group.icon }}</mat-icon>
+              <span>{{ group.label }}</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
 
-    <div class="sidebar-section">
-      <div class="sidebar-section-title">APPS</div>
-      <mat-nav-list>
-        <a mat-list-item routerLink="/admin/chat" routerLinkActive="active-link" class="sidebar-link">
-          <mat-icon>chat</mat-icon>
-          <span>Chat</span>
-        </a>
-        <a mat-list-item routerLink="/admin/calendar" routerLinkActive="active-link" class="sidebar-link">
-          <mat-icon>calendar_month</mat-icon>
-          <span>Calendar</span>
-        </a>
-        <a mat-list-item routerLink="/admin/email" routerLinkActive="active-link" class="sidebar-link">
-          <mat-icon>email</mat-icon>
-          <span>Email</span>
-        </a>
-      </mat-nav-list>
-    </div>
+          <mat-nav-list>
+            @for (item of group.items; track item.path) {
+              <a
+                mat-list-item
+                [routerLink]="itemPath(group.path, item.path)"
+                routerLinkActive="active-link"
+                class="sidebar-link sidebar-sub-link"
+              >
+                <mat-icon>{{ item.icon }}</mat-icon>
+                <span>{{ item.label }}</span>
+              </a>
+            }
+          </mat-nav-list>
+        </mat-expansion-panel>
+      }
+    </mat-accordion>
 
     <div class="sidebar-footer">
-      <div class="sidebar-upgrade-box">
-        <div class="upgrade-icon">★</div>
-        <div>
-          <div class="upgrade-label">Check Pro Version</div>
-        </div>
-      </div>
+      <a class="logout-link" href="https://nsp.org.in/admin/Logout.aspx">Logout</a>
     </div>
   </mat-sidenav>
 
@@ -52,7 +46,6 @@
         <mat-icon>menu</mat-icon>
       </button>
       <div class="topbar-spacer"></div>
-      <button mat-flat-button color="accent" class="topbar-pro-button">Check Pro Template</button>
       <button mat-icon-button class="topbar-notification" aria-label="Notifications">
         <mat-icon>notifications</mat-icon>
       </button>
