@@ -83,6 +83,12 @@ export interface AdminMenuGroup {
 
 const annualReportRows: AdminTableRow[] = [];
 
+const programmeMasterRows: AdminTableRow[] = [];
+
+const programmeDetailsRows: AdminTableRow[] = [];
+
+const programmeOverviewRows: AdminTableRow[] = [];
+
 const auditReportRows: AdminTableRow[] = [];
 
 const successStoryRows: AdminTableRow[] = [];
@@ -461,40 +467,46 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
             primaryAction: 'Save Banner',
             sections: [
               {
-                title: 'Hero banner content',
+                title: 'Banner Management Details',
                 columns: 2,
                 fields: [
+                  { label: 'title', type: 'text', placeholder: 'Enter banner title' },
                   {
-                    label: 'Banner title',
+                    label: 'sub_title',
                     type: 'text',
-                    placeholder: 'Supporting communities with dignity',
+                    placeholder: 'Enter banner subtitle',
                   },
                   {
-                    label: 'Banner subtitle',
+                    label: 'alt_text',
                     type: 'text',
-                    placeholder: 'A place where service meets action',
+                    placeholder: 'Enter image alt text',
                   },
                   {
-                    label: 'Call to action label',
-                    type: 'text',
-                    placeholder: 'Learn more',
+                    label: 'image_path',
+                    type: 'file',
                   },
                   {
-                    label: 'Call to action URL',
-                    type: 'text',
-                    placeholder: '/about',
+                    label: 'display_order',
+                    type: 'number',
+                    placeholder: '1',
                   },
-                  { label: 'Banner image', type: 'file' },
-                  {
-                    label: 'Banner description',
-                    type: 'textarea',
-                    rows: 4,
-                    span: 2,
-                    placeholder: 'Concise banner copy for the public homepage.',
-                  },
+                  { label: 'is_active', type: 'checkbox' },
                 ],
               },
             ],
+          },
+          table: {
+            columns: [
+              { key: 'slNo', label: 'Sl No' },
+              { key: 'title', label: 'title' },
+              { key: 'sub_title', label: 'sub_title' },
+              { key: 'alt_text', label: 'alt_text' },
+              { key: 'image_path', label: 'image_path' },
+              { key: 'display_order', label: 'display_order' },
+              { key: 'is_active', label: 'is_active', type: 'status' },
+              { key: 'action', label: 'Action' },
+            ],
+            rows: [],
           },
         },
       },
@@ -734,247 +746,210 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
     icon: 'volunteer_activism',
     items: [
       {
-        label: 'Overview',
-        path: 'overview',
+        label: 'Programme Master',
+        path: 'programme-master',
+        icon: 'assignment',
+        page: {
+          title: 'Programme Master',
+          eyebrow: 'Programmes',
+          summary: 'Create and manage programme master records for NSP.',
+          kind: 'form',
+          form: {
+            primaryAction: 'Save Programme Master',
+            sections: [
+              {
+                title: 'Programme Master Details',
+                columns: 2,
+                fields: [
+                  {
+                    label: 'programme_name',
+                    type: 'text',
+                    placeholder: 'Enter programme name',
+                  },
+                  {
+                    label: 'display_order',
+                    type: 'number',
+                    placeholder: 'Enter display order',
+                  },
+                  { label: 'is_active', type: 'checkbox' },
+                ],
+              },
+            ],
+          },
+          table: {
+            columns: [
+              { key: 'slNo', label: 'Sl No' },
+              { key: 'programme_name', label: 'programme_name' },
+              { key: 'display_order', label: 'display_order' },
+              { key: 'is_active', label: 'is_active', type: 'status' },
+              { key: 'action', label: 'Action' },
+            ],
+            rows: programmeMasterRows,
+          },
+        },
+      },
+      {
+        label: 'Programme Details',
+        path: 'programme-details',
+        icon: 'format_list_bulleted',
+        page: {
+          title: 'Programme Details',
+          eyebrow: 'Programmes',
+          summary: 'Create and manage project-level programme details for NSP.',
+          kind: 'form',
+          form: {
+            primaryAction: 'Save Programme Details',
+            sections: [
+              {
+                title: 'Programme Details',
+                columns: 2,
+                fields: [
+                  {
+                    label: 'programme_name',
+                    type: 'select',
+                    placeholder: 'Select programme name',
+                  },
+                  {
+                    label: 'project_name',
+                    type: 'text',
+                    placeholder: 'Enter project name',
+                  },
+                  {
+                    label: 'project_details',
+                    type: 'textarea',
+                    rows: 4,
+                    span: 2,
+                    placeholder: 'Enter project details',
+                  },
+                  {
+                    label: 'achievement_details',
+                    type: 'textarea',
+                    rows: 4,
+                    span: 2,
+                    placeholder: 'Enter achievement details',
+                  },
+                  {
+                    label: 'image_path',
+                    type: 'file',
+                    note: 'No file chosen',
+                  },
+                  {
+                    label: 'other_image_paths',
+                    type: 'file',
+                    note: 'No file chosen',
+                  },
+                  {
+                    label: 'display_order',
+                    type: 'number',
+                    placeholder: 'Enter display order',
+                  },
+                  { label: 'is_active', type: 'checkbox' },
+                ],
+              },
+            ],
+          },
+          table: {
+            columns: [
+              { key: 'slNo', label: 'Sl No' },
+              { key: 'programme_name', label: 'programme_name' },
+              { key: 'project_name', label: 'project_name' },
+              { key: 'project_details', label: 'project_details' },
+              { key: 'achievement_details', label: 'achievement_details' },
+              { key: 'image_path', label: 'image_path' },
+              { key: 'other_image_paths', label: 'other_image_paths' },
+              { key: 'display_order', label: 'display_order' },
+              { key: 'is_active', label: 'is_active', type: 'status' },
+              { key: 'action', label: 'Action' },
+            ],
+            rows: programmeDetailsRows,
+          },
+        },
+      },
+      {
+        label: 'Programme Overview',
+        path: 'programme-overview',
         icon: 'dashboard_customize',
         page: {
           title: 'Programme Overview',
           eyebrow: 'Programmes',
-          summary: 'High-level summary of the programmes delivered by NSP.',
-          kind: 'cards',
-          cards: [
-            {
-              title: 'Education',
-              text: 'Support for learning continuity, scholarships, and inclusive classrooms.',
-              tag: 'Programme',
-            },
-            {
-              title: 'Livelihood',
-              text: 'Skills, employment readiness, and micro-enterprise support.',
-              tag: 'Programme',
-            },
-            {
-              title: 'Health',
-              text: 'Community health, nutrition, and awareness drives.',
-              tag: 'Programme',
-            },
-          ],
-        },
-      },
-      {
-        label: 'Childrens Welfare',
-        path: 'childrens-welfare',
-        icon: 'child_care',
-        page: {
-          title: 'Childrens Welfare',
-          eyebrow: 'Programmes',
-          summary: 'Child protection and support programmes.',
-          kind: 'cards',
-          cards: [
-            {
-              title: 'Child support',
-              text: 'Learning, nutrition, and care pathways for children.',
-              tag: 'Programme',
-            },
-          ],
-        },
-      },
-      {
-        label: 'Womens Welfare',
-        path: 'womens-welfare',
-        icon: 'female',
-        page: {
-          title: 'Womens Welfare',
-          eyebrow: 'Programmes',
-          summary: 'Women-centered economic and social support.',
-          kind: 'cards',
-          cards: [
-            {
-              title: 'Women empowerment',
-              text: 'Training, self-help group support, and livelihood access.',
-              tag: 'Programme',
-            },
-          ],
-        },
-      },
-      {
-        label: 'PWD Welfare',
-        path: 'pwd-welfare',
-        icon: 'accessibility_new',
-        page: {
-          title: 'PWD Welfare',
-          eyebrow: 'Programmes',
-          summary: 'Inclusion and accessibility support programmes.',
-          kind: 'cards',
-          cards: [
-            {
-              title: 'Accessibility',
-              text: 'Services designed around participation and dignity.',
-              tag: 'Programme',
-            },
-          ],
-        },
-      },
-      {
-        label: 'Vocational Training',
-        path: 'vocational-training',
-        icon: 'school',
-        page: {
-          title: 'Vocational Training',
-          eyebrow: 'Programmes',
-          summary: 'Job-oriented skills and training pathways.',
-          kind: 'cards',
-          cards: [
-            {
-              title: 'Skill building',
-              text: 'Training modules aligned with local employment needs.',
-              tag: 'Programme',
-            },
-          ],
-        },
-      },
-      {
-        label: 'Mental Health',
-        path: 'mental-health',
-        icon: 'psychology',
-        page: {
-          title: 'Mental Health',
-          eyebrow: 'Programmes',
-          summary: 'Counselling and emotional well-being support.',
-          kind: 'cards',
-          cards: [
-            {
-              title: 'Well-being',
-              text: 'Awareness, referral, and counselling support.',
-              tag: 'Programme',
-            },
-          ],
-        },
-      },
-      {
-        label: 'Senior Citizen',
-        path: 'senior-citizen',
-        icon: 'elderly',
-        page: {
-          title: 'Senior Citizen',
-          eyebrow: 'Programmes',
-          summary: 'Care and companionship focused initiatives.',
-          kind: 'cards',
-          cards: [
-            {
-              title: 'Ageing with dignity',
-              text: 'Home visits, support services, and engagement activities.',
-              tag: 'Programme',
-            },
-          ],
-        },
-      },
-      {
-        label: 'Substance Abuse',
-        path: 'substance-abuse',
-        icon: 'support',
-        page: {
-          title: 'Substance Abuse',
-          eyebrow: 'Programmes',
-          summary: 'Prevention and recovery support work.',
-          kind: 'cards',
-          cards: [
-            {
-              title: 'Prevention',
-              text: 'Referral pathways, awareness sessions, and family support.',
-              tag: 'Programme',
-            },
-          ],
-        },
-      },
-      {
-        label: 'Education HRW',
-        path: 'education-hrw',
-        icon: 'menu_book',
-        page: {
-          title: 'Education HRW',
-          eyebrow: 'Programmes',
-          summary: 'Education and rights-based learning initiatives.',
-          kind: 'cards',
-          cards: [
-            {
-              title: 'Learning access',
-              text: 'School support, tutoring, and bridge learning.',
-              tag: 'Programme',
-            },
-          ],
-        },
-      },
-      {
-        label: 'Animal Welfare',
-        path: 'animal-welfare',
-        icon: 'pets',
-        page: {
-          title: 'Animal Welfare',
-          eyebrow: 'Programmes',
-          summary: 'Animal care and community awareness.',
-          kind: 'cards',
-          cards: [
-            {
-              title: 'Care and awareness',
-              text: 'Protection, treatment support, and local outreach.',
-              tag: 'Programme',
-            },
-          ],
-        },
-      },
-      {
-        label: 'Capacity Building',
-        path: 'capacity-building',
-        icon: 'build_circle',
-        page: {
-          title: 'Capacity Building',
-          eyebrow: 'Programmes',
-          summary: 'Training the people who deliver the work.',
-          kind: 'cards',
-          cards: [
-            {
-              title: 'Capability growth',
-              text: 'Workshops, facilitation, and organizational learning.',
-              tag: 'Programme',
-            },
-          ],
-        },
-      },
-      {
-        label: 'Water Sanitation',
-        path: 'water-sanitation',
-        icon: 'water_drop',
-        page: {
-          title: 'Water Sanitation',
-          eyebrow: 'Programmes',
-          summary: 'Community water and hygiene support.',
-          kind: 'cards',
-          cards: [
-            {
-              title: 'WASH',
-              text: 'Clean water, sanitation, and public hygiene campaigns.',
-              tag: 'Programme',
-            },
-          ],
-        },
-      },
-      {
-        label: 'Advocacy',
-        path: 'advocacy',
-        icon: 'campaign',
-        page: {
-          title: 'Advocacy',
-          eyebrow: 'Programmes',
-          summary: 'Policy and public voice work.',
-          kind: 'cards',
-          cards: [
-            {
-              title: 'Public voice',
-              text: 'Awareness campaigns and issue-based advocacy.',
-              tag: 'Programme',
-            },
-          ],
+          summary: 'Create and manage programme overview records for NSP projects.',
+          kind: 'form',
+          form: {
+            primaryAction: 'Save Programme Overview',
+            sections: [
+              {
+                title: 'Programme Overview Details',
+                columns: 2,
+                fields: [
+                  {
+                    label: 'programme_name',
+                    type: 'select',
+                    placeholder: 'Select programme name',
+                  },
+                  {
+                    label: 'project_name',
+                    type: 'select',
+                    placeholder: 'Select project name',
+                  },
+                  {
+                    label: 'starting_year',
+                    type: 'text',
+                    placeholder: 'Enter 4 digit year',
+                  },
+                  {
+                    label: 'supported_by',
+                    type: 'select',
+                    options: [
+                      { label: 'Own Funding', value: 'Own Funding' },
+                      { label: 'Ministry', value: 'Ministry' },
+                      { label: 'Foreign Funding', value: 'Foreign Funding' },
+                    ],
+                  },
+                  {
+                    label: 'status',
+                    type: 'select',
+                    options: [
+                      { label: 'On going', value: 'On going' },
+                      { label: 'Completed', value: 'Completed' },
+                      { label: 'Not Applicable', value: 'Not Applicable' },
+                    ],
+                  },
+                  {
+                    label: 'strength',
+                    type: 'number',
+                    placeholder: 'Enter strength',
+                  },
+                  {
+                    label: 'beneficiaries_covered',
+                    type: 'number',
+                    placeholder: 'Enter beneficiaries covered',
+                  },
+                  {
+                    label: 'display_order',
+                    type: 'number',
+                    placeholder: 'Enter display order',
+                  },
+                  { label: 'is_active', type: 'checkbox' },
+                ],
+              },
+            ],
+          },
+          table: {
+            columns: [
+              { key: 'slNo', label: 'Sl No' },
+              { key: 'programme_name', label: 'programme_name' },
+              { key: 'project_name', label: 'project_name' },
+              { key: 'starting_year', label: 'starting_year' },
+              { key: 'supported_by', label: 'supported_by' },
+              { key: 'status', label: 'status' },
+              { key: 'strength', label: 'strength' },
+              { key: 'beneficiaries_covered', label: 'beneficiaries_covered' },
+              { key: 'display_order', label: 'display_order' },
+              { key: 'is_active', label: 'is_active', type: 'status' },
+              { key: 'action', label: 'Action' },
+            ],
+            rows: programmeOverviewRows,
+          },
         },
       },
     ],

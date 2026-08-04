@@ -63,37 +63,15 @@
         >
           <a routerLink="/programmes" class="dropdown-toggle">Programmes</a>
           <div class="submenu" *ngIf="openDropdown === 'programmes'">
-            <a routerLink="/programmes/overview">Programme Overview</a>
-            <a routerLink="/programmes/childrens-welfare">Children's Welfare</a>
-            <a routerLink="/programmes/womens-welfare">Women's Welfare</a>
-            <a routerLink="/programmes/pwd-welfare">PWD's Welfare</a>
-            <a routerLink="/programmes/vocational-training"
-              >Vocational Training & Livelihood</a
-            >
-            <a routerLink="/programmes/mental-health"
-              >Mentally Ill People's Welfare</a
-            >
-            <a routerLink="/programmes/senior-citizen"
-              >Senior Citizen's Welfare</a
-            >
-            <a routerLink="/programmes/substance-abuse"
-              >Prevention of Alcoholism & Drug Abuse</a
-            >
-            <a routerLink="/programmes/education-hrw"
-              >Education & Human Resource Welfare</a
-            >
-            <a routerLink="/programmes/animal-welfare"
-              >Animals & Livestock Welfare</a
-            >
-            <a routerLink="/programmes/capacity-building"
-              >Capacity Building of PRI's</a
-            >
-            <a routerLink="/programmes/water-sanitation"
-              >Water Sanitation & Hygiene</a
-            >
-            <a routerLink="/programmes/advocacy"
-              >Advocacy & Awareness Program</a
-            >
+            @if (isProgrammeMenuLoading) {
+              <span class="submenu-info">Loading programmes...</span>
+            } @else if (!programmeMenuItems.length) {
+              <span class="submenu-info">No programmes available</span>
+            } @else {
+              @for (programme of programmeMenuItems; track programme.id) {
+                <a [routerLink]="['/programmes/category', programme.id]">{{ programme.name }}</a>
+              }
+            }
           </div>
         </div>
 

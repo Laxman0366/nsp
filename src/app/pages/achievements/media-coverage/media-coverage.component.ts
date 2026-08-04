@@ -24,11 +24,11 @@ export class MediaCoverageComponent {
       caption: 'District newspaper highlights women empowerment camp',
     },
     {
-      image: '/assets/images/banners/banner2.jpeg',
+      image: '/assets/images/banners/banner2.jpg',
       caption: 'Regional channel covers NSP education support drive',
     },
     {
-      image: '/assets/images/banners/banner3.jpeg',
+      image: '/assets/images/banners/banner3.jpg',
       caption: 'Feature story on rural health awareness initiative',
     },
     {

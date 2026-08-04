@@ -20,7 +20,7 @@ export class AwardsRecognitionComponent {
 
   readonly awardItems: AwardItem[] = [
     {
-      image: '/assets/images/banners/banner3.jpeg',
+      image: '/assets/images/banners/banner3.jpg',
       caption: 'State-level recognition for community development initiatives',
     },
     {

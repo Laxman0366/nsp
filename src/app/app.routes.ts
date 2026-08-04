@@ -23,6 +23,7 @@ import { AnimalWelfareComponent } from './pages/programmes/animal-welfare/animal
 import { CapacityBuildingComponent } from './pages/programmes/capacity-building/capacity-building.component';
 import { WaterSanitationComponent } from './pages/programmes/water-sanitation/water-sanitation.component';
 import { AdvocacyComponent } from './pages/programmes/advocacy/advocacy.component';
+import { ProgrammeCategoryComponent } from './pages/programmes/programme-category/programme-category.component';
 import { DonationsComponent } from './pages/donations/donations.component';
 import { DonateNowComponent } from './pages/donations/donate-now/donate-now.component';
 import { DonorListComponent } from './pages/donations/donor-list/donor-list.component';
@@ -99,6 +100,10 @@ export const routes: Routes = [
       {
         path: 'programmes',
         component: ProgrammesComponent,
+      },
+      {
+        path: 'programmes/category/:programmeId',
+        component: ProgrammeCategoryComponent,
       },
       {
         path: 'programmes/overview',

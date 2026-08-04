@@ -1,0 +1,51 @@
+<section class="programme-page">
+  <div class="programme-hero">
+    <p class="hero-kicker">Programmes By NSP</p>
+    <h1>{{ programmeName }}</h1>
+    <p>
+      Explore the project portfolio under this programme, including project text
+      and detailed outcomes.
+    </p>
+  </div>
+
+  @if (isLoading) {
+    <div class="state-card">Loading project details...</div>
+  } @else if (!projects.length) {
+    <div class="state-card">
+      No projects are available for this programme right now.
+    </div>
+  } @else {
+    <div class="project-grid">
+      @for (project of projects; track project.id) {
+        <article class="project-card">
+          <p class="eyebrow">{{ project.projectName }}</p>
+
+          @if (project.featureImageUrl) {
+            <figure class="feature-image-wrap">
+              <div class="project-rich-text" [innerHTML]="project.projectText"></div>
+              <img
+                class="feature-image"
+                [src]="project.featureImageUrl"
+                [alt]="project.projectName + ' feature image'"
+              />
+            </figure>
+          }
+          <div class="project-rich-details" [innerHTML]="project.details"></div>
+
+          @if (project.otherImageUrls.length) {
+            <div class="project-gallery">
+              <p class="gallery-title">More Images</p>
+              <div class="gallery-grid">
+                @for (img of project.otherImageUrls; track img) {
+                  <figure class="gallery-item">
+                    <img [src]="img" [alt]="project.projectName + ' gallery image'" loading="lazy" />
+                  </figure>
+                }
+              </div>
+            </div>
+          }
+        </article>
+      }
+    </div>
+  }
+</section>

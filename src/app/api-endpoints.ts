@@ -17,6 +17,12 @@ function toPublicAssetUrl(path: string): string {
 }
 
 export const apiEndpoints = {
+  programmeMasters: `${apiBaseUrl}/programme_master`,
+  programmeMasterById: (id: string | number) => `${apiBaseUrl}/programme_master/${id}`,
+  programmeDetails: `${apiBaseUrl}/projects`,
+  programmeDetailById: (id: string | number) => `${apiBaseUrl}/projects/${id}`,
+  programmeOverviews: `${apiBaseUrl}/programme_overview`,
+  programmeOverviewById: (id: string | number) => `${apiBaseUrl}/programme_overview/${id}`,
   annualReports: `${apiBaseUrl}/annual_reports`,
   annualReportById: (id: string | number) => `${apiBaseUrl}/annual_reports/${id}`,
   auditReports: `${apiBaseUrl}/audit_reports`,
@@ -37,6 +43,8 @@ export const apiEndpoints = {
   imageGalleryById: (id: string | number) => `${apiBaseUrl}/image_gallery/${id}`,
   videoGalleries: `${apiBaseUrl}/video_gallery`,
   videoGalleryById: (id: string | number) => `${apiBaseUrl}/video_gallery/${id}`,
+  banners: `${apiBaseUrl}/banners`,
+  bannerById: (id: string | number) => `${apiBaseUrl}/banners/${id}`,
   upload: `${apiBaseUrl}/upload`,
   publicAsset: (path: string) => toPublicAssetUrl(path),
 } as const;

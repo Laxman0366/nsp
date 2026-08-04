@@ -33,21 +33,36 @@
 
                     @switch (field.type) {
                       @case ("textarea") {
-                        <mat-form-field appearance="outline" class="w-100">
-                          <textarea
-                            matInput
-                            [rows]="field.rows || 4"
+                        @if (isProgrammeDetailsRichTextField(field.label)) {
+                          <quill-editor
+                            class="rich-editor"
+                            theme="snow"
+                            [modules]="quillModules"
                             [placeholder]="field.placeholder || field.label"
-                            [value]="getAnnualReportInputValue(field.label)"
-                            (input)="onAnnualReportInputChange(field.label, $any($event.target).value)"
-                          ></textarea>
-                        </mat-form-field>
+                            [ngModel]="getAnnualReportInputValue(field.label)"
+                            (ngModelChange)="onAnnualReportInputChange(field.label, $event)"
+                          ></quill-editor>
+                        } @else {
+                          <mat-form-field appearance="outline" class="w-100">
+                            <textarea
+                              matInput
+                              [rows]="field.rows || 4"
+                              [placeholder]="field.placeholder || field.label"
+                              [value]="getAnnualReportInputValue(field.label)"
+                              (input)="onAnnualReportInputChange(field.label, $any($event.target).value)"
+                            ></textarea>
+                          </mat-form-field>
+                        }
                       }
                       @case ("select") {
                         <mat-form-field appearance="outline" class="w-100">
-                          <mat-select>
+                          <mat-select
+                            [value]="getAnnualReportInputValue(field.label)"
+                            [placeholder]="field.placeholder || field.label"
+                            (selectionChange)="onAnnualReportInputChange(field.label, $any($event.value))"
+                          >
                             @for (
-                              option of field.options || [];
+                              option of getFieldOptions(field);
                               track option.value
                             ) {
                               <mat-option [value]="option.value">{{
@@ -64,7 +79,7 @@
                               #annualReportFileInput
                               type="file"
                               class="hidden-file-input"
-                              (change)="onAnnualReportFileSelected($event)"
+                              (change)="onAnnualReportFileSelected($event, field.label)"
                             />
                             <button
                               mat-stroked-button
@@ -73,16 +88,16 @@
                             >
                               Choose file
                             </button>
-                            <span>{{ getAnnualReportFileNote(field.note) }}</span>
+                            <span>{{ getAnnualReportFileNote(field.label, field.note) }}</span>
                           </div>
 
-                          @if (getAnnualReportFileNote(field.note) !== (field.note || "No file chosen")) {
+                          @if (getAnnualReportFileNote(field.label, field.note) !== (field.note || "No file chosen")) {
                             <div class="file-meta">
-                              <span class="file-meta-name">{{ getAnnualReportFileNote(field.note) }}</span>
-                              @if (hasAnnualReportDownload()) {
+                              <span class="file-meta-name">{{ getAnnualReportFileNote(field.label, field.note) }}</span>
+                              @if (hasAnnualReportDownload(field.label)) {
                                 <a
                                   class="file-download-link"
-                                  [href]="getAnnualReportDownloadUrl()"
+                                  [href]="getAnnualReportDownloadUrl(field.label)"
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   download

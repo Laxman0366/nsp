@@ -54,6 +54,28 @@
   grid-column: span 4;
 }
 
+.rich-editor {
+  display: block;
+}
+
+:host ::ng-deep .rich-editor .ql-toolbar.ql-snow,
+:host ::ng-deep .rich-editor .ql-container.ql-snow {
+  border-color: rgba(29, 37, 76, 0.22);
+}
+
+:host ::ng-deep .rich-editor .ql-toolbar.ql-snow {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  background: #f7f9fc;
+}
+
+:host ::ng-deep .rich-editor .ql-container.ql-snow {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  min-height: 170px;
+  background: #fff;
+}
+
 .file-picker {
   min-height: 56px;
   padding: 12px 14px;

@@ -1,13 +1,20 @@
 <div id="carouselInterval" class="carousel slide" data-coreui-ride="carousel">
   <div class="carousel-indicators">
-    <button type="button" data-coreui-target="#carouselInterval" data-coreui-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-    <button type="button" data-coreui-target="#carouselInterval" data-coreui-slide-to="1" aria-label="Slide 2"></button>
-    <button type="button" data-coreui-target="#carouselInterval" data-coreui-slide-to="2" aria-label="Slide 3"></button>
+    @for (slide of slides; track slide.id; let i = $index) {
+      <button
+        type="button"
+        data-coreui-target="#carouselInterval"
+        [attr.data-coreui-slide-to]="i"
+        [class.active]="i === 0"
+        [attr.aria-current]="i === 0 ? 'true' : null"
+        [attr.aria-label]="'Slide ' + (i + 1)"
+      ></button>
+    }
   </div>
   <div class="carousel-inner">
-    @for (slide of slides; track slide.src) {
-      <div class="carousel-item" [class.active]="slide.id === 0" data-coreui-interval="2000">
-        <img [src]="slide.src" class="d-block w-100" alt="...">
+    @for (slide of slides; track slide.id; let i = $index) {
+      <div class="carousel-item" [class.active]="i === 0" data-coreui-interval="2000">
+        <img [src]="slide.src" class="d-block w-100" [alt]="slide.altText">
         <div class="carousel-caption d-none d-md-block">
           <h5>{{ slide.title }}</h5>
           <p>{{ slide.subtitle }}</p>

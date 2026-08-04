@@ -40,11 +40,11 @@ export class ImageGalleryComponent {
       caption: 'Awareness activities with community involvement',
     },
     {
-      image: '/assets/images/banners/banner2.jpeg',
+      image: '/assets/images/banners/banner2.jpg',
       caption: 'Field engagement across programme locations',
     },
     {
-      image: '/assets/images/banners/banner3.jpeg',
+      image: '/assets/images/banners/banner3.jpg',
       caption: 'Women-focused support and participation activities',
     },
     {
