@@ -1,5 +1,5 @@
 <mat-sidenav-container class="admin-layout-shell">
-  <mat-sidenav #sidenav mode="side" opened class="admin-sidebar">
+  <mat-sidenav mode="side" opened class="admin-sidebar">
     <div class="sidebar-brand">
       <img src="/assets/images/logos/nsp_logo.jpeg" alt="NSP logo" class="sidebar-logo" />
       <div>
@@ -42,9 +42,6 @@
 
   <mat-sidenav-content class="admin-content">
     <mat-toolbar class="admin-topbar" color="primary">
-      <button mat-icon-button (click)="sidenav.toggle()" class="topbar-menu-button" aria-label="Toggle sidebar">
-        <mat-icon>menu</mat-icon>
-      </button>
       <div class="topbar-spacer"></div>
       <button mat-icon-button class="topbar-notification" aria-label="Notifications">
         <mat-icon>notifications</mat-icon>

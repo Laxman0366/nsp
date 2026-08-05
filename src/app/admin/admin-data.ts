@@ -406,46 +406,7 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
           },
         },
       },
-      {
-        label: 'Site Notices',
-        path: 'site-notices',
-        icon: 'campaign',
-        page: {
-          title: 'Site Notices',
-          eyebrow: 'Master Setup',
-          summary:
-            'Maintain short announcements and quick links used across the site.',
-          kind: 'table',
-          table: {
-            columns: [
-              { key: 'slNo', label: 'Sl No' },
-              { key: 'title', label: 'Notice Title' },
-              { key: 'createdDate', label: 'Created Date' },
-              { key: 'action', label: 'Action', type: 'download' },
-            ],
-            rows: [
-              {
-                slNo: '01',
-                title: 'Admissions open for new programmes',
-                createdDate: '01 Aug 2026',
-                action: 'View',
-              },
-              {
-                slNo: '02',
-                title: 'Volunteer orientation schedule updated',
-                createdDate: '28 Jul 2026',
-                action: 'View',
-              },
-              {
-                slNo: '03',
-                title: 'Quarterly report upload pending',
-                createdDate: '22 Jul 2026',
-                action: 'View',
-              },
-            ],
-          },
-        },
-      },
+
     ],
   },
   {
@@ -511,45 +472,178 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
         },
       },
       {
-        label: 'Quick News',
-        path: 'quick-news',
-        icon: 'feed',
+        label: 'Tender Notices',
+        path: 'tender-notices',
+        icon: 'campaign',
         page: {
-          title: 'Quick News',
-          eyebrow: 'Home Page',
+          title: 'Tender Notices',
+          eyebrow: 'Master Setup',
           summary:
-            'Manage the short announcements that appear above or below the banner.',
-          kind: 'table',
-          table: {
-            columns: [
-              { key: 'slNo', label: 'Sl No' },
-              { key: 'title', label: 'Headline' },
-              { key: 'createdDate', label: 'Published On' },
-              { key: 'action', label: 'Action', type: 'download' },
-            ],
-            rows: [
+            'Maintain short announcements and quick links used across the site.',
+          kind: 'form',
+          form: {
+            primaryAction: 'Save Tender Notice',
+            sections: [
               {
-                slNo: '01',
-                title: 'Community camp scheduled for next week',
-                createdDate: '30 Jul 2026',
-                action: 'Edit',
-              },
-              {
-                slNo: '02',
-                title: 'Annual celebration photo gallery added',
-                createdDate: '24 Jul 2026',
-                action: 'Edit',
-              },
-              {
-                slNo: '03',
-                title: 'Report upload completed for Q2',
-                createdDate: '18 Jul 2026',
-                action: 'Edit',
+                title: 'Tender Notice Details',
+                columns: 3,
+                fields: [
+                  { label: 'title', type: 'text' },
+                  {
+                    label: 'opening_date',
+                    type: 'date',
+                  },
+                  {
+                    label: 'closing_date',
+                    type: 'date',
+                  },
+                  {
+                    label: 'detail_file_path',
+                    type: 'file',
+                    span: 2,
+                  },
+                  {
+                    label: 'display_order',
+                    type: 'number',
+                  },
+                  {
+                    label: 'description',
+                    type: 'textarea',
+                    rows: 4,
+                    span: 2,
+                  },
+                  { label: 'is_active', type: 'checkbox' },
+                ],
               },
             ],
           },
+          table: {
+            columns: [
+              { key: 'slNo', label: 'Sl No' },
+              { key: 'title', label: 'Title' },
+              { key: 'description', label: 'Description' },
+              { key: 'opening_date', label: 'Opening Date' },
+              { key: 'closing_date', label: 'Closing Date' },
+              { key: 'detail_file_path', label: 'Detail File' },
+              { key: 'createdDate', label: 'Created Date' },
+              { key: 'action', label: 'Action', type: 'download' },
+            ],
+            rows: [],
+          },
         },
       },
+      {
+        label: 'Advertisements',
+        path: 'advertisements',
+        icon: 'ads_click',
+        page: {
+          title: 'Advertisements',
+          eyebrow: 'Master Setup',
+          summary:
+            'Maintain promotional announcements and supporting files used across the site.',
+          kind: 'form',
+          form: {
+            primaryAction: 'Save Advertisement',
+            sections: [
+              {
+                title: 'Advertisement Details',
+                columns: 3,
+                fields: [
+                  { label: 'title', type: 'text' },
+                  {
+                    label: 'opening_date',
+                    type: 'date',
+                  },
+                  {
+                    label: 'closing_date',
+                    type: 'date',
+                  },
+                  {
+                    label: 'detail_file_path',
+                    type: 'file',
+                    span: 2,
+                  },
+                  {
+                    label: 'display_order',
+                    type: 'number',
+                  },
+                  {
+                    label: 'description',
+                    type: 'textarea',
+                    rows: 4,
+                    span: 2,
+                  },
+                  { label: 'is_active', type: 'checkbox' },
+                ],
+              },
+            ],
+          },
+          table: {
+            columns: [
+              { key: 'slNo', label: 'Sl No' },
+              { key: 'title', label: 'Title' },
+              { key: 'description', label: 'Description' },
+              { key: 'opening_date', label: 'Opening Date' },
+              { key: 'closing_date', label: 'Closing Date' },
+              { key: 'detail_file_path', label: 'Detail File' },
+              { key: 'createdDate', label: 'Created Date' },
+              { key: 'action', label: 'Action', type: 'download' },
+            ],
+            rows: [],
+          },
+        },
+      },
+      {
+        label: 'News & Events',
+        path: 'news_events',
+        icon: 'event',
+        page: {
+          title: 'News & Events',
+          eyebrow: 'Master Setup',
+          summary:
+            'Maintain news and event announcements with supporting files used across the site.',
+          kind: 'form',
+          form: {
+            primaryAction: 'Save News Event',
+            sections: [
+              {
+                title: 'News & Event Details',
+                columns: 3,
+                fields: [
+                  { label: 'title', type: 'text' },
+                  {
+                    label: 'detail_file_path',
+                    type: 'file',
+                    span: 2,
+                  },
+                  {
+                    label: 'display_order',
+                    type: 'number',
+                  },
+                  {
+                    label: 'description',
+                    type: 'textarea',
+                    rows: 4,
+                    span: 2,
+                  },
+                  { label: 'is_active', type: 'checkbox' },
+                ],
+              },
+            ],
+          },
+          table: {
+            columns: [
+              { key: 'slNo', label: 'Sl No' },
+              { key: 'title', label: 'Title' },
+              { key: 'description', label: 'Description' },
+              { key: 'detail_file_path', label: 'Detail File' },
+              { key: 'createdDate', label: 'Created Date' },
+              { key: 'action', label: 'Action', type: 'download' },
+            ],
+            rows: [],
+          },
+        },
+      }
     ],
   },
   {
@@ -853,8 +947,6 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
               { key: 'slNo', label: 'Sl No' },
               { key: 'programme_name', label: 'programme_name' },
               { key: 'project_name', label: 'project_name' },
-              { key: 'project_details', label: 'project_details' },
-              { key: 'achievement_details', label: 'achievement_details' },
               { key: 'image_path', label: 'image_path' },
               { key: 'other_image_paths', label: 'other_image_paths' },
               { key: 'display_order', label: 'display_order' },

@@ -7,7 +7,7 @@ import { apiEndpoints } from 'src/app/api-endpoints';
 @Component({
   selector: 'app-programme-category',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './programme-category.component.html',
   styleUrls: ['./programme-category.component.scss'],
 })

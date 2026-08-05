@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { QuillModule } from 'ngx-quill';
+import { firstValueFrom } from 'rxjs';
 import { apiEndpoints } from '../api-endpoints';
 import { MaterialModule } from '../material.module';
 import { AdminField, AdminFieldOption, AdminPageDefinition, AdminTableColumn, AdminTableRow } from './admin-data';
@@ -45,6 +46,10 @@ export class AdminContentComponent implements OnInit {
     strength: '',
     beneficiariesCovered: '',
     title: '',
+    description: '',
+    openingDate: '',
+    closingDate: '',
+    detailFilePath: '',
     subTitle: '',
     altText: '',
     imagePath: '',
@@ -142,6 +147,89 @@ export class AdminContentComponent implements OnInit {
       return;
     }
 
+    if (this.isTenderNoticePage() || this.isAdvertisementPage() || this.isNewsEventsPage()) {
+      const reportId = row['id'];
+      if (reportId === null || reportId === undefined || reportId === '') {
+        return;
+      }
+
+      if (typeof reportId !== 'string' && typeof reportId !== 'number') {
+        return;
+      }
+
+      this.http.get<unknown>(this.getReportByIdApiUrl(reportId)).subscribe({
+        next: (response) => {
+          const report = this.extractReport(response);
+          if (!report) {
+            this.showToast(
+              this.isAdvertisementPage()
+                ? 'Failed to load advertisement details.'
+                : this.isNewsEventsPage()
+                  ? 'Failed to load news event details.'
+                  : 'Failed to load tender notice details.',
+              'error-toast'
+            );
+            return;
+          }
+
+          this.annualReportForm = {
+            programmeMasterFk: '',
+            projectFk: '',
+            programmeName: '',
+            projectName: '',
+            projectDetails: '',
+            achievementDetails: '',
+            startingYear: '',
+            supportedBy: '',
+            status: '',
+            strength: '',
+            beneficiariesCovered: '',
+            title: report.title || '',
+            description: report.description || '',
+            openingDate: this.toDateValue(report.opening_date),
+            closingDate: this.toDateValue(report.closing_date),
+            detailFilePath: report.detail_file_path || '',
+            subTitle: '',
+            altText: '',
+            imagePath: '',
+            otherImagePaths: '',
+            beneficiaryName: '',
+            details: '',
+            dateTime: '',
+            noOfBeneficiaries: '',
+            displayOrder: report.display_order === null || report.display_order === undefined
+              ? ''
+              : String(report.display_order),
+            isActive: this.toBoolean(report.is_active),
+            file: null,
+            existingFileName: this.extractFileName(report.detail_file_path || ''),
+            existingFilePath: report.detail_file_path || '',
+            existingFileUrl: apiEndpoints.publicAsset(report.detail_file_path || ''),
+            uploadedFilePath: '',
+            otherFile: null,
+            otherExistingFileName: '',
+            otherExistingFilePath: '',
+            otherExistingFileUrl: '',
+            otherUploadedFilePath: '',
+            hasNewUploadedFile: false,
+            hasNewOtherUploadedFile: false,
+          };
+          this.editingAnnualReportId = report.id ?? reportId;
+        },
+        error: () => {
+          this.showToast(
+            this.isAdvertisementPage()
+              ? 'Failed to load advertisement details.'
+              : this.isNewsEventsPage()
+                ? 'Failed to load news event details.'
+                : 'Failed to load tender notice details.',
+            'error-toast'
+          );
+        },
+      });
+      return;
+    }
+
     const reportId = row['id'];
     if (reportId === null || reportId === undefined || reportId === '') {
       return;
@@ -179,6 +267,10 @@ export class AdminContentComponent implements OnInit {
               ? ''
               : String(report.beneficiaries_covered),
           title: report.title || report.project_name || '',
+          description: '',
+          openingDate: '',
+          closingDate: '',
+          detailFilePath: '',
           subTitle: report.sub_title || '',
           altText: report.alt_text || '',
           imagePath: report.image_path || '',
@@ -291,6 +383,16 @@ export class AdminContentComponent implements OnInit {
       );
     }
 
+    if (this.isTenderNoticePage() || this.isAdvertisementPage()) {
+      return Boolean(
+        this.annualReportForm.title.trim() &&
+          this.annualReportForm.description.trim() &&
+          this.annualReportForm.openingDate.trim() &&
+          this.annualReportForm.closingDate.trim() &&
+          this.annualReportForm.displayOrder.trim()
+      );
+    }
+
     if (this.isSuccessStoryPage()) {
       return Boolean(
         this.annualReportForm.title.trim() &&
@@ -355,6 +457,15 @@ export class AdminContentComponent implements OnInit {
     this.saveAnnualReport();
   }
 
+  onClearForm(): void {
+    if (!this.isReportPage()) {
+      return;
+    }
+
+    this.resetAnnualReportForm();
+    this.showToast('Form cleared.', 'success-toast');
+  }
+
   onAnnualReportInputChange(label: string, value: string): void {
     if (!this.isReportPage()) {
       return;
@@ -376,6 +487,22 @@ export class AdminContentComponent implements OnInit {
       } else {
         this.annualReportForm.title = value;
       }
+    }
+
+    if (label === 'description') {
+      this.annualReportForm.description = value;
+    }
+
+    if (label === 'opening_date') {
+      this.annualReportForm.openingDate = value;
+    }
+
+    if (label === 'closing_date') {
+      this.annualReportForm.closingDate = value;
+    }
+
+    if (label === 'detail_file_path') {
+      this.annualReportForm.detailFilePath = value;
     }
 
     if (label === 'sub_title') {
@@ -470,6 +597,22 @@ export class AdminContentComponent implements OnInit {
       return this.annualReportForm.title;
     }
 
+    if (label === 'description') {
+      return this.annualReportForm.description;
+    }
+
+    if (label === 'opening_date') {
+      return this.annualReportForm.openingDate;
+    }
+
+    if (label === 'closing_date') {
+      return this.annualReportForm.closingDate;
+    }
+
+    if (label === 'detail_file_path') {
+      return this.annualReportForm.detailFilePath;
+    }
+
     if (label === 'sub_title') {
       return this.annualReportForm.subTitle;
     }
@@ -559,18 +702,19 @@ export class AdminContentComponent implements OnInit {
     }
 
     const input = event.target as HTMLInputElement;
-    const selectedFile = input.files && input.files[0] ? input.files[0] : null;
-    if (!selectedFile) {
+    const selectedFiles = input.files ? Array.from(input.files) : [];
+    if (!selectedFiles.length) {
       return;
     }
 
     if (label === 'other_image_paths') {
-      this.annualReportForm.otherFile = selectedFile;
-    } else {
-      this.annualReportForm.file = selectedFile;
+      this.annualReportForm.otherFile = selectedFiles[0];
+      this.uploadAnnualReportFiles(selectedFiles, label);
+      return;
     }
 
-    this.uploadAnnualReportFile(selectedFile, label);
+    this.annualReportForm.file = selectedFiles[0];
+    this.uploadAnnualReportFile(selectedFiles[0], label);
   }
 
   getAnnualReportFileNote(label: string, defaultNote: string | undefined): string {
@@ -593,6 +737,51 @@ export class AdminContentComponent implements OnInit {
       defaultNote ||
       'No file chosen'
     );
+  }
+
+  getAnnualReportFileName(label: string): string {
+    if (label === 'other_image_paths') {
+      return this.annualReportForm.otherFile?.name || this.annualReportForm.otherExistingFileName || '';
+    }
+
+    return this.annualReportForm.file?.name || this.annualReportForm.existingFileName || '';
+  }
+
+  getOtherImagePathList(): string[] {
+    const value = this.annualReportForm.otherImagePaths || this.annualReportForm.otherExistingFilePath || '';
+    if (!value) {
+      return [];
+    }
+
+    return value
+      .split(',')
+      .map((path) => path.trim())
+      .filter(Boolean);
+  }
+
+  getPublicAssetUrl(path: string): string {
+    return apiEndpoints.publicAsset(path);
+  }
+
+  getFileName(path: string): string {
+    if (!path) {
+      return '';
+    }
+
+    const normalizedPath = path.split('?')[0].split('#')[0];
+    const segments = normalizedPath.split('/').filter(Boolean);
+    return segments[segments.length - 1] || path;
+  }
+
+  getImagePathList(value: unknown): string[] {
+    if (typeof value !== 'string' || !value.trim()) {
+      return [];
+    }
+
+    return value
+      .split(',')
+      .map((path) => path.trim())
+      .filter(Boolean);
   }
 
   hasAnnualReportDownload(label: string): boolean {
@@ -620,6 +809,9 @@ export class AdminContentComponent implements OnInit {
       this.page.title === 'Success Story' ||
       this.page.title === 'Media Coverage' ||
       this.page.title === 'Awards Recognition' ||
+      this.page.title === 'Tender Notices' ||
+      this.page.title === 'Advertisements' ||
+      this.page.title === 'News & Events' ||
       this.page.title === 'Image Gallery' ||
       this.page.title === 'Video Gallery' ||
       this.page.title === 'Annual Report' ||
@@ -652,6 +844,18 @@ export class AdminContentComponent implements OnInit {
 
   isAwardsRecognitionPage(): boolean {
     return this.page.title === 'Awards Recognition';
+  }
+
+  isTenderNoticePage(): boolean {
+    return this.page.title === 'Tender Notices';
+  }
+
+  isAdvertisementPage(): boolean {
+    return this.page.title === 'Advertisements';
+  }
+
+  isNewsEventsPage(): boolean {
+    return this.page.title === 'News & Events';
   }
 
   isImageGalleryPage(): boolean {
@@ -723,6 +927,18 @@ export class AdminContentComponent implements OnInit {
       return apiEndpoints.banners;
     }
 
+    if (this.isTenderNoticePage()) {
+      return apiEndpoints.tenderNotices;
+    }
+
+    if (this.isAdvertisementPage()) {
+      return apiEndpoints.advertisements;
+    }
+
+    if (this.isNewsEventsPage()) {
+      return apiEndpoints.newsEvents;
+    }
+
     if (this.isFoodMenuPage()) {
       return apiEndpoints.foodMenus;
     }
@@ -773,6 +989,18 @@ export class AdminContentComponent implements OnInit {
 
     if (this.isBannerPage()) {
       return apiEndpoints.bannerById(id);
+    }
+
+    if (this.isTenderNoticePage()) {
+      return apiEndpoints.tenderNoticeById(id);
+    }
+
+    if (this.isAdvertisementPage()) {
+      return apiEndpoints.advertisementById(id);
+    }
+
+    if (this.isNewsEventsPage()) {
+      return apiEndpoints.newsEventById(id);
     }
 
     if (this.isFoodMenuPage()) {
@@ -829,6 +1057,18 @@ export class AdminContentComponent implements OnInit {
       return 'banner';
     }
 
+    if (this.isTenderNoticePage()) {
+      return 'tender notice';
+    }
+
+    if (this.isAdvertisementPage()) {
+      return 'advertisement';
+    }
+
+    if (this.isNewsEventsPage()) {
+      return 'news event';
+    }
+
     if (this.isFoodMenuPage()) {
       return 'food menu';
     }
@@ -879,6 +1119,18 @@ export class AdminContentComponent implements OnInit {
 
     if (this.isBannerPage()) {
       return 'Banner';
+    }
+
+    if (this.isTenderNoticePage()) {
+      return 'Tender notice';
+    }
+
+    if (this.isAdvertisementPage()) {
+      return 'Advertisement';
+    }
+
+    if (this.isNewsEventsPage()) {
+      return 'News event';
     }
 
     if (this.isFoodMenuPage()) {
@@ -946,6 +1198,12 @@ export class AdminContentComponent implements OnInit {
       payload.append('title', this.annualReportForm.title.trim());
       payload.append('date_time', this.annualReportForm.dateTime.trim());
       payload.append('image_path', filePath);
+    } else if (this.isTenderNoticePage() || this.isAdvertisementPage() || this.isNewsEventsPage()) {
+      payload.append('title', this.annualReportForm.title.trim());
+      payload.append('description', this.annualReportForm.description.trim());
+      payload.append('opening_date', this.annualReportForm.openingDate.trim());
+      payload.append('closing_date', this.annualReportForm.closingDate.trim());
+      payload.append('detail_file_path', this.getAnnualReportFilePathForSave('detail_file_path'));
     } else if (this.isVideoGalleryPage()) {
       payload.append('title', this.annualReportForm.title.trim());
       payload.append('video_path', filePath);
@@ -970,6 +1228,9 @@ export class AdminContentComponent implements OnInit {
       !this.isProgrammeDetailsPage() &&
       !this.isProgrammeMasterPage() &&
       !this.isBannerPage() &&
+      !this.isTenderNoticePage() &&
+      !this.isAdvertisementPage() &&
+      !this.isNewsEventsPage() &&
       !this.isSuccessStoryPage() &&
       !this.isMediaCoveragePage() &&
       !this.isAwardsRecognitionPage() &&
@@ -1028,6 +1289,10 @@ export class AdminContentComponent implements OnInit {
       strength: '',
       beneficiariesCovered: '',
       title: '',
+      description: '',
+      openingDate: '',
+      closingDate: '',
+      detailFilePath: '',
       subTitle: '',
       altText: '',
       imagePath: '',
@@ -1103,6 +1368,12 @@ export class AdminContentComponent implements OnInit {
       programmeMasters?: unknown;
       success_stories?: unknown;
       successStories?: unknown;
+      tender_notices?: unknown;
+      tenderNotices?: unknown;
+      advertisements?: unknown;
+      advertisement?: unknown;
+      news_events?: unknown;
+      newsEvents?: unknown;
       banner_management?: unknown;
       bannerManagement?: unknown;
       banners?: unknown;
@@ -1166,6 +1437,30 @@ export class AdminContentComponent implements OnInit {
 
     if (Array.isArray(payload.successStories)) {
       return payload.successStories as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.tender_notices)) {
+      return payload.tender_notices as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.tenderNotices)) {
+      return payload.tenderNotices as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.advertisements)) {
+      return payload.advertisements as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.advertisement)) {
+      return payload.advertisement as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.news_events)) {
+      return payload.news_events as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.newsEvents)) {
+      return payload.newsEvents as AnnualReportApiItem[];
     }
 
     if (Array.isArray(payload.banners)) {
@@ -1232,6 +1527,11 @@ export class AdminContentComponent implements OnInit {
       programmeMaster?: unknown;
       success_story?: unknown;
       successStory?: unknown;
+      tender_notice?: unknown;
+      tenderNotice?: unknown;
+      advertisement?: unknown;
+      news_event?: unknown;
+      newsEvent?: unknown;
       banner?: unknown;
       media_coverage?: unknown;
       mediaCoverage?: unknown;
@@ -1325,6 +1625,46 @@ export class AdminContentComponent implements OnInit {
       typeof payload.successStory === 'object'
     ) {
       return payload.successStory as AnnualReportApiItem;
+    }
+
+    if (
+      payload.tender_notice &&
+      !Array.isArray(payload.tender_notice) &&
+      typeof payload.tender_notice === 'object'
+    ) {
+      return payload.tender_notice as AnnualReportApiItem;
+    }
+
+    if (
+      payload.tenderNotice &&
+      !Array.isArray(payload.tenderNotice) &&
+      typeof payload.tenderNotice === 'object'
+    ) {
+      return payload.tenderNotice as AnnualReportApiItem;
+    }
+
+    if (
+      payload.advertisement &&
+      !Array.isArray(payload.advertisement) &&
+      typeof payload.advertisement === 'object'
+    ) {
+      return payload.advertisement as AnnualReportApiItem;
+    }
+
+    if (
+      payload.news_event &&
+      !Array.isArray(payload.news_event) &&
+      typeof payload.news_event === 'object'
+    ) {
+      return payload.news_event as AnnualReportApiItem;
+    }
+
+    if (
+      payload.newsEvent &&
+      !Array.isArray(payload.newsEvent) &&
+      typeof payload.newsEvent === 'object'
+    ) {
+      return payload.newsEvent as AnnualReportApiItem;
     }
 
     if (payload.banner && !Array.isArray(payload.banner) && typeof payload.banner === 'object') {
@@ -1425,6 +1765,10 @@ export class AdminContentComponent implements OnInit {
       project_details: report.project_details || '-',
       achievement_details: report.achievement_details || '-',
       title: report.title || 'Untitled',
+      description: report.description || '-',
+      opening_date: this.formatDate(report.opening_date),
+      closing_date: this.formatDate(report.closing_date),
+      detail_file_path: report.detail_file_path || '-',
       sub_title: report.sub_title || '-',
       alt_text: report.alt_text || '-',
       beneficiary_name: report.beneficiary_name || '-',
@@ -1527,9 +1871,25 @@ export class AdminContentComponent implements OnInit {
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   }
 
+  private toDateValue(value: string | null | undefined): string {
+    if (!value) {
+      return '';
+    }
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return value;
+    }
+
+    const year = String(date.getFullYear());
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
   private resolveActionLabel(report: AnnualReportApiItem): string {
-    return report.file || report.file_url || report.download_url
-      ? 'Download PDF'
+    return report.file || report.file_url || report.download_url || report.detail_file_path
+      ? 'Download File'
       : 'Unavailable';
   }
 
@@ -1557,9 +1917,14 @@ export class AdminContentComponent implements OnInit {
     return apiEndpoints.publicAsset(fileUrl);
   }
 
-  private getAnnualReportFilePathForSave(label: 'image_path' | 'other_image_paths' = 'image_path'): string {
+  private getAnnualReportFilePathForSave(label: 'image_path' | 'other_image_paths' | 'detail_file_path' = 'image_path'): string {
     if (label === 'other_image_paths') {
-      return this.annualReportForm.otherUploadedFilePath || this.annualReportForm.otherExistingFilePath;
+      const joinedPaths = this.getOtherImagePathList().join(',');
+      return joinedPaths || this.annualReportForm.otherUploadedFilePath || this.annualReportForm.otherExistingFilePath;
+    }
+
+    if (label === 'detail_file_path') {
+      return this.annualReportForm.detailFilePath || this.annualReportForm.uploadedFilePath || this.annualReportForm.existingFilePath;
     }
 
     return this.annualReportForm.uploadedFilePath || this.annualReportForm.existingFilePath;
@@ -1664,8 +2029,19 @@ export class AdminContentComponent implements OnInit {
           this.annualReportForm.otherExistingFilePath = filePath;
           this.annualReportForm.otherExistingFileUrl = apiEndpoints.publicAsset(filePath);
           this.annualReportForm.otherExistingFileName = file.name;
-          this.annualReportForm.otherImagePaths = filePath;
+          this.annualReportForm.otherImagePaths = this.annualReportForm.otherImagePaths
+            ? `${this.annualReportForm.otherImagePaths},${filePath}`
+            : filePath;
           this.annualReportForm.hasNewOtherUploadedFile = true;
+          return;
+        }
+
+        if (label === 'detail_file_path') {
+          this.annualReportForm.detailFilePath = filePath;
+          this.annualReportForm.existingFilePath = filePath;
+          this.annualReportForm.existingFileUrl = apiEndpoints.publicAsset(filePath);
+          this.annualReportForm.existingFileName = file.name;
+          this.annualReportForm.hasNewUploadedFile = true;
           return;
         }
 
@@ -1683,6 +2059,56 @@ export class AdminContentComponent implements OnInit {
         this.isUploadingAnnualReportFile = false;
       },
     });
+  }
+
+  private async uploadAnnualReportFiles(files: File[], label: string): Promise<void> {
+    if (!files.length) {
+      return;
+    }
+
+    this.isUploadingAnnualReportFile = true;
+
+    try {
+      for (const file of files) {
+        const payload = new FormData();
+        payload.append('file', file);
+
+        const response = await firstValueFrom(this.http.post<unknown>(apiEndpoints.upload, payload));
+        const filePath = this.extractUploadedFilePath(response);
+        if (!filePath) {
+          this.showToast('File uploaded, but file path was missing in response.', 'warn-toast');
+          continue;
+        }
+
+        if (label === 'other_image_paths') {
+          this.annualReportForm.otherUploadedFilePath = filePath;
+          this.annualReportForm.otherExistingFilePath = filePath;
+          this.annualReportForm.otherExistingFileUrl = apiEndpoints.publicAsset(filePath);
+          this.annualReportForm.otherExistingFileName = file.name;
+          this.annualReportForm.otherImagePaths = this.annualReportForm.otherImagePaths
+            ? `${this.annualReportForm.otherImagePaths},${filePath}`
+            : filePath;
+          this.annualReportForm.hasNewOtherUploadedFile = true;
+        } else if (label === 'detail_file_path') {
+          this.annualReportForm.detailFilePath = filePath;
+          this.annualReportForm.existingFilePath = filePath;
+          this.annualReportForm.existingFileUrl = apiEndpoints.publicAsset(filePath);
+          this.annualReportForm.existingFileName = file.name;
+          this.annualReportForm.hasNewUploadedFile = true;
+        } else {
+          this.annualReportForm.uploadedFilePath = filePath;
+          this.annualReportForm.existingFilePath = filePath;
+          this.annualReportForm.existingFileUrl = apiEndpoints.publicAsset(filePath);
+          this.annualReportForm.existingFileName = file.name;
+          this.annualReportForm.imagePath = filePath;
+          this.annualReportForm.hasNewUploadedFile = true;
+        }
+      }
+    } catch {
+      this.showToast('Failed to upload file.', 'error-toast');
+    } finally {
+      this.isUploadingAnnualReportFile = false;
+    }
   }
 
   private extractUploadedFilePath(response: unknown): string {
@@ -1739,6 +2165,10 @@ interface AnnualReportApiItem {
   strength?: number | string | null;
   beneficiaries_covered?: number | string | null;
   title?: string;
+  description?: string;
+  opening_date?: string | null;
+  closing_date?: string | null;
+  detail_file_path?: string | null;
   sub_title?: string;
   alt_text?: string;
   beneficiary_name?: string;
@@ -1771,6 +2201,10 @@ interface AnnualReportFormState {
   strength: string;
   beneficiariesCovered: string;
   title: string;
+  description: string;
+  openingDate: string;
+  closingDate: string;
+  detailFilePath: string;
   subTitle: string;
   altText: string;
   imagePath: string;

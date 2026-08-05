@@ -1,8 +1,10 @@
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 import { MaterialModule } from '../../material.module';
 import { BannerComponent } from '../../layouts/full/banner/banner.component';
+import { apiEndpoints } from '../../api-endpoints';
 declare var $: any;
 interface StoryItem {
   title: string;
@@ -43,11 +45,11 @@ interface NoticeItem {
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, MaterialModule, BannerComponent],
+  imports: [CommonModule, MaterialModule, BannerComponent, RouterModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements AfterViewInit {
+export class HomeComponent implements OnInit, AfterViewInit {
   readonly stories: StoryItem[] = [
     {
       title: 'Designing calm for busy teams',
@@ -175,126 +177,134 @@ export class HomeComponent implements AfterViewInit {
     },
   ];
 
-  readonly advertisements: NoticeItem[] = [
-    {
-      id: 1,
-      title: 'New Training Programme: Digital Skills for Communities',
-      description:
-        'Announcement for upcoming digital literacy sessions with community-led trainers and support materials.',
-      link: '#',
-      openingDate: '2024-07-28',
-      closingDate: '2024-08-12',
-      pdfLink: '#',
-    },
-    {
-      id: 2,
-      title: 'Recruitment: Join Our Team as Program Coordinator',
-      description:
-        'Applications invited for program planning, field coordination, and stakeholder engagement activities.',
-      link: '#',
-      openingDate: '2024-07-25',
-      closingDate: '2024-08-08',
-      pdfLink: '#',
-    },
-    {
-      id: 3,
-      title: 'Scholarship Opportunities: Apply Now for Academic Year 2024-25',
-      description:
-        'Financial support for eligible students with preference for underserved and rural backgrounds.',
-      link: '#',
-      openingDate: '2024-07-20',
-      closingDate: '2024-08-05',
-      pdfLink: '#',
-    },
-    {
-      id: 4,
-      title: 'Partnership Announcement: Collaboration with Health Ministry',
-      description:
-        'Invitation for partner organizations to join co-implementation of health awareness programs.',
-      link: '#',
-      openingDate: '2024-07-18',
-      closingDate: '2024-08-01',
-      pdfLink: '#',
-    },
-  ];
+  advertisements: NoticeItem[] = [];
+  tendersNotice: NoticeItem[] = [];
+  newsAndEvents: NoticeItem[] = [];
 
-  readonly tendersNotice: NoticeItem[] = [
-    {
-      id: 1,
-      title: 'Tender for Supply of Educational Materials and Stationery',
-      description:
-        'Procurement of notebooks, textbooks, and classroom kits for project schools across districts.',
-      link: '#',
-      openingDate: '2024-07-29',
-      closingDate: '2024-08-14',
-      pdfLink: '#',
-    },
-    {
-      id: 2,
-      title: 'RFP: Construction Services for New Community Center',
-      description:
-        'Request for qualified contractors to build a multi-use center with sustainable infrastructure.',
-      link: '#',
-      openingDate: '2024-07-26',
-      closingDate: '2024-08-10',
-      pdfLink: '#',
-    },
-    {
-      id: 3,
-      title: 'Bid Invitation: Medical Equipment and Healthcare Supplies',
-      description:
-        'Supply of essential diagnostic tools, consumables, and basic treatment support equipment.',
-      link: '#',
-      openingDate: '2024-07-22',
-      closingDate: '2024-08-07',
-      pdfLink: '#',
-    },
-    {
-      id: 4,
-      title: 'Expression of Interest: Environmental Conservation Projects',
-      description:
-        'Seeking implementation agencies for watershed, plantation, and biodiversity restoration projects.',
-      link: '#',
-      openingDate: '2024-07-19',
-      closingDate: '2024-08-03',
-      pdfLink: '#',
-    },
-  ];
+  constructor(private readonly http: HttpClient) {}
 
-  readonly newsAndEvents: NoticeItem[] = [
-    {
-      id: 1,
-      title: 'Upcoming Event: Community Health Camp on August 5th',
-      description:
-        'A free one-day camp offering health checkups, medicines, and awareness sessions for local families.',
-      link: '#',
-      date: '2024-07-27',
-    },
-    {
-      id: 2,
-      title: 'News: NSP Receives Credibility Alliance Award for Excellence',
-      description:
-        'NSP was recognized for transparent governance, impactful programs, and consistent community outreach.',
-      link: '#',
-      date: '2024-07-24',
-    },
-    {
-      id: 3,
-      title: 'Workshop: Sustainable Development Skills Training - Register Now',
-      description:
-        'An interactive workshop focused on practical climate action, livelihoods, and grassroots leadership.',
-      link: '#',
-      date: '2024-07-21',
-    },
-    {
-      id: 4,
-      title: 'Event Report: Annual Donor Appreciation Gala 2024',
-      description:
-        'Highlights from the annual gathering celebrating partners, milestones, and future collaboration plans.',
-      link: '#',
-      date: '2024-07-17',
-    },
-  ];
+  ngOnInit(): void {
+    this.loadNoticeItems();
+  }
+
+  private loadNoticeItems(): void {
+    this.http.get<unknown>(apiEndpoints.advertisements).subscribe({
+      next: (response) => {
+        this.advertisements = this.mapNoticeItems(response, 'advertisement');
+      },
+      error: () => {
+        this.advertisements = [];
+      },
+    });
+
+    this.http.get<unknown>(apiEndpoints.tenderNotices).subscribe({
+      next: (response) => {
+        this.tendersNotice = this.mapNoticeItems(response, 'tender');
+      },
+      error: () => {
+        this.tendersNotice = [];
+      },
+    });
+
+    this.http.get<unknown>(apiEndpoints.newsEvents).subscribe({
+      next: (response) => {
+        this.newsAndEvents = this.mapNewsAndEvents(response);
+      },
+      error: () => {
+        this.newsAndEvents = [];
+      },
+    });
+  }
+
+  private mapNoticeItems(response: unknown, kind: 'advertisement' | 'tender'): NoticeItem[] {
+    const payload = this.extractResponseArray(response);
+
+    return payload.map((item: Record<string, unknown>, index: number) => {
+      const title = this.getStringValue(item, ['title', 'name']);
+      const description = this.getStringValue(item, ['description', 'details', 'summary']);
+      const openingDate = this.getStringValue(item, ['opening_date', 'openingDate', 'open_date']);
+      const closingDate = this.getStringValue(item, ['closing_date', 'closingDate', 'close_date']);
+      const filePath = this.getStringValue(item, ['detail_file_path', 'file_path', 'pdf_path', 'download_url', 'file_url', 'file']);
+
+      return {
+        id: Number(this.getValue(item, 'id', index + 1)),
+        title: title || `Untitled ${kind === 'advertisement' ? 'advertisement' : 'tender notice'}`,
+        description,
+        link: filePath ? apiEndpoints.publicAsset(filePath) : '#',
+        openingDate: this.normalizeDateValue(openingDate),
+        closingDate: this.normalizeDateValue(closingDate),
+        pdfLink: filePath ? apiEndpoints.publicAsset(filePath) : '',
+      };
+    });
+  }
+
+  private mapNewsAndEvents(response: unknown): NoticeItem[] {
+    const payload = this.extractResponseArray(response);
+
+    return payload.map((item: Record<string, unknown>, index: number) => {
+      const title = this.getStringValue(item, ['title', 'name']);
+      const description = this.getStringValue(item, ['description', 'details', 'summary']);
+      const date = this.getStringValue(item, ['date', 'posted_at', 'published_at', 'created_at', 'updated_at', 'opening_date', 'closing_date', 'date_time']);
+      const filePath = this.getStringValue(item, ['detail_file_path', 'file_path', 'pdf_path', 'download_url', 'file_url', 'file']);
+
+      return {
+        id: Number(this.getValue(item, 'id', index + 1)),
+        title: title || 'Untitled news item',
+        description,
+        link: filePath ? apiEndpoints.publicAsset(filePath) : '#',
+        date: this.normalizeDateValue(date),
+        pdfLink: filePath ? apiEndpoints.publicAsset(filePath) : '',
+      };
+    });
+  }
+
+  private extractResponseArray(response: unknown): Array<Record<string, unknown>> {
+    if (Array.isArray(response)) {
+      return response as Array<Record<string, unknown>>;
+    }
+
+    if (response && typeof response === 'object') {
+      const payload: any = response as Record<string, unknown>;
+      if (Array.isArray(payload.data)) {
+        return payload.data as Array<Record<string, unknown>>;
+      }
+
+      if (Array.isArray(payload.items)) {
+        return payload.items as Array<Record<string, unknown>>;
+      }
+    }
+
+    return [];
+  }
+
+  private getStringValue(item: Record<string, unknown>, keys: string[]): string {
+    for (const key of keys) {
+      const value = item[key];
+      if (typeof value === 'string' && value.trim()) {
+        return value.trim();
+      }
+    }
+
+    return '';
+  }
+
+  private getValue(item: Record<string, unknown>, key: string, fallback: unknown): unknown {
+    const value = item[key];
+    return value ?? fallback;
+  }
+
+  private normalizeDateValue(value: string | null | undefined): string {
+    if (!value) {
+      return '';
+    }
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return value;
+    }
+
+    return date.toISOString();
+  }
 
   ngAfterViewInit() {
     $(document).ready(function () {

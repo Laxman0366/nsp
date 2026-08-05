@@ -38,18 +38,23 @@
                             class="rich-editor"
                             theme="snow"
                             [modules]="quillModules"
-                            [placeholder]="field.placeholder || field.label"
                             [ngModel]="getAnnualReportInputValue(field.label)"
-                            (ngModelChange)="onAnnualReportInputChange(field.label, $event)"
+                            (ngModelChange)="
+                              onAnnualReportInputChange(field.label, $event)
+                            "
                           ></quill-editor>
                         } @else {
                           <mat-form-field appearance="outline" class="w-100">
                             <textarea
                               matInput
                               [rows]="field.rows || 4"
-                              [placeholder]="field.placeholder || field.label"
                               [value]="getAnnualReportInputValue(field.label)"
-                              (input)="onAnnualReportInputChange(field.label, $any($event.target).value)"
+                              (input)="
+                                onAnnualReportInputChange(
+                                  field.label,
+                                  $any($event.target).value
+                                )
+                              "
                             ></textarea>
                           </mat-form-field>
                         }
@@ -58,8 +63,12 @@
                         <mat-form-field appearance="outline" class="w-100">
                           <mat-select
                             [value]="getAnnualReportInputValue(field.label)"
-                            [placeholder]="field.placeholder || field.label"
-                            (selectionChange)="onAnnualReportInputChange(field.label, $any($event.value))"
+                            (selectionChange)="
+                              onAnnualReportInputChange(
+                                field.label,
+                                $any($event.value)
+                              )
+                            "
                           >
                             @for (
                               option of getFieldOptions(field);
@@ -79,7 +88,12 @@
                               #annualReportFileInput
                               type="file"
                               class="hidden-file-input"
-                              (change)="onAnnualReportFileSelected($event, field.label)"
+                              [attr.multiple]="
+                                field.label === 'other_image_paths' ? '' : null
+                              "
+                              (change)="
+                                onAnnualReportFileSelected($event, field.label)
+                              "
                             />
                             <button
                               mat-stroked-button
@@ -88,23 +102,89 @@
                             >
                               Choose file
                             </button>
-                            <span>{{ getAnnualReportFileNote(field.label, field.note) }}</span>
+                            <span>{{
+                              getAnnualReportFileNote(field.label, field.note)
+                            }}</span>
                           </div>
 
-                          @if (getAnnualReportFileNote(field.label, field.note) !== (field.note || "No file chosen")) {
-                            <div class="file-meta">
-                              <span class="file-meta-name">{{ getAnnualReportFileNote(field.label, field.note) }}</span>
-                              @if (hasAnnualReportDownload(field.label)) {
+                          @if (
+                            field.label !== "other_image_paths" &&
+                            field.label !== "image_path" && getAnnualReportFileName(field.label)
+                          ) {
+                            <div class="file-meta-card file-type">
+                              <div class="file-meta-line">
+                                <span class="file-meta-name">{{
+                                  getAnnualReportFileName(field.label)
+                                }}</span>
+                              </div>
+                              @if (getAnnualReportDownloadUrl(field.label)) {
                                 <a
                                   class="file-download-link"
-                                  [href]="getAnnualReportDownloadUrl(field.label)"
+                                  [href]="
+                                    getAnnualReportDownloadUrl(field.label)
+                                  "
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  download
                                 >
-                                  Download
+                                  Download file
                                 </a>
                               }
+                            </div>
+                          }
+                          @if (
+                            field.label === "image_path" &&
+                            getAnnualReportFileName(field.label)
+                          ) {
+                            <div class="uploaded-path-list">
+                              <div class="uploaded-image-grid">
+                                <div class="uploaded-image-card">
+                                  <img
+                                    [src]="
+                                      getAnnualReportDownloadUrl(field.label)
+                                    "
+                                    [alt]="
+                                      getAnnualReportFileName(field.label) ||
+                                      'No file selected'
+                                    "
+                                    class="uploaded-image-preview"
+                                  />
+                                  <div class="uploaded-image-name">
+                                    {{
+                                      getAnnualReportFileNote(
+                                        field.label,
+                                        field.note
+                                      )
+                                    }}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          }
+                          @if (
+                            field.label === "other_image_paths" &&
+                            getOtherImagePathList().length
+                          ) {
+                            <div class="uploaded-path-list">
+                              <div class="uploaded-path-list-title">
+                                Uploaded images
+                              </div>
+                              <div class="uploaded-image-grid">
+                                @for (
+                                  path of getOtherImagePathList();
+                                  track path
+                                ) {
+                                  <div class="uploaded-image-card">
+                                    <img
+                                      [src]="getPublicAssetUrl(path)"
+                                      [alt]="path"
+                                      class="uploaded-image-preview"
+                                    />
+                                    <div class="uploaded-image-name">
+                                      {{ getFileName(path) }}
+                                    </div>
+                                  </div>
+                                }
+                              </div>
                             </div>
                           }
                         </div>
@@ -112,18 +192,16 @@
                       @case ("checkbox") {
                         <mat-checkbox
                           [checked]="getAnnualReportIsActive(field.label)"
-                          (change)="onAnnualReportIsActiveChange($event.checked)"
+                          (change)="
+                            onAnnualReportIsActiveChange($event.checked)
+                          "
                         >
                           {{ field.label }}
                         </mat-checkbox>
                       }
                       @case ("readonly") {
                         <mat-form-field appearance="outline" class="w-100">
-                          <input
-                            matInput
-                            [placeholder]="field.placeholder || field.label"
-                            readonly
-                          />
+                          <input matInput readonly />
                         </mat-form-field>
                       }
                       @default {
@@ -131,9 +209,13 @@
                           <input
                             matInput
                             [type]="field.type"
-                            [placeholder]="field.placeholder || field.label"
                             [value]="getAnnualReportInputValue(field.label)"
-                            (input)="onAnnualReportInputChange(field.label, $any($event.target).value)"
+                            (input)="
+                              onAnnualReportInputChange(
+                                field.label,
+                                $any($event.target).value
+                              )
+                            "
                           />
                         </mat-form-field>
                       }
@@ -143,10 +225,22 @@
               </div>
               <div class="form-actions d-flex justify-content-end">
                 <button
+                  mat-stroked-button
+                  color="warn"
+                  type="button"
+                  (click)="onClearForm()"
+                >
+                  Clear
+                </button>
+                <button
                   mat-raised-button
                   color="primary"
                   type="button"
-                  [disabled]="isSavingAnnualReport || isUploadingAnnualReportFile || (isReportPage() && !isAnnualReportFormValid())"
+                  [disabled]="
+                    isSavingAnnualReport ||
+                    isUploadingAnnualReportFile ||
+                    (isReportPage() && !isAnnualReportFormValid())
+                  "
                   (click)="onPrimaryActionClick()"
                 >
                   {{ page.form?.primaryAction || "Save changes" }}
@@ -165,51 +259,89 @@
           <mat-card class="content-card table-card">
             <mat-card-content>
               <div class="table-wrap">
-                <table class="admin-table">
-                  <thead>
-                    <tr>
-                      @for (column of getTableColumns(); track column.key) {
-                        <th>{{ column.label }}</th>
-                      }
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @for (row of page.table.rows || []; track row["slNo"]) {
+                @if (!(page.table.rows || []).length) {
+                  <div class="table-empty-state">
+                    <div class="empty-state-icon">📋</div>
+                    <h3>No records yet</h3>
+                    <p>Add your first entry to see it appear here.</p>
+                  </div>
+                } @else {
+                  <table class="admin-table">
+                    <thead>
                       <tr>
                         @for (column of getTableColumns(); track column.key) {
-                          <td [class]="rowClass(column.type)">
-                            @if (column.key === "action") {
-                              <div class="action-buttons">
-                                <button
-                                  type="button"
-                                  class="table-action-btn edit-btn"
-                                  (click)="onEditRow(row)"
-                                >
-                                  Edit
-                                </button>
-                                <button
-                                  type="button"
-                                  class="table-action-btn delete-btn"
-                                  (click)="onDeleteRow(row)"
-                                >
-                                  Delete
-                                </button>
-                              </div>
-                            } @else if (column.type === "download") {
-                              <button type="button" class="download-btn">
-                                {{ row[column.key] || "Download PDF" }}
-                              </button>
-                            } @else if (column.type === "status") {
-                              <span class="status-pill">{{ row[column.key] }}</span>
-                            } @else {
-                              {{ row[column.key] }}
-                            }
-                          </td>
+                          <th>{{ column.label }}</th>
                         }
                       </tr>
-                    }
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      @for (row of page.table.rows || []; track row["slNo"]) {
+                        <tr>
+                          @for (column of getTableColumns(); track column.key) {
+                            <td
+                              [attr.data-label]="column.label"
+                              [class]="rowClass(column.type)"
+                            >
+                              @if (column.key === "action") {
+                                <div class="action-buttons">
+                                  <button
+                                    type="button"
+                                    class="table-action-btn edit-btn"
+                                    (click)="onEditRow(row)"
+                                  >
+                                    Edit
+                                  </button>
+                                  <button
+                                    type="button"
+                                    class="table-action-btn delete-btn"
+                                    (click)="onDeleteRow(row)"
+                                  >
+                                    Delete
+                                  </button>
+                                </div>
+                              } @else if (column.type === "download") {
+                                <button type="button" class="download-btn">
+                                  {{ row[column.key] || "Download PDF" }}
+                                </button>
+                              } @else if (column.type === "status") {
+                                <span class="status-pill">{{
+                                  row[column.key]
+                                }}</span>
+                              } @else if (
+                                column.key === "other_image_paths" ||
+                                column.key === "image_path" ||
+                                column.key === "detail_file_path"
+                              ) {
+                                @if (getImagePathList(row[column.key]).length) {
+                                  <div class="table-file-actions">
+                                    @for (
+                                      path of getImagePathList(row[column.key]);
+                                      track path
+                                    ) {
+                                      <a
+                                        class="table-file-icon"
+                                        [href]="getPublicAssetUrl(path)"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        title="Download {{ getFileName(path) }}"
+                                      >
+                                        <span>📄</span>
+                                      </a>
+                                    }
+                                  </div>
+                                } @else {
+                                  <span class="table-empty-text">No file</span>
+                                }
+                              } @else {
+                                {{ row[column.key] }}
+                              }
+                            </td>
+                          }
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                }
               </div>
             </mat-card-content>
           </mat-card>
@@ -221,51 +353,64 @@
       <mat-card class="content-card table-card">
         <mat-card-content>
           <div class="table-wrap">
-            <table class="admin-table">
-              <thead>
-                <tr>
-                  @for (column of getTableColumns(); track column.key) {
-                    <th>{{ column.label }}</th>
-                  }
-                </tr>
-              </thead>
-              <tbody>
-                @for (row of page.table?.rows || []; track row["slNo"]) {
+            @if (!(page.table?.rows || []).length) {
+              <div class="table-empty-state">
+                <div class="empty-state-icon">📋</div>
+                <h3>No records yet</h3>
+                <p>Add your first entry to see it appear here.</p>
+              </div>
+            } @else {
+              <table class="admin-table">
+                <thead>
                   <tr>
                     @for (column of getTableColumns(); track column.key) {
-                      <td [class]="rowClass(column.type)">
-                        @if (column.key === "action") {
-                          <div class="action-buttons">
-                            <button
-                              type="button"
-                              class="table-action-btn edit-btn"
-                              (click)="onEditRow(row)"
-                            >
-                              Edit
-                            </button>
-                            <button
-                              type="button"
-                              class="table-action-btn delete-btn"
-                              (click)="onDeleteRow(row)"
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        } @else if (column.type === "download") {
-                          <button type="button" class="download-btn">
-                            {{ column.label || "Download PDF" }}
-                          </button>
-                        } @else if (column.type === "status") {
-                          <span class="status-pill">{{ row[column.key] }}</span>
-                        } @else {
-                          {{ row[column.key] }}
-                        }
-                      </td>
+                      <th>{{ column.label }}</th>
                     }
                   </tr>
-                }
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  @for (row of page.table?.rows || []; track row["slNo"]) {
+                    <tr>
+                      @for (column of getTableColumns(); track column.key) {
+                        <td
+                          [attr.data-label]="column.label"
+                          [class]="rowClass(column.type)"
+                        >
+                          @if (column.key === "action") {
+                            <div class="action-buttons">
+                              <button
+                                type="button"
+                                class="table-action-btn edit-btn"
+                                (click)="onEditRow(row)"
+                              >
+                                Edit
+                              </button>
+                              <button
+                                type="button"
+                                class="table-action-btn delete-btn"
+                                (click)="onDeleteRow(row)"
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          } @else if (column.type === "download") {
+                            <button type="button" class="download-btn">
+                              {{ column.label || "Download PDF" }}
+                            </button>
+                          } @else if (column.type === "status") {
+                            <span class="status-pill">{{
+                              row[column.key]
+                            }}</span>
+                          } @else {
+                            {{ row[column.key] }}
+                          }
+                        </td>
+                      }
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            }
           </div>
         </mat-card-content>
       </mat-card>

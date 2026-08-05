@@ -1,0 +1,73 @@
+.notice-list-shell {
+  padding: 24px 0 40px;
+}
+
+.notice-list-card {
+  border-radius: 18px;
+  box-shadow: 0 16px 40px rgba(35, 57, 93, 0.08);
+}
+
+.notice-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.notice-list-header h2 {
+  margin: 4px 0 0;
+  color: #1d254c;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid rgba(29, 37, 76, 0.08);
+  border-radius: 14px;
+}
+
+.notice-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+  background: #fff;
+}
+
+.notice-table th,
+.notice-table td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid rgba(29, 37, 76, 0.08);
+  vertical-align: top;
+}
+
+.notice-table th {
+  background: #f4f7fc;
+  color: #1d254c;
+  font-weight: 700;
+}
+
+.download-link {
+  color: #d8252c;
+  font-size: 1.2rem;
+  text-decoration: none;
+}
+
+.empty-state {
+  color: #60708f;
+}
+
+.notice-list-empty {
+  padding: 24px;
+  text-align: center;
+  color: #60708f;
+  border: 1px dashed rgba(29, 37, 76, 0.16);
+  border-radius: 14px;
+}
+
+@media (max-width: 767px) {
+  .notice-list-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

@@ -6,7 +6,6 @@
 
 .page-stack,
 .card-grid {
-  display: grid;
   gap: 20px;
 }
 
@@ -18,6 +17,7 @@
 .form-card mat-card-header,
 .table-card mat-card-content {
   padding-inline: 4px;
+  padding: 0px !important;
 }
 
 .section-note {
@@ -101,8 +101,35 @@
   font-size: 0.92rem;
 }
 
+.file-meta-card {
+  display: grid;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid rgba(29, 37, 76, 0.08);
+}
+.file-meta-card.file-type {
+  display: flex !important;
+}
+.file-meta-line {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.file-meta-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #60708f;
+  font-weight: 700;
+}
+
 .file-meta-name {
   word-break: break-word;
+  color: #1d254c;
+  font-weight: 600;
 }
 
 .file-download-link {
@@ -113,6 +140,90 @@
 
 .file-download-link:hover {
   text-decoration: underline;
+}
+
+.uploaded-path-list {
+  display: grid;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid rgba(29, 37, 76, 0.08);
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.uploaded-path-list-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1d254c;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.uploaded-image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.uploaded-image-card {
+  display: grid;
+  gap: 6px;
+  padding: 8px;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid rgba(29, 37, 76, 0.06);
+}
+
+.uploaded-image-preview {
+  width: 100%;
+  height: 88px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #eef2f7;
+}
+
+.uploaded-image-name {
+  font-size: 0.8rem;
+  color: #44506b;
+  line-height: 1.3;
+  word-break: break-all;
+}
+
+.table-image-grid {
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 8px;
+}
+
+.table-image-grid .uploaded-image-preview {
+  height: 64px;
+}
+
+.table-empty-text {
+  color: #60708f;
+  font-style: italic;
+}
+
+.table-file-actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.table-file-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(25, 118, 210, 0.1);
+  color: #1976d2;
+  font-size: 1rem;
+  text-decoration: none;
+}
+
+.table-file-icon:hover {
+  background: rgba(25, 118, 210, 0.16);
 }
 
 .hidden-file-input {
@@ -131,12 +242,24 @@
 
 .table-wrap {
   overflow-x: auto;
+  border: 1px solid rgba(29, 37, 76, 0.08);
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  padding: 4px;
+      // width: calc(100% - 244px);
 }
 
 .admin-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   min-width: 720px;
+  background: #fff;
+  font-size: 14px;
+}
+
+.field-shell {
+    font-size: 14px;
 }
 
 .admin-table th,
@@ -148,8 +271,54 @@
 }
 
 .admin-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f4f7fc;
   color: #1d254c;
   font-weight: 700;
+}
+
+.admin-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.admin-table tbody tr:hover {
+  background: rgba(25, 118, 210, 0.04);
+}
+
+.table-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 220px;
+  padding: 24px;
+  text-align: center;
+  color: #60708f;
+}
+
+.empty-state-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(91, 108, 255, 0.12);
+  font-size: 1.25rem;
+}
+
+.table-empty-state h3 {
+  margin: 0;
+  color: #1d254c;
+  font-size: 1.05rem;
+}
+
+.table-empty-state p {
+  margin: 0;
+  max-width: 320px;
 }
 
 .download-btn {
@@ -159,20 +328,23 @@
   background: #1d254c;
   color: #fff;
   font-weight: 600;
+  cursor: pointer;
 }
 
 .action-buttons {
   display: inline-flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
 .table-action-btn {
   border: 0;
-  border-radius: 5px;
+  border-radius: 8px;
   padding: 8px 12px;
   color: #fff;
   font-weight: 600;
   line-height: 1;
+  cursor: pointer;
 }
 
 .edit-btn {
@@ -191,6 +363,68 @@
   background: rgba(91, 108, 255, 0.12);
   color: #5b6cff;
   font-weight: 600;
+}
+
+@media (max-width: 767px) {
+  .table-wrap {
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    background: transparent;
+  }
+
+  .admin-table {
+    display: block;
+    min-width: 0;
+    border-collapse: collapse;
+  }
+
+  .admin-table thead {
+    display: none;
+  }
+
+  .admin-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .admin-table tr {
+    display: block;
+    background: #fff;
+    border: 1px solid rgba(29, 37, 76, 0.08);
+    border-radius: 16px;
+    box-shadow: 0 10px 28px rgba(25, 43, 89, 0.06);
+    overflow: hidden;
+  }
+
+  .admin-table td {
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr);
+    gap: 10px;
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(29, 37, 76, 0.08);
+  }
+
+  .admin-table td:last-child {
+    border-bottom: 0;
+  }
+
+  .admin-table td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: #1d254c;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .table-action-btn,
+  .download-btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .card-grid {

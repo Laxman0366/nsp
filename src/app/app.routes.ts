@@ -45,6 +45,7 @@ import { CareerOpportunitiesComponent } from './pages/career/career-opportunitie
 import { ApplyNowComponent } from './pages/career/apply-now/apply-now.component';
 import { ContactComponent } from './pages/contact/contact.component';
 import { HomeComponent } from './pages/home/home.component';
+import { NoticeListComponent } from './pages/notices/notice-list.component';
 
 export const routes: Routes = [
   {
@@ -64,6 +65,10 @@ export const routes: Routes = [
       {
         path: 'home',
         component: HomeComponent,
+      },
+      {
+        path: 'notices/:type',
+        component: NoticeListComponent,
       },
       {
         path: 'about',

@@ -48,3 +48,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .transparent {
   background-color: transparent !important;
 }
+.mat-drawer {
+  width: auto !important;
+}
+mat-sidenav-content {
+  margin-left: 244px;
+  width: -webkit-fill-available;
+}
