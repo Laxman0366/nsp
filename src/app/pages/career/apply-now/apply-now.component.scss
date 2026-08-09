@@ -32,7 +32,6 @@
 .eyebrow,
 .section-label {
   margin: 0;
-  font-size: 0.8rem;
   font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -438,4 +437,8 @@ mat-form-field {
     align-items: flex-start;
     flex-direction: column;
   }
+}
+h2.form-hint {
+    font-size: 14px !important;
+    font-style: italic;
 }

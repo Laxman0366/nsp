@@ -1,8 +1,8 @@
 <div class="gallery-page container">
   <section class="gallery-hero">
     <div>
-      <p class="eyebrow">Awards & Recognition</p>
-      <p class="title-hint">Honours received for service and measurable social impact</p>
+      <p class="eyebrow">{{ 'nav.awardsRecognition' | translate }}</p>
+      <p class="title-hint">{{ 'page.awardsRecognitionHint' | translate }}</p>
       <p class="hero-text">
         A small showcase of recognitions received by NSP for sustained contribution
         to education, health, and community empowerment programmes.
@@ -11,7 +11,7 @@
     <img src="/assets/images/banners/banner2.jpg" alt="Awards and recognition overview" />
   </section>
 
-  <section class="gallery-grid">
+  <section class="gallery-grid" *ngIf="awardItems.length; else noAwards">
     @for (item of awardItems; track item.image + item.caption; let i = $index) {
       <figure class="gallery-card" (click)="openLightbox(i)">
         <img [src]="item.image" [alt]="item.caption" />
@@ -19,6 +19,10 @@
       </figure>
     }
   </section>
+
+  <ng-template #noAwards>
+    <p class="title-hint">{{ 'common.noRecordsFound' | translate }}</p>
+  </ng-template>
 
   <div class="lightbox-backdrop" *ngIf="isLightboxOpen" (click)="closeLightbox()">
     <div class="lightbox-dialog" (click)="$event.stopPropagation()">

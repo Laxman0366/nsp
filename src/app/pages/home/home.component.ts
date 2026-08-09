@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { MaterialModule } from '../../material.module';
 import { BannerComponent } from '../../layouts/full/banner/banner.component';
+import { TranslateModule } from '@ngx-translate/core';
 import { apiEndpoints } from '../../api-endpoints';
 declare var $: any;
 interface StoryItem {
@@ -45,7 +46,7 @@ interface NoticeItem {
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, MaterialModule, BannerComponent, RouterModule],
+  imports: [CommonModule, MaterialModule, BannerComponent, RouterModule, TranslateModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })

@@ -1,8 +1,8 @@
 <div class="status-page container">
   <section class="hero-panel">
     <div>
-      <p class="eyebrow">Legal Status</p>
-      <p class="title-hint">Current recognition and compliance records</p>
+      <p class="eyebrow">{{ 'nav.legalStatus' | translate }}</p>
+      <p class="title-hint">{{ 'page.legalStatusHint' | translate }}</p>
       <p>
         NSP maintains a broad set of statutory and sector-specific approvals.
         The list below translates the live-site table into a cleaner page that
@@ -15,16 +15,16 @@
   <section class="document-table-section">
     <mat-card class="document-table-card">
       <mat-card-content>
-        <p class="section-label">Legal Status</p>
-        <p class="table-hint">A quick view of statutory recognitions, certifications, and registration timelines.</p>
+        <p class="section-label">{{ 'nav.legalStatus' | translate }}</p>
+        <p class="table-hint">{{ 'section.legalStatusTableHint' | translate }}</p>
 
         <div class="table-wrap">
           <table class="document-table">
             <thead>
               <tr>
-                <th>Sl No</th>
-                <th>Status Details</th>
-                <th>Created Date</th>
+                <th>{{ 'common.slNo' | translate }}</th>
+                <th>{{ 'common.statusDetails' | translate }}</th>
+                <th>{{ 'common.createdDate' | translate }}</th>
               </tr>
             </thead>
             <tbody>

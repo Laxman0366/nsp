@@ -19,6 +19,7 @@ export interface AdminField {
     | 'file'
     | 'readonly'
     | 'checkbox';
+  optional?: boolean;
   placeholder?: string;
   rows?: number;
   span?: 1 | 2 | 3 | 4;
@@ -212,66 +213,69 @@ const legalStatusRows: AdminTableRow[] = [
   },
 ];
 
-const donorRows: AdminTableRow[] = [
+const donorRows: AdminTableRow[] = [];
+
+const partnerRows: AdminTableRow[] = [
+  {
+    title: 'Technology Partner',
+    logo_path: '/assets/images/partners/tech-partner.png',
+    display_order: 1,
+    is_active: true,
+  },
+  {
+    title: 'Community Partner',
+    logo_path: '/assets/images/partners/community-partner.png',
+    display_order: 2,
+    is_active: true,
+  },
+];
+
+const cctvDetailRows: AdminTableRow[] = [
   {
     slNo: '01',
-    title: 'Sujata Patnaik',
-    createdDate: '22 Jul 2026',
-    action: 'Recurring support',
+    project_name: 'Main Gate',
+    project_name_hindi: 'मुख्य द्वार',
+    project_name_odia: 'ମୁଖ୍ୟ ଗେଟ୍',
+    serial_number: 'CCTV-001',
+    display_order: 1,
   },
   {
     slNo: '02',
-    title: 'Anil Kumar Das',
-    createdDate: '18 Jul 2026',
-    action: 'One-time gift',
-  },
-  {
-    slNo: '03',
-    title: 'Odisha Development Circle',
-    createdDate: '10 Jul 2026',
-    action: 'Institutional donor',
-  },
-  {
-    slNo: '04',
-    title: 'Asha Foundation',
-    createdDate: '04 Jul 2026',
-    action: 'Programme grant',
-  },
-  {
-    slNo: '05',
-    title: 'Community Wellbeing Trust',
-    createdDate: '28 Jun 2026',
-    action: 'Project support',
+    project_name: 'Office Block',
+    project_name_hindi: 'कार्यालय भवन',
+    project_name_odia: 'ଅଫିସ୍ ବ୍ଲକ୍',
+    serial_number: 'CCTV-002',
+    display_order: 2,
   },
 ];
 
 const careerRows: AdminTableRow[] = [
   {
-    slNo: '01',
-    title: 'Programme Coordinator',
-    createdDate: 'Open',
-    action: 'Apply now',
+    name_of_post: 'Programme Coordinator',
+    req_qualification: 'MSW / MBA with 3 years experience',
+    number_of_post: 2,
+    remuneration: '35000',
+    closing_date: '2026-12-31',
+    lower_age: 25,
+    upper_age: 40,
+    display_order: 1,
+    is_active: true,
   },
   {
-    slNo: '02',
-    title: 'Field Officer',
-    createdDate: 'Open',
-    action: 'Apply now',
-  },
-  { slNo: '03', title: 'Counsellor', createdDate: 'Open', action: 'Apply now' },
-  {
-    slNo: '04',
-    title: 'Office Assistant',
-    createdDate: 'Open',
-    action: 'Apply now',
-  },
-  {
-    slNo: '05',
-    title: 'Data Entry Operator',
-    createdDate: 'Open',
-    action: 'Apply now',
+    name_of_post: 'Field Officer',
+    req_qualification: 'Graduate with community outreach experience',
+    number_of_post: 3,
+    remuneration: '25000',
+    closing_date: '2026-11-30',
+    lower_age: 21,
+    upper_age: 35,
+    display_order: 2,
+    is_active: true,
   },
 ];
+
+const governingBodyRows: AdminTableRow[] = [];
+const generalBodyRows: AdminTableRow[] = [];
 
 export const ADMIN_MENU: AdminMenuGroup[] = [
   {
@@ -281,74 +285,60 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
     items: [
       {
         label: 'Organization Settings',
-        path: 'organization-settings',
+        path: 'organization-details',
         icon: 'domain',
         page: {
-          title: 'Organization Settings',
+          title: 'Organization Details',
           eyebrow: 'Master Setup',
           summary:
             'Core identity, contact details, and branding for the NSP admin area.',
           kind: 'form',
           form: {
-            primaryAction: 'Save Settings',
-            secondaryAction: 'Reset',
+            primaryAction: 'Save Details',
             sections: [
-              {
-                title: 'Core identity',
-                note: 'Keep the organization profile aligned across the site and admin panels.',
-                columns: 2,
-                fields: [
-                  {
-                    label: 'Organization name',
-                    type: 'text',
-                    placeholder: 'Nilachal Seva Pratisthan',
-                  },
-                  {
-                    label: 'Registration number',
-                    type: 'text',
-                    placeholder: 'REG-NSP-0001',
-                  },
-                  {
-                    label: 'Email',
-                    type: 'email',
-                    placeholder: 'nspodisha@gmail.com',
-                  },
-                  { label: 'Phone', type: 'tel', placeholder: '9437524416' },
-                ],
-              },
               {
                 title: 'Address and branding',
                 note: 'Update the public address and the assets used in the sidebar and hero areas.',
                 columns: 2,
                 fields: [
                   {
-                    label: 'District',
-                    type: 'select',
-                    options: [
-                      { label: 'Puri', value: 'puri' },
-                      { label: 'Khordha', value: 'khordha' },
-                      { label: 'Cuttack', value: 'cuttack' },
-                    ],
+                    label: 'Phone Number',
+                    type: 'text',
                   },
                   {
-                    label: 'City',
-                    type: 'text',
-                    placeholder: 'Benagaon (Dayavihar)',
+                    label: 'Email',
+                    type: 'email',
                   },
-                  {
-                    label: 'Website',
-                    type: 'text',
-                    placeholder: 'https://nsp.org.in',
-                  },
-                  { label: 'Logo file', type: 'file' },
                   {
                     label: 'Office address',
                     type: 'textarea',
                     rows: 3,
-                    span: 2,
-                    placeholder:
-                      'AT-Benagaon (Dayavihar), P.O-Gadasahi, P.S-Kanas, Dist-Puri, Odisha-752017',
                   },
+                  {
+                    label: 'Office address(Hindi)',
+                    type: 'textarea',
+                    rows: 3,
+                  },
+                  {
+                    label: 'Office address(Odia)',
+                    type: 'textarea',
+                    rows: 3,
+                  },
+                  {
+                    label: 'facebook_url',
+                    type: 'text',
+                    optional: true,
+                  },
+                  {
+                    label: 'twitter_url',
+                    type: 'text',
+                    optional: true,
+                  },
+                  {
+                    label: 'linkedin_url',
+                    type: 'text',
+                    optional: true,
+                  }
                 ],
               },
             ],
@@ -356,53 +346,57 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
         },
       },
       {
-        label: 'Home Contact Panel',
-        path: 'home-contact-panel',
-        icon: 'contact_page',
+        label: 'CCTV Details',
+        path: 'cctv-details',
+        icon: 'videocam',
         page: {
-          title: 'Home Contact Panel',
+          title: 'CCTV Details',
           eyebrow: 'Master Setup',
-          summary:
-            'Update the contact block and support details shown in the public theme.',
+          summary: 'Manage CCTV project details displayed in the admin area.',
           kind: 'form',
           form: {
-            primaryAction: 'Save Contact Panel',
+            primaryAction: 'Save CCTV Details',
             sections: [
               {
-                title: 'Contact form inputs',
+                title: 'CCTV Details',
                 columns: 2,
                 fields: [
+                  { label: 'project_name', type: 'text', placeholder: 'Enter project name' },
                   {
-                    label: 'Contact title',
+                    label: 'project_name_hindi',
                     type: 'text',
-                    placeholder: 'Contact Us',
+                    placeholder: 'Enter project name in Hindi',
                   },
                   {
-                    label: 'Support email',
-                    type: 'email',
-                    placeholder: 'nspodisha@gmail.com',
-                  },
-                  {
-                    label: 'Support phone',
-                    type: 'tel',
-                    placeholder: '9437524416',
-                  },
-                  {
-                    label: 'Map URL',
+                    label: 'project_name_odia',
                     type: 'text',
-                    placeholder: 'Google Maps embed link',
+                    placeholder: 'Enter project name in Odia',
                   },
                   {
-                    label: 'Short message',
-                    type: 'textarea',
-                    rows: 4,
-                    span: 2,
-                    placeholder:
-                      "Get in touch with us. We'd love to hear from you.",
+                    label: 'serial_number',
+                    type: 'text',
+                    placeholder: 'Enter serial number',
+                  },
+                  {
+                    label: 'display_order',
+                    type: 'number',
+                    placeholder: 'Enter display order',
                   },
                 ],
               },
             ],
+          },
+          table: {
+            columns: [
+              { key: 'slNo', label: 'Sl No' },
+              { key: 'project_name', label: 'project_name' },
+              { key: 'project_name_hindi', label: 'project_name_hindi' },
+              { key: 'project_name_odia', label: 'project_name_odia' },
+              { key: 'serial_number', label: 'serial_number' },
+              { key: 'display_order', label: 'display_order' },
+              { key: 'action', label: 'Action' },
+            ],
+            rows: cctvDetailRows,
           },
         },
       },
@@ -468,6 +462,45 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
               { key: 'action', label: 'Action' },
             ],
             rows: [],
+          },
+        },
+      },
+      {
+        label: 'Partners',
+        path: 'partners',
+        icon: 'handshake',
+        page: {
+          title: 'Partners',
+          eyebrow: 'Home Page',
+          summary: 'Manage partner logos displayed on the public website.',
+          kind: 'form',
+          form: {
+            primaryAction: 'Save Partner',
+            sections: [
+              {
+                title: 'Partner Details',
+                columns: 2,
+                fields: [
+                  { label: 'title', type: 'text', placeholder: 'Enter partner title' },
+                  { label: 'logo_path', type: 'file' },
+                  {
+                    label: 'display_order',
+                    type: 'number',
+                    placeholder: 'Enter display order',
+                  },
+                ],
+              },
+            ],
+          },
+          table: {
+            columns: [
+              { key: 'slNo', label: 'Sl No' },
+              { key: 'title', label: 'title' },
+              { key: 'logo_path', label: 'logo_path' },
+              { key: 'display_order', label: 'display_order' },
+              { key: 'action', label: 'Action' },
+            ],
+            rows: partnerRows,
           },
         },
       },
@@ -652,108 +685,113 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
     icon: 'info',
     items: [
       {
-        label: 'Organization Overview',
-        path: 'organization-overview',
-        icon: 'account_balance',
-        page: {
-          title: 'Organization Overview',
-          eyebrow: 'About Us',
-          summary:
-            'A concise story of the NSP mission and the communities it serves.',
-          kind: 'cards',
-          cards: [
-            {
-              title: 'Mission',
-              text: 'Build inclusive, community-led support systems that improve education, health, and dignity.',
-              tag: 'Strategy',
-            },
-            {
-              title: 'Vision',
-              text: 'Create long-term social impact through practical service, partnerships, and accountability.',
-              tag: 'Strategy',
-            },
-            {
-              title: 'Approach',
-              text: 'Use locally grounded programmes that combine outreach, training, and public communication.',
-              tag: 'Operations',
-            },
-          ],
-        },
-      },
-      {
-        label: 'Brief Profile',
-        path: 'brief-profile',
-        icon: 'badge',
-        page: {
-          title: 'Brief Profile',
-          eyebrow: 'About Us',
-          summary:
-            'Key organization facts that usually appear in the profile page.',
-          kind: 'cards',
-          cards: [
-            {
-              title: 'Founded for service',
-              text: 'A community-focused organization with a long public service history.',
-              tag: 'Profile',
-            },
-            {
-              title: 'Location',
-              text: 'Benagaon (Dayavihar), Puri, Odisha.',
-              tag: 'Profile',
-            },
-            {
-              title: 'Support areas',
-              text: 'Education, welfare, livelihood, health, and advocacy.',
-              tag: 'Profile',
-            },
-          ],
-        },
-      },
-      {
-        label: 'Founder Message',
-        path: 'founder-message',
-        icon: 'person',
-        page: {
-          title: 'Founder Message',
-          eyebrow: 'About Us',
-          summary: 'Founders and leadership notes can be managed here.',
-          kind: 'cards',
-          cards: [
-            {
-              title: 'Leadership note',
-              text: 'Keep the founder statement short, direct, and values-focused.',
-              tag: 'Message',
-            },
-            {
-              title: 'Community promise',
-              text: 'Ground every programme in respect, service, and measurable impact.',
-              tag: 'Message',
-            },
-          ],
-        },
-      },
-      {
         label: 'Governing Body',
         path: 'governing-body',
         icon: 'groups',
         page: {
           title: 'Governing Body',
           eyebrow: 'About Us',
-          summary: 'Track board members and their responsibilities.',
-          kind: 'table',
+          summary: 'Manage governing body members shown in About Us section.',
+          kind: 'form',
+          form: {
+            primaryAction: 'Save Governing Body',
+            sections: [
+              {
+                title: 'Governing Body Details',
+                columns: 3,
+                fields: [
+                  {
+                    label: 'name',
+                    type: 'text',
+                    placeholder: 'Enter member name',
+                  },
+                  {
+                    label: 'name_hindi',
+                    type: 'text',
+                    placeholder: 'Enter member name in Hindi',
+                  },
+                  {
+                    label: 'name_odia',
+                    type: 'text',
+                    placeholder: 'Enter member name in Odia',
+                  },
+                  {
+                    label: 'position',
+                    type: 'select',
+                    options: [
+                      { label: 'Chairman', value: 'Chairman' },
+                      { label: 'Vice Chairman', value: 'Vice Chairman' },
+                      { label: 'Secretary', value: 'Secretary' },
+                      { label: 'Joint Secretary', value: 'Joint Secretary' },
+                      { label: 'Member', value: 'Member' },
+                    ],
+                  },
+                  {
+                    label: 'qualification',
+                    type: 'select',
+                    options: [
+                      { label: 'PhD', value: 'PhD' },
+                      { label: 'Master Degree', value: 'Master Degree' },
+                      { label: 'B.A/B.ED', value: 'B.A/B.ED' },
+                      { label: 'M.A/B.ED', value: 'M.A/B.ED' },
+                      { label: 'M.A', value: 'M.A' },
+                      { label: 'MBA', value: 'MBA' },
+                      { label: 'B.Sc/B.ED', value: 'B.Sc/B.ED' },
+                      { label: 'Graduate', value: 'Graduate' },
+                      { label: '+2', value: '+2' },
+                      { label: 'HSC', value: 'HSC' },
+                      { label: 'Under Matric', value: 'Under Matric' },
+                    ],
+                  },
+                  {
+                    label: 'message',
+                    type: 'textarea',
+                    rows: 3,
+                    placeholder: 'Enter message',
+                  },
+                  {
+                    label: 'message_hindi',
+                    type: 'textarea',
+                    rows: 3,
+                    placeholder: 'Enter message in Hindi',
+                  },
+                  {
+                    label: 'message_odia',
+                    type: 'textarea',
+                    rows: 3,
+                    placeholder: 'Enter message in Odia',
+                  },
+                  {
+                    label: 'image_path',
+                    type: 'file',
+                  },
+                  {
+                    label: 'display_order',
+                    type: 'number',
+                    placeholder: 'Enter display order',
+                  },
+                  { label: 'is_active', type: 'checkbox' },
+                ],
+              },
+            ],
+          },
           table: {
             columns: [
               { key: 'slNo', label: 'Sl No' },
-              { key: 'title', label: 'Name / Role' },
-              { key: 'createdDate', label: 'Tenure' },
+              { key: 'name', label: 'name' },
+              { key: 'name_hindi', label: 'name_hindi' },
+              { key: 'name_odia', label: 'name_odia' },
+              { key: 'position', label: 'position' },
+              { key: 'qualification', label: 'qualification' },
+              { key: 'message', label: 'message' },
+              { key: 'message_hindi', label: 'message_hindi' },
+              { key: 'message_odia', label: 'message_odia' },
+              { key: 'image_path', label: 'image_path' },
+              { key: 'display_order', label: 'display_order' },
+              { key: 'is_active', label: 'is_active', type: 'status' },
+              { key: 'action', label: 'Action' },
             ],
-            rows: [
-              { slNo: '01', title: 'Chairperson', createdDate: '2024 - 2027' },
-              { slNo: '02', title: 'Secretary', createdDate: '2024 - 2027' },
-              { slNo: '03', title: 'Treasurer', createdDate: '2024 - 2027' },
-              { slNo: '04', title: 'Member', createdDate: '2024 - 2027' },
-              { slNo: '05', title: 'Member', createdDate: '2024 - 2027' },
-            ],
+            rows: governingBodyRows,
           },
         },
       },
@@ -764,32 +802,68 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
         page: {
           title: 'General Body',
           eyebrow: 'About Us',
-          summary:
-            'Maintain the wider member directory and annual meeting notes.',
-          kind: 'table',
+          summary: 'Manage general body members shown in About Us section.',
+          kind: 'form',
+          form: {
+            primaryAction: 'Save General Body',
+            sections: [
+              {
+                title: 'General Body Details',
+                columns: 3,
+                fields: [
+                  {
+                    label: 'name',
+                    type: 'text',
+                    placeholder: 'Enter member name',
+                  },
+                  {
+                    label: 'name_hindi',
+                    type: 'text',
+                    placeholder: 'Enter member name in Hindi',
+                  },
+                  {
+                    label: 'name_odia',
+                    type: 'text',
+                    placeholder: 'Enter member name in Odia',
+                  },
+                  {
+                    label: 'position',
+                    type: 'select',
+                    options: [
+                      { label: 'Chairman', value: 'Chairman' },
+                      { label: 'Vice Chairman', value: 'Vice Chairman' },
+                      { label: 'Secretary', value: 'Secretary' },
+                      { label: 'Joint Secretary', value: 'Joint Secretary' },
+                      { label: 'Member', value: 'Member' },
+                    ],
+                  },
+                  {
+                    label: 'image_path',
+                    type: 'file',
+                  },
+                  {
+                    label: 'display_order',
+                    type: 'number',
+                    placeholder: 'Enter display order',
+                  },
+                  { label: 'is_active', type: 'checkbox' },
+                ],
+              },
+            ],
+          },
           table: {
             columns: [
               { key: 'slNo', label: 'Sl No' },
-              { key: 'title', label: 'Member Group' },
-              { key: 'createdDate', label: 'Updated On' },
+              { key: 'name', label: 'name' },
+              { key: 'name_hindi', label: 'name_hindi' },
+              { key: 'name_odia', label: 'name_odia' },
+              { key: 'position', label: 'position' },
+              { key: 'image_path', label: 'image_path' },
+              { key: 'display_order', label: 'display_order' },
+              { key: 'is_active', label: 'is_active', type: 'status' },
+              { key: 'action', label: 'Action' },
             ],
-            rows: [
-              {
-                slNo: '01',
-                title: 'Core General Body Members',
-                createdDate: '08 Aug 2026',
-              },
-              {
-                slNo: '02',
-                title: 'Programme Advisors',
-                createdDate: '08 Aug 2026',
-              },
-              {
-                slNo: '03',
-                title: 'Community Representatives',
-                createdDate: '08 Aug 2026',
-              },
-            ],
+            rows: generalBodyRows,
           },
         },
       },
@@ -861,6 +935,16 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
                     placeholder: 'Enter programme name',
                   },
                   {
+                    label: 'programme_name_hindi',
+                    type: 'text',
+                    placeholder: 'Enter programme name in Hindi',
+                  },
+                  {
+                    label: 'programme_name_odia',
+                    type: 'text',
+                    placeholder: 'Enter programme name in Odia',
+                  },
+                  {
                     label: 'display_order',
                     type: 'number',
                     placeholder: 'Enter display order',
@@ -874,6 +958,8 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
             columns: [
               { key: 'slNo', label: 'Sl No' },
               { key: 'programme_name', label: 'programme_name' },
+              { key: 'programme_name_hindi', label: 'programme_name_hindi' },
+              { key: 'programme_name_odia', label: 'programme_name_odia' },
               { key: 'display_order', label: 'display_order' },
               { key: 'is_active', label: 'is_active', type: 'status' },
               { key: 'action', label: 'Action' },
@@ -909,6 +995,16 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
                     placeholder: 'Enter project name',
                   },
                   {
+                    label: 'project_name_hindi',
+                    type: 'text',
+                    placeholder: 'Enter project name in Hindi',
+                  },
+                  {
+                    label: 'project_name_odia',
+                    type: 'text',
+                    placeholder: 'Enter project name in Odia',
+                  },
+                  {
                     label: 'project_details',
                     type: 'textarea',
                     rows: 4,
@@ -916,11 +1012,39 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
                     placeholder: 'Enter project details',
                   },
                   {
+                    label: 'project_details_hindi',
+                    type: 'textarea',
+                    rows: 4,
+                    span: 2,
+                    placeholder: 'Enter project details in Hindi',
+                  },
+                  {
+                    label: 'project_details_odia',
+                    type: 'textarea',
+                    rows: 4,
+                    span: 2,
+                    placeholder: 'Enter project details in Odia',
+                  },
+                  {
                     label: 'achievement_details',
                     type: 'textarea',
                     rows: 4,
                     span: 2,
                     placeholder: 'Enter achievement details',
+                  },
+                  {
+                    label: 'achievement_details_hindi',
+                    type: 'textarea',
+                    rows: 4,
+                    span: 2,
+                    placeholder: 'Enter achievement details in Hindi',
+                  },
+                  {
+                    label: 'achievement_details_odia',
+                    type: 'textarea',
+                    rows: 4,
+                    span: 2,
+                    placeholder: 'Enter achievement details in Odia',
                   },
                   {
                     label: 'image_path',
@@ -947,6 +1071,14 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
               { key: 'slNo', label: 'Sl No' },
               { key: 'programme_name', label: 'programme_name' },
               { key: 'project_name', label: 'project_name' },
+              { key: 'project_name_hindi', label: 'project_name_hindi' },
+              { key: 'project_name_odia', label: 'project_name_odia' },
+              { key: 'project_details', label: 'project_details' },
+              { key: 'project_details_hindi', label: 'project_details_hindi' },
+              { key: 'project_details_odia', label: 'project_details_odia' },
+              { key: 'achievement_details', label: 'achievement_details' },
+              { key: 'achievement_details_hindi', label: 'achievement_details_hindi' },
+              { key: 'achievement_details_odia', label: 'achievement_details_odia' },
               { key: 'image_path', label: 'image_path' },
               { key: 'other_image_paths', label: 'other_image_paths' },
               { key: 'display_order', label: 'display_order' },
@@ -1116,14 +1248,51 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
         page: {
           title: 'Donor List',
           eyebrow: 'Donation',
-          summary: 'A clean listing of donors, support type, and dates.',
-          kind: 'table',
+          summary: 'Create and manage donor entries with amount, date, and status.',
+          kind: 'form',
+          form: {
+            primaryAction: 'Save Donor',
+            sections: [
+              {
+                title: 'Donor Details',
+                columns: 2,
+                fields: [
+                  {
+                    label: 'donor_name',
+                    type: 'text',
+                    placeholder: 'Enter donor name',
+                  },
+                  {
+                    label: 'donation_amount',
+                    type: 'number',
+                    placeholder: 'Enter donation amount',
+                  },
+                  {
+                    label: 'donation_date',
+                    type: 'date',
+                  },
+                  {
+                    label: 'display_order',
+                    type: 'number',
+                    placeholder: 'Enter display order',
+                  },
+                  {
+                    label: 'is_active',
+                    type: 'checkbox',
+                  },
+                ],
+              },
+            ],
+          },
           table: {
             columns: [
               { key: 'slNo', label: 'Sl No' },
-              { key: 'title', label: 'Donor Name' },
-              { key: 'createdDate', label: 'Created Date' },
-              { key: 'action', label: 'Type', type: 'status' },
+              { key: 'donor_name', label: 'donor_name' },
+              { key: 'donation_amount', label: 'donation_amount' },
+              { key: 'donation_date', label: 'donation_date' },
+              { key: 'display_order', label: 'display_order' },
+              { key: 'is_active', label: 'is_active', type: 'status' },
+              { key: 'action', label: 'Action' },
             ],
             rows: donorRows,
           },
@@ -1677,13 +1846,70 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
           title: 'Career Opportunities',
           eyebrow: 'Career',
           summary: 'Open positions and recruitment listings.',
-          kind: 'table',
+          kind: 'form',
+          form: {
+            primaryAction: 'Save Career Opportunity',
+            sections: [
+              {
+                title: 'Career Opportunities',
+                columns: 3,
+                fields: [
+                  {
+                    label: 'name_of_post',
+                    type: 'text',
+                    placeholder: 'Enter post name',
+                  },
+                  {
+                    label: 'req_qualification',
+                    type: 'text',
+                    rows: 3,
+                    placeholder: 'Enter required qualification',
+                  },
+                  {
+                    label: 'number_of_post',
+                    type: 'number',
+                    placeholder: 'Enter number of posts',
+                  },
+                  {
+                    label: 'remuneration',
+                    type: 'text',
+                    placeholder: 'Enter remuneration',
+                  },
+                  {
+                    label: 'closing_date',
+                    type: 'date',
+                  },
+                  {
+                    label: 'lower_age',
+                    type: 'number',
+                    placeholder: 'Enter lower age',
+                  },
+                  {
+                    label: 'upper_age',
+                    type: 'number',
+                    placeholder: 'Enter upper age',
+                  },
+                  {
+                    label: 'display_order',
+                    type: 'number',
+                    placeholder: 'Enter display order',
+                  },
+                  { label: 'is_active', type: 'checkbox' },
+                ],
+              },
+            ],
+          },
           table: {
             columns: [
-              { key: 'slNo', label: 'Sl No' },
-              { key: 'title', label: 'Role' },
-              { key: 'createdDate', label: 'Status' },
-              { key: 'action', label: 'Action', type: 'download' },
+              { key: 'name_of_post', label: 'name_of_post' },
+              { key: 'req_qualification', label: 'req_qualification' },
+              { key: 'number_of_post', label: 'number_of_post' },
+              { key: 'remuneration', label: 'remuneration' },
+              { key: 'closing_date', label: 'closing_date' },
+              { key: 'lower_age', label: 'lower_age' },
+              { key: 'upper_age', label: 'upper_age' },
+              { key: 'display_order', label: 'display_order' },
+              { key: 'is_active', label: 'is_active', type: 'status' },
             ],
             rows: careerRows,
           },

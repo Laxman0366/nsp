@@ -1,0 +1,84 @@
+<section class="cctv-page">
+  <div class="cctv-hero">
+    <p class="hero-kicker">{{ 'nav.accessCctv' | translate }}</p>
+    <h1>{{ 'page.accessCctvTitle' | translate }}</h1>
+  </div>
+
+  <mat-card class="process-card">
+    <mat-card-content>
+      <p class="section-title eyebrow">{{ 'page.accessCctvProcessTitle' | translate }}</p>
+      <p class="section-intro">{{ 'page.accessCctvProcessIntro' | translate }}</p>
+
+      <ul class="download-steps">
+        <li>
+          {{ 'page.accessCctvWindowsStep' | translate }}
+          <a
+            href="https://www.cpplusworld.com/software"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {{ 'page.accessCctvWindowsDownloadText' | translate }}
+          </a>
+        </li>
+        <li>
+          {{ 'page.accessCctvAndroidStep' | translate }}
+          <a
+            href="https://play.google.com/store/apps/details?id=com.mm.android.direct.g_CMOB_XU&hl=en_IN&gl=US"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {{ 'page.accessCctvAndroidDownloadText' | translate }}
+          </a>
+        </li>
+      </ul>
+
+      <div class="software-block">
+        <div class="software-item">
+          <img
+            src="assets/images/blog/cctv.png"
+            [alt]="'page.accessCctvSoftwareImageAlt' | translate"
+            class="software-image"
+          />
+        </div>
+      </div>
+      <p class="credentials-title eyebrow">
+        {{ 'page.accessCctvCredentialTitle' | translate }}
+      </p>
+      <p class="credentials-note">
+        {{ 'page.accessCctvCredentialNote' | translate }}
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+
+  <mat-card class="table-card">
+    <mat-card-content>
+      @if (isLoading) {
+        <p class="state-text">{{ 'page.accessCctvLoading' | translate }}</p>
+      } @else if (!rows.length) {
+        <p class="state-text">{{ 'common.noRecordsFound' | translate }}</p>
+      } @else {
+        <div class="table-wrap">
+          <table class="cctv-table">
+            <thead>
+              <tr>
+                <th>{{ 'page.accessCctvSlNo' | translate }}</th>
+                <th>{{ 'page.accessCctvProjectName' | translate }}</th>
+                <th>{{ 'page.accessCctvSerialNumber' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of rows; track row.id) {
+                <tr>
+                  <td>{{ row.slNo }}</td>
+                  <td>{{ row.projectName }}</td>
+                  <td>{{ row.serialNumber }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+</section>

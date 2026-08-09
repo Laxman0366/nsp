@@ -45,6 +45,7 @@ import { CareerOpportunitiesComponent } from './pages/career/career-opportunitie
 import { ApplyNowComponent } from './pages/career/apply-now/apply-now.component';
 import { ContactComponent } from './pages/contact/contact.component';
 import { HomeComponent } from './pages/home/home.component';
+import { AccessCctvComponent } from './pages/access-cctv/access-cctv.component';
 import { NoticeListComponent } from './pages/notices/notice-list.component';
 
 export const routes: Routes = [
@@ -237,6 +238,10 @@ export const routes: Routes = [
       {
         path: 'career/apply-now',
         component: ApplyNowComponent,
+      },
+      {
+        path: 'access-cctv',
+        component: AccessCctvComponent,
       },
       {
         path: 'contact',

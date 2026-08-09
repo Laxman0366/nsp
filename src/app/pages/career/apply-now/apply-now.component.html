@@ -1,45 +1,36 @@
 <div class="apply-page">
   <section class="hero-banner">
     <div class="hero-copy">
-      <p class="eyebrow">Career Application</p>
-      <h1>Apply Now</h1>
-      <p class="title-hint">A cleaner, guided application experience for NSP roles</p>
+      <p class="eyebrow">{{ 'page.careerApplication' | translate }}</p>
+      <p class="title-hint">{{ 'page.applyNowHint' | translate }}</p>
       <p class="hero-text">
         The earlier form has been reorganized into a modern workflow with progress tracking,
         upload previews, collapsible education blocks, and a live summary panel.
       </p>
 
-      <div class="hero-actions">
-        <button mat-raised-button color="primary" type="button" (click)="resetForm()">Reset form</button>
-        <button mat-stroked-button type="button" (click)="form.markAllAsTouched()">Check validation</button>
-      </div>
     </div>
 
     <mat-card class="progress-card">
       <mat-card-content>
-        <p class="section-label">Application progress</p>
+        <p class="section-label">{{ 'section.applicationProgress' | translate }}</p>
         <mat-progress-bar mode="determinate" [value]="progressPercent"></mat-progress-bar>
         <div class="progress-row">
           <span>{{ progressPercent }}% complete</span>
-          <span>{{ formReady ? 'Ready to submit' : 'In progress' }}</span>
+          <span>{{ (formReady ? 'form.readyToSubmit' : 'form.inProgress') | translate }}</span>
         </div>
 
         <div class="summary-grid">
           <div>
-            <span>Selected post</span>
-            <strong>{{ selectedPostLabel || 'Choose a role' }}</strong>
+            <span>{{ 'form.selectedPost' | translate }}</span>
+            <strong>{{ selectedPostLabel || ('form.chooseRole' | translate) }}</strong>
           </div>
           <div>
-            <span>Applicant</span>
-            <strong>{{ form.get('personal.applicantName')?.value || 'Awaiting entry' }}</strong>
+            <span>{{ 'form.applicant' | translate }}</span>
+            <strong>{{ form.get('personal.applicantName')?.value || ('form.awaitingEntry' | translate) }}</strong>
           </div>
           <div>
-            <span>Uploads</span>
+            <span>{{ 'form.uploads' | translate }}</span>
             <strong>{{ uploadedCount }} / 2</strong>
-          </div>
-          <div>
-            <span>Application number</span>
-            <strong>{{ form.get('personal.registrationNumber')?.value || 'Auto-generated' }}</strong>
           </div>
         </div>
       </mat-card-content>
@@ -53,25 +44,19 @@
           <section class="section-card">
             <div class="section-header">
               <div>
-                <p class="section-label">Step 1</p>
-                <h2>Select the application post</h2>
+                <p class="section-label">{{ 'section.step1' | translate }}</p>
+                <h2 class="form-hint">{{ 'section.selectApplicationPost' | translate }}</h2>
               </div>
-              <p class="section-note">Choosing a post auto-generates the registration number.</p>
             </div>
 
             <div class="field-grid field-grid-2">
               <mat-form-field appearance="outline">
-                <mat-label>Select application for the post</mat-label>
-                <mat-select formControlName="post" (selectionChange)="onPostChange()">
+                <mat-label>{{ 'form.selectPost' | translate }}</mat-label>
+                <mat-select formControlName="post">
                   @for (option of postOptions; track option.value) {
                     <mat-option [value]="option.value">{{ option.label }}</mat-option>
                   }
                 </mat-select>
-              </mat-form-field>
-
-              <mat-form-field appearance="outline">
-                <mat-label>Registration number</mat-label>
-                <input matInput [value]="form.get('personal.registrationNumber')?.value" readonly />
               </mat-form-field>
             </div>
           </section>
@@ -79,67 +64,67 @@
           <section class="section-card" formGroupName="personal">
             <div class="section-header">
               <div>
-                <p class="section-label">Step 2</p>
-                <h2>Personal details</h2>
+                <p class="section-label">{{ 'section.step2' | translate }}</p>
+                <h2 class="form-hint">{{ 'section.personalDetails' | translate }}</h2>
               </div>
-              <p class="section-note">Basic identity and contact information.</p>
+              <p class="section-note">{{ 'section.personalDetailsNote' | translate }}</p>
             </div>
 
             <div class="field-grid field-grid-4">
               <mat-form-field appearance="outline">
-                <mat-label>Applicant name</mat-label>
+                <mat-label>{{ 'form.applicantName' | translate }}</mat-label>
                 <input matInput formControlName="applicantName" />
               </mat-form-field>
 
               <mat-form-field appearance="outline">
-                <mat-label>Gender</mat-label>
+                <mat-label>{{ 'form.gender' | translate }}</mat-label>
                 <mat-select formControlName="gender">
-                  <mat-option value="male">Male</mat-option>
-                  <mat-option value="female">Female</mat-option>
-                  <mat-option value="other">Other</mat-option>
+                  <mat-option value="male">{{ 'form.male' | translate }}</mat-option>
+                  <mat-option value="female">{{ 'form.female' | translate }}</mat-option>
+                  <mat-option value="other">{{ 'form.other' | translate }}</mat-option>
                 </mat-select>
               </mat-form-field>
 
               <mat-form-field appearance="outline">
-                <mat-label>Marital status</mat-label>
+                <mat-label>{{ 'form.maritalStatus' | translate }}</mat-label>
                 <mat-select formControlName="maritalStatus">
-                  <mat-option value="unmarried">Unmarried</mat-option>
-                  <mat-option value="married">Married</mat-option>
+                  <mat-option value="unmarried">{{ 'form.unmarried' | translate }}</mat-option>
+                  <mat-option value="married">{{ 'form.married' | translate }}</mat-option>
                 </mat-select>
               </mat-form-field>
 
               <mat-form-field appearance="outline">
-                <mat-label>Date of birth</mat-label>
+                <mat-label>{{ 'form.dateOfBirth' | translate }}</mat-label>
                 <input matInput type="date" formControlName="dob" />
               </mat-form-field>
 
               <mat-form-field appearance="outline">
-                <mat-label>Email</mat-label>
+                <mat-label>{{ 'common.email' | translate }}</mat-label>
                 <input matInput type="email" formControlName="email" />
               </mat-form-field>
 
               <mat-form-field appearance="outline">
-                <mat-label>Mobile number</mat-label>
+                <mat-label>{{ 'form.mobileNumber' | translate }}</mat-label>
                 <input matInput formControlName="mobileNo" />
               </mat-form-field>
 
               <mat-form-field appearance="outline">
-                <mat-label>Father's name</mat-label>
+                <mat-label>{{ 'form.fatherName' | translate }}</mat-label>
                 <input matInput formControlName="fatherName" />
               </mat-form-field>
 
               <mat-form-field appearance="outline">
-                <mat-label>Mother's name</mat-label>
+                <mat-label>{{ 'form.motherName' | translate }}</mat-label>
                 <input matInput formControlName="motherName" />
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="span-2">
-                <mat-label>Present address</mat-label>
+                <mat-label>{{ 'form.presentAddress' | translate }}</mat-label>
                 <textarea matInput rows="3" formControlName="presentAddress"></textarea>
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="span-2">
-                <mat-label>Permanent address</mat-label>
+                <mat-label>{{ 'form.permanentAddress' | translate }}</mat-label>
                 <textarea matInput rows="3" formControlName="permanentAddress"></textarea>
               </mat-form-field>
             </div>
@@ -148,58 +133,58 @@
           <section class="section-card uploads-section" formGroupName="personal">
             <div class="section-header">
               <div>
-                <p class="section-label">Step 3</p>
-                <h2>Photo and signature uploads</h2>
+                <p class="section-label">{{ 'section.step3' | translate }}</p>
+                <h2 class="form-hint">{{ 'section.photoUploads' | translate }}</h2>
               </div>
-              <p class="section-note">Use clear image files for identity verification.</p>
+              <p class="section-note">{{ 'section.photoUploadsNote' | translate }}</p>
             </div>
 
             <div class="upload-grid">
               <div class="upload-card">
                 <div class="upload-head">
                   <div>
-                    <p class="upload-title">Affix photograph</p>
-                    <p class="upload-note">Image size max 200 KB</p>
+                    <p class="upload-title">{{ 'form.affixPhotograph' | translate }}</p>
+                    <p class="upload-note">{{ 'form.imageSizeHint' | translate }}</p>
                   </div>
                   <input #photoInput type="file" accept="image/*" hidden (change)="onFileSelected($event, 'personal.photo', 'photo')" />
-                  <button mat-stroked-button type="button" (click)="photoInput.click()">Choose file</button>
+                  <button mat-stroked-button type="button" (click)="photoInput.click()">{{ 'common.chooseFile' | translate }}</button>
                 </div>
 
                 <div class="upload-preview" [class.has-preview]="photoPreview">
                   @if (photoPreview) {
                     <img [src]="photoPreview" alt="Applicant photograph preview" />
                   } @else {
-                    <p>Preview will appear here</p>
+                    <p>{{ 'form.previewHint' | translate }}</p>
                   }
                 </div>
 
                 <div class="upload-foot">
-                  <span>{{ form.get('personal.photo')?.value || 'No file chosen' }}</span>
-                  <button mat-button type="button" (click)="removePreview('photo', 'personal.photo')">Clear</button>
+                  <span>{{ form.get('personal.photo')?.value || ('common.noFileChosen' | translate) }}</span>
+                  <button mat-button type="button" (click)="removePreview('photo', 'personal.photo')">{{ 'common.clear' | translate }}</button>
                 </div>
               </div>
 
               <div class="upload-card">
                 <div class="upload-head">
                   <div>
-                    <p class="upload-title">Signature</p>
-                    <p class="upload-note">Image size max 200 KB</p>
+                    <p class="upload-title">{{ 'form.signatureLabel' | translate }}</p>
+                    <p class="upload-note">{{ 'form.imageSizeHint' | translate }}</p>
                   </div>
                   <input #signatureInput type="file" accept="image/*" hidden (change)="onFileSelected($event, 'personal.signature', 'signature')" />
-                  <button mat-stroked-button type="button" (click)="signatureInput.click()">Choose file</button>
+                  <button mat-stroked-button type="button" (click)="signatureInput.click()">{{ 'common.chooseFile' | translate }}</button>
                 </div>
 
                 <div class="upload-preview" [class.has-preview]="signaturePreview">
                   @if (signaturePreview) {
                     <img [src]="signaturePreview" alt="Signature preview" />
                   } @else {
-                    <p>Preview will appear here</p>
+                    <p>{{ 'form.previewHint' | translate }}</p>
                   }
                 </div>
 
                 <div class="upload-foot">
-                  <span>{{ form.get('personal.signature')?.value || 'No file chosen' }}</span>
-                  <button mat-button type="button" (click)="removePreview('signature', 'personal.signature')">Clear</button>
+                  <span>{{ form.get('personal.signature')?.value || ('common.noFileChosen' | translate) }}</span>
+                  <button mat-button type="button" (click)="removePreview('signature', 'personal.signature')">{{ 'common.clear' | translate }}</button>
                 </div>
               </div>
             </div>
@@ -215,43 +200,43 @@
 
                 <div [formGroupName]="section.key" class="education-grid">
                   <mat-form-field appearance="outline">
-                    <mat-label>Name of qualification awarded</mat-label>
+                    <mat-label>{{ 'form.qualificationName' | translate }}</mat-label>
                     <input matInput formControlName="nameOfQualificationAwarded" />
                   </mat-form-field>
 
                   <mat-form-field appearance="outline">
-                    <mat-label>Board / University</mat-label>
+                    <mat-label>{{ 'form.boardUniversity' | translate }}</mat-label>
                     <input matInput formControlName="boardUniversity" />
                   </mat-form-field>
 
                   <mat-form-field appearance="outline">
-                    <mat-label>Subject specialisation</mat-label>
+                    <mat-label>{{ 'form.subjectSpecialisation' | translate }}</mat-label>
                     <input matInput formControlName="subjectSpecialisation" />
                   </mat-form-field>
 
                   <mat-form-field appearance="outline">
-                    <mat-label>Year of passing</mat-label>
+                    <mat-label>{{ 'form.yearOfPassing' | translate }}</mat-label>
                     <input matInput placeholder="YYYY" formControlName="yearOfPassing" />
                   </mat-form-field>
 
                   <mat-form-field appearance="outline">
-                    <mat-label>Passing category</mat-label>
+                    <mat-label>{{ 'form.passingCategory' | translate }}</mat-label>
                     <mat-select formControlName="passingCategory">
-                      <mat-option value="first-class">First Class</mat-option>
-                      <mat-option value="second-class">Second Class</mat-option>
-                      <mat-option value="distinction">Distinction</mat-option>
-                      <mat-option value="percentage">Percentage</mat-option>
-                      <mat-option value="ogpa">OGPA / Grade</mat-option>
+                      <mat-option value="first-class">{{ 'form.firstClass' | translate }}</mat-option>
+                      <mat-option value="second-class">{{ 'form.secondClass' | translate }}</mat-option>
+                      <mat-option value="distinction">{{ 'form.distinction' | translate }}</mat-option>
+                      <mat-option value="percentage">{{ 'form.percentageCategory' | translate }}</mat-option>
+                      <mat-option value="ogpa">{{ 'form.ogpaGrade' | translate }}</mat-option>
                     </mat-select>
                   </mat-form-field>
 
                   <mat-form-field appearance="outline">
-                    <mat-label>Percentile / Percentage / OGPA / Grade</mat-label>
+                    <mat-label>{{ 'form.percentileLabel' | translate }}</mat-label>
                     <input matInput formControlName="percentage" />
                   </mat-form-field>
 
                   <div class="certificate-upload">
-                    <p class="upload-title">Photocopies of certificates</p>
+                    <p class="upload-title">{{ 'form.photocopyOfCertificates' | translate }}</p>
                     <input
                       #certificateInput
                       type="file"
@@ -259,8 +244,8 @@
                       (change)="onFileSelected($event, section.key + '.certificate')"
                     />
                     <div class="certificate-row">
-                      <button mat-stroked-button type="button" (click)="certificateInput.click()">Choose file</button>
-                      <span>{{ form.get(section.key + '.certificate')?.value || 'No file chosen' }}</span>
+                      <button mat-stroked-button type="button" (click)="certificateInput.click()">{{ 'common.chooseFile' | translate }}</button>
+                      <span>{{ form.get(section.key + '.certificate')?.value || ('common.noFileChosen' | translate) }}</span>
                     </div>
                   </div>
                 </div>
@@ -271,35 +256,35 @@
           <section class="section-card" formGroupName="employment">
             <div class="section-header">
               <div>
-                <p class="section-label">Employment details</p>
-                <h2>Employment and service record</h2>
+                <p class="section-label">{{ 'section.employmentDetails' | translate }}</p>
+                <h2 class="form-hint">{{ 'section.employmentRecord' | translate }}</h2>
               </div>
-              <p class="section-note">Add your current or previous work information.</p>
+              <p class="section-note">{{ 'section.employmentNote' | translate }}</p>
             </div>
 
             <div class="field-grid field-grid-4">
               <mat-form-field appearance="outline">
-                <mat-label>Organization / agency</mat-label>
+                <mat-label>{{ 'form.organization' | translate }}</mat-label>
                 <input matInput formControlName="organization" />
               </mat-form-field>
 
               <mat-form-field appearance="outline">
-                <mat-label>Designation</mat-label>
+                <mat-label>{{ 'form.designation' | translate }}</mat-label>
                 <input matInput formControlName="designation" />
               </mat-form-field>
 
               <mat-form-field appearance="outline">
-                <mat-label>Period</mat-label>
+                <mat-label>{{ 'form.period' | translate }}</mat-label>
                 <input matInput formControlName="period" />
               </mat-form-field>
 
               <mat-form-field appearance="outline">
-                <mat-label>Gross salary</mat-label>
+                <mat-label>{{ 'form.grossSalary' | translate }}</mat-label>
                 <input matInput formControlName="grossSalary" />
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="span-4">
-                <mat-label>Assignment / nature of responsibility</mat-label>
+                <mat-label>{{ 'form.assignment' | translate }}</mat-label>
                 <textarea matInput rows="3" formControlName="assignment"></textarea>
               </mat-form-field>
             </div>
@@ -308,20 +293,20 @@
           <section class="section-card" formGroupName="computer">
             <div class="section-header">
               <div>
-                <p class="section-label">Skills</p>
-                <h2>Computer literacy</h2>
+                <p class="section-label">{{ 'section.skills' | translate }}</p>
+                <h2 class="form-hint">{{ 'section.computerLiteracy' | translate }}</h2>
               </div>
-              <p class="section-note">Mention your tools and proficiency level.</p>
+              <p class="section-note">{{ 'section.computerNote' | translate }}</p>
             </div>
 
             <div class="field-grid field-grid-2">
               <mat-form-field appearance="outline">
-                <mat-label>Proficiency level</mat-label>
+                <mat-label>{{ 'form.proficiencyLevel' | translate }}</mat-label>
                 <input matInput formControlName="proficiency" />
               </mat-form-field>
 
               <mat-form-field appearance="outline">
-                <mat-label>Tools and applications</mat-label>
+                <mat-label>{{ 'form.toolsAndApplications' | translate }}</mat-label>
                 <input matInput formControlName="tools" />
               </mat-form-field>
             </div>
@@ -331,15 +316,15 @@
             <div class="section-header">
               <div>
                 <p class="section-label">Skills</p>
-                <h2>Language proficiency</h2>
+                <h2 class="form-hint">{{ 'section.languageProficiency' | translate }}</h2>
               </div>
-              <p class="section-note">Select the languages you can communicate in.</p>
+              <p class="section-note">{{ 'section.languageNote' | translate }}</p>
             </div>
 
             <div class="language-grid">
-              <mat-checkbox formControlName="english">English</mat-checkbox>
-              <mat-checkbox formControlName="odia">Odia</mat-checkbox>
-              <mat-checkbox formControlName="hindi">Hindi</mat-checkbox>
+              <mat-checkbox formControlName="english">{{ 'form.englishLang' | translate }}</mat-checkbox>
+              <mat-checkbox formControlName="odia">{{ 'form.odiaLang' | translate }}</mat-checkbox>
+              <mat-checkbox formControlName="hindi">{{ 'form.hindiLang' | translate }}</mat-checkbox>
             </div>
           </section>
 
@@ -347,14 +332,14 @@
             <div class="section-header">
               <div>
                 <p class="section-label">References</p>
-                <h2>Reference contacts</h2>
+                <h2 class="form-hint">{{ 'section.referenceContacts' | translate }}</h2>
               </div>
-              <p class="section-note">Provide two people who can vouch for your work.</p>
+              <p class="section-note">{{ 'section.referenceNote' | translate }}</p>
             </div>
 
             <div class="reference-list">
               <div class="reference-card">
-                <h3>Reference 1</h3>
+                <h3>{{ 'form.reference1' | translate }}</h3>
                 <div class="field-grid field-grid-2">
                   <mat-form-field appearance="outline"><mat-label>Name</mat-label><input matInput formControlName="reference1Name" /></mat-form-field>
                   <mat-form-field appearance="outline"><mat-label>Phone</mat-label><input matInput formControlName="reference1Phone" /></mat-form-field>
@@ -363,7 +348,7 @@
               </div>
 
               <div class="reference-card">
-                <h3>Reference 2</h3>
+                <h3>{{ 'form.reference2' | translate }}</h3>
                 <div class="field-grid field-grid-2">
                   <mat-form-field appearance="outline"><mat-label>Name</mat-label><input matInput formControlName="reference2Name" /></mat-form-field>
                   <mat-form-field appearance="outline"><mat-label>Phone</mat-label><input matInput formControlName="reference2Phone" /></mat-form-field>
@@ -375,16 +360,16 @@
 
           <section class="section-card declaration-card">
             <mat-checkbox formControlName="declaration">
-              I certify that the information provided above is true and complete to the best of my knowledge.
+              {{ 'form.declaration' | translate }}
             </mat-checkbox>
 
             <div class="action-row">
-              <button mat-stroked-button type="button" (click)="resetForm()">Clear draft</button>
-              <button mat-raised-button color="accent" type="submit">Save application</button>
+              <button mat-stroked-button type="button" (click)="resetForm()">{{ 'form.resetForm' | translate }}</button>
+              <button mat-raised-button color="accent" type="submit">{{ 'form.saveApplication' | translate }}</button>
             </div>
 
             @if (submitted && form.invalid) {
-              <p class="error-text">Please complete the required fields before submitting.</p>
+              <p class="error-text">{{ 'form.validationError' | translate }}</p>
             }
           </section>
         </main>
@@ -392,28 +377,28 @@
         <aside class="form-aside">
           <mat-card class="aside-card summary-card">
             <mat-card-content>
-              <p class="section-label">Quick summary</p>
-              <h3>{{ selectedPostLabel || 'No post selected yet' }}</h3>
+              <p class="section-label">{{ 'section.quickSummary' | translate }}</p>
+              <h3>{{ selectedPostLabel || ('form.noPostSelected' | translate) }}</h3>
               <p class="aside-copy">
-                Use the checklist below to track the form as you complete it.
+                {{ 'section.checklistHint' | translate }}
               </p>
 
               <div class="checklist">
                 <div>
-                  <span>Personal details</span>
-                  <strong>{{ form.get('personal.applicantName')?.value ? 'Done' : 'Pending' }}</strong>
+                  <span>{{ 'section.personalDetails' | translate }}</span>
+                  <strong>{{ (form.get('personal.applicantName')?.value ? 'common.done' : 'common.pending') | translate }}</strong>
                 </div>
                 <div>
-                  <span>Photo upload</span>
-                  <strong>{{ photoPreview ? 'Done' : 'Pending' }}</strong>
+                  <span>{{ 'form.photoUpload' | translate }}</span>
+                  <strong>{{ (photoPreview ? 'common.done' : 'common.pending') | translate }}</strong>
                 </div>
                 <div>
-                  <span>Signature upload</span>
-                  <strong>{{ signaturePreview ? 'Done' : 'Pending' }}</strong>
+                  <span>{{ 'form.signatureUpload' | translate }}</span>
+                  <strong>{{ (signaturePreview ? 'common.done' : 'common.pending') | translate }}</strong>
                 </div>
                 <div>
-                  <span>Declaration</span>
-                  <strong>{{ form.get('declaration')?.value ? 'Accepted' : 'Pending' }}</strong>
+                  <span>{{ 'form.declarationLabel' | translate }}</span>
+                  <strong>{{ (form.get('declaration')?.value ? 'common.accepted' : 'common.pending') | translate }}</strong>
                 </div>
               </div>
             </mat-card-content>
@@ -421,22 +406,22 @@
 
           <mat-card class="aside-card preview-card">
             <mat-card-content>
-              <p class="section-label">Image preview</p>
+              <p class="section-label">{{ 'section.imagePreview' | translate }}</p>
               <div class="aside-preview">
                 <div>
-                  <span>Photograph</span>
+                  <span>{{ 'common.photograph' | translate }}</span>
                   @if (photoPreview) {
                     <img [src]="photoPreview" alt="Photograph preview" />
                   } @else {
-                    <p>No photo uploaded</p>
+                    <p>{{ 'form.noPhotoUploaded' | translate }}</p>
                   }
                 </div>
                 <div>
-                  <span>Signature</span>
+                  <span>{{ 'common.signature' | translate }}</span>
                   @if (signaturePreview) {
                     <img [src]="signaturePreview" alt="Signature preview" />
                   } @else {
-                    <p>No signature uploaded</p>
+                    <p>{{ 'form.noSignatureUploaded' | translate }}</p>
                   }
                 </div>
               </div>
@@ -445,7 +430,7 @@
 
           <mat-card class="aside-card tips-card">
             <mat-card-content>
-              <p class="section-label">Helpful tips</p>
+              <p class="section-label">{{ 'section.helpfulTips' | translate }}</p>
               <ul>
                 <li>Use clear, readable details to avoid follow-up corrections.</li>
                 <li>Upload image files under 200 KB for photo and signature.</li>

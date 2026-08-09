@@ -109,7 +109,9 @@
 
                           @if (
                             field.label !== "other_image_paths" &&
-                            field.label !== "image_path" && getAnnualReportFileName(field.label)
+                            field.label !== "image_path" &&
+                            field.label !== "logo_path" &&
+                            getAnnualReportFileName(field.label)
                           ) {
                             <div class="file-meta-card file-type">
                               <div class="file-meta-line">
@@ -132,7 +134,7 @@
                             </div>
                           }
                           @if (
-                            field.label === "image_path" &&
+                            (field.label === "image_path" || field.label === "logo_path") &&
                             getAnnualReportFileName(field.label)
                           ) {
                             <div class="uploaded-path-list">
@@ -238,6 +240,7 @@
                   type="button"
                   [disabled]="
                     isSavingAnnualReport ||
+                    isSavingOrganizationDetails ||
                     isUploadingAnnualReportFile ||
                     (isReportPage() && !isAnnualReportFormValid())
                   "

@@ -1,8 +1,8 @@
 <div class="gallery-page container">
   <section class="gallery-hero">
     <div>
-      <p class="eyebrow">Video Gallery</p>
-      <p class="title-hint">Watch our programme moments</p>
+      <p class="eyebrow">{{ 'nav.videoGallery' | translate }}</p>
+      <p class="title-hint">{{ 'page.videoGalleryHint' | translate }}</p>
       <p class="hero-text">
         Play videos directly in the gallery or open them in popup slider mode
         for a larger viewing experience.
@@ -11,17 +11,21 @@
     <img src="/assets/images/banners/banner3.jpg" alt="NSP video gallery overview" />
   </section>
 
-  <section class="gallery-grid">
+  <section class="gallery-grid" *ngIf="galleryVideos.length; else noVideos">
     @for (video of galleryVideos; track video.embedUrl + video.caption; let i = $index) {
       <figure class="gallery-card">
         <div class="video-frame">
-          <iframe
-            [src]="video.safeUrl"
-            [title]="video.caption"
-            loading="lazy"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-          ></iframe>
+          @if (video.isDirectVideo) {
+            <video [src]="video.embedUrl" [title]="video.caption" controls preload="metadata"></video>
+          } @else {
+            <iframe
+              [src]="video.safeUrl"
+              [title]="video.caption"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          }
         </div>
         <figcaption class="caption-open" (click)="openLightbox(i)">
           {{ video.caption }}
@@ -29,6 +33,10 @@
       </figure>
     }
   </section>
+
+  <ng-template #noVideos>
+    <p class="title-hint">{{ 'common.noRecordsFound' | translate }}</p>
+  </ng-template>
 
   <div class="lightbox-backdrop" *ngIf="isLightboxOpen" (click)="closeLightbox()">
     <div class="lightbox-dialog" (click)="$event.stopPropagation()">
@@ -38,12 +46,16 @@
 
       <figure class="lightbox-figure">
         <div class="lightbox-video-frame">
-          <iframe
-            [src]="activeVideo.safeUrl"
-            [title]="activeVideo.caption"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-          ></iframe>
+          @if (activeVideo.isDirectVideo) {
+            <video [src]="activeVideo.embedUrl" [title]="activeVideo.caption" controls preload="metadata"></video>
+          } @else {
+            <iframe
+              [src]="activeVideo.safeUrl"
+              [title]="activeVideo.caption"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          }
         </div>
         <figcaption>
           {{ activeVideo.caption }}

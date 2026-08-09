@@ -1,6 +1,6 @@
 <div class="container">
-  <p class="eyebrow">Beneficiary List</p>
-  <p class="title-hint">Project-wise beneficiary count and latest updates</p>
+  <p class="eyebrow">{{ 'nav.beneficiaryList' | translate }}</p>
+  <p class="title-hint">{{ 'page.beneficiaryListHint' | translate }}</p>
 
   <mat-card class="report-table-card">
     <mat-card-content>
@@ -8,11 +8,11 @@
         <table class="report-table">
           <thead>
             <tr>
-              <th>Sl No</th>
-              <th>Project Name</th>
-              <th>No of Beneficiaries</th>
-              <th>Last Updated On</th>
-              <th>Download</th>
+              <th>{{ 'common.slNo' | translate }}</th>
+              <th>{{ 'common.projectName' | translate }}</th>
+              <th>{{ 'common.noOfBeneficiaries' | translate }}</th>
+              <th>{{ 'common.lastUpdatedOn' | translate }}</th>
+              <th>{{ 'common.download' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -34,7 +34,7 @@
               </td>
             </tr>
             <tr *ngIf="!rows.length">
-              <td colspan="5" class="empty-state">No records found.</td>
+              <td colspan="5" class="empty-state">{{ 'common.noRecordsFound' | translate }}</td>
             </tr>
           </tbody>
         </table>

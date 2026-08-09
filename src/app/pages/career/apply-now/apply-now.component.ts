@@ -1,7 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { ReactiveFormsModule, UntypedFormBuilder, Validators } from '@angular/forms';
 import { MaterialModule } from '../../../material.module';
+import { TranslateModule } from '@ngx-translate/core';
+import { apiEndpoints } from '../../../api-endpoints';
 
 interface PostOption {
   value: string;
@@ -17,19 +20,15 @@ interface EducationSection {
 @Component({
   selector: 'app-apply-now',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MaterialModule],
+  imports: [CommonModule, ReactiveFormsModule, MaterialModule, TranslateModule],
   templateUrl: './apply-now.component.html',
   styleUrls: ['./apply-now.component.scss']
 })
 export class ApplyNowComponent {
   private readonly fb = inject(UntypedFormBuilder);
+  private readonly http = inject(HttpClient);
 
-  readonly postOptions: PostOption[] = [
-    { value: 'programme-coordinator', label: 'Programme Coordinator' },
-    { value: 'project-assistant', label: 'Project Assistant' },
-    { value: 'field-officer', label: 'Field Officer' },
-    { value: 'community-worker', label: 'Community Worker' },
-  ];
+  postOptions: PostOption[] = [];
 
   readonly educationSections: EducationSection[] = [
     { key: 'secondary', title: 'Secondary Matriculation', subtitle: 'Class 10 or equivalent' },
@@ -41,7 +40,6 @@ export class ApplyNowComponent {
 
   readonly progressFields = [
     'post',
-    'personal.registrationNumber',
     'personal.applicantName',
     'personal.gender',
     'personal.maritalStatus',
@@ -112,7 +110,6 @@ export class ApplyNowComponent {
   readonly form = this.fb.group({
     post: ['', Validators.required],
     personal: this.fb.group({
-      registrationNumber: ['', Validators.required],
       applicantName: ['', Validators.required],
       gender: ['', Validators.required],
       maritalStatus: ['', Validators.required],
@@ -158,6 +155,10 @@ export class ApplyNowComponent {
     declaration: [false, Validators.requiredTrue],
   });
 
+  ngOnInit(): void {
+    this.loadPostOptions();
+  }
+
   get selectedPostLabel(): string {
     const selectedValue = this.form.get('post')?.value as string;
     return this.postOptions.find((option) => option.value === selectedValue)?.label || '';
@@ -193,23 +194,60 @@ export class ApplyNowComponent {
     });
   }
 
-  onPostChange(): void {
-    const post = this.form.get('post')?.value as string;
+  private loadPostOptions(): void {
+    this.http.get<unknown>(apiEndpoints.opportunities).subscribe({
+      next: (response) => {
+        const opportunities = this.extractOpportunities(response);
+        this.postOptions = opportunities
+          .map((item) => item.name_of_post?.trim() || '')
+          .filter(Boolean)
+          .filter((name, index, all) => all.indexOf(name) === index)
+          .map((name) => ({
+            value: this.toPostValue(name),
+            label: name,
+          }));
+      },
+      error: () => {
+        this.postOptions = [];
+      },
+    });
+  }
 
-    if (!post) {
-      this.form.get('personal.registrationNumber')?.reset('');
-      return;
+  private extractOpportunities(response: unknown): OpportunityItem[] {
+    if (Array.isArray(response)) {
+      return response as OpportunityItem[];
     }
 
-    const postCode = post
-      .split('-')
-      .map((part) => part.charAt(0))
-      .join('')
-      .toUpperCase();
-    const year = new Date().getFullYear();
-    const stamp = Math.floor(100 + Math.random() * 900);
+    if (!response || typeof response !== 'object') {
+      return [];
+    }
 
-    this.form.get('personal.registrationNumber')?.setValue(`NSP-${postCode}-${year}-${stamp}`);
+    const payload = response as {
+      data?: unknown;
+      opportunities?: unknown;
+      opportunitiesList?: unknown;
+    };
+
+    if (Array.isArray(payload.data)) {
+      return payload.data as OpportunityItem[];
+    }
+
+    if (Array.isArray(payload.opportunities)) {
+      return payload.opportunities as OpportunityItem[];
+    }
+
+    if (Array.isArray(payload.opportunitiesList)) {
+      return payload.opportunitiesList as OpportunityItem[];
+    }
+
+    return [];
+  }
+
+  private toPostValue(name: string): string {
+    return name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
   }
 
   onFileSelected(event: Event, controlPath: string, previewTarget?: 'photo' | 'signature'): void {
@@ -274,4 +312,8 @@ export class ApplyNowComponent {
     this.signaturePreview = null;
     this.submitted = false;
   }
+}
+
+interface OpportunityItem {
+  name_of_post?: string | null;
 }

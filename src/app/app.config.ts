@@ -4,6 +4,7 @@ import {
   importProvidersFrom,
 } from '@angular/core';
 import {
+  HttpClient,
   provideHttpClient,
   withInterceptorsFromDi,
 } from '@angular/common/http';
@@ -26,6 +27,8 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
 //Import all material modules
 import { MaterialModule } from './material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { provideTranslateService, provideTranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader, TRANSLATE_HTTP_LOADER_CONFIG } from '@ngx-translate/http-loader';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -39,6 +42,11 @@ export const appConfig: ApplicationConfig = {
       withComponentInputBinding()
     ),
     provideHttpClient(withInterceptorsFromDi()),
+    { provide: TRANSLATE_HTTP_LOADER_CONFIG, useValue: { prefix: './assets/i18n/', suffix: '.json' } },
+    provideTranslateService({
+      loader: provideTranslateLoader(TranslateHttpLoader),
+      defaultLanguage: 'en',
+    }),
     provideClientHydration(),
     provideAnimationsAsync(),
     importProvidersFrom(

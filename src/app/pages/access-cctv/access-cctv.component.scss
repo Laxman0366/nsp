@@ -1,0 +1,225 @@
+.cctv-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 20px 40px;
+}
+
+.cctv-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  padding: 28px;
+  background: linear-gradient(135deg, #22364b 0%, #42505c 100%);
+  color: #fff;
+  box-shadow: 0 14px 30px rgba(26, 58, 84, 0.22);
+}
+
+.cctv-hero::after {
+  content: '';
+  position: absolute;
+  right: -80px;
+  top: -90px;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: rgba(251, 191, 36, 0.16);
+}
+
+.credentials-card .mat-mdc-card-content {
+  background: rgba(251, 191, 36, 0.16);
+}
+
+.hero-kicker {
+  margin: 0;
+  color: #fcd34d;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.cctv-hero h1 {
+  margin: 10px 0 8px;
+  font-size: clamp(26px, 4vw, 40px);
+  line-height: 1.1;
+  color: #fbbf24;
+}
+
+.hero-text {
+  margin: 0;
+  max-width: 760px;
+  color: #dbe8f3;
+  line-height: 1.7;
+}
+
+.process-card,
+.credentials-card,
+.table-card {
+  border-radius: 14px;
+  border: 1px solid #d9e4ef;
+  box-shadow: 0 10px 20px rgba(24, 44, 67, 0.08);
+  margin-top: 18px;
+}
+
+.section-title {
+  margin: 0;
+  color: #d4272a;
+  line-height: 1.2;
+}
+
+.section-intro {
+  margin: 12px 0 0;
+  color: #3f5368;
+  font-size: 16px;
+}
+
+.download-steps {
+  margin: 14px 0 0;
+  padding: 0 0 0 18px;
+  color: #31465c;
+  line-height: 1.7;
+}
+
+.download-steps li {
+  margin-bottom: 8px;
+}
+
+.download-steps a,
+.software-table a {
+  color: #e3342f;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.download-steps a:hover,
+.software-table a:hover {
+  text-decoration: underline;
+}
+
+.software-block {
+  margin-top: 16px;
+  border: 1px solid #d5dfeb;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.software-band {
+  background: #f3f6fa;
+  color: #ff5a28;
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  padding: 10px 14px;
+  line-height: 1;
+}
+
+.software-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.software-table th,
+.software-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #dde6ef;
+  text-align: left;
+}
+
+.software-table th {
+  background: #fbfcfe;
+  color: #1f3d5a;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.software-table tbody tr:first-child {
+  outline: 3px solid #ffe100;
+  outline-offset: -3px;
+}
+
+.credentials-title {
+  margin: 0;
+    color: #424e55;
+    line-height: 1.2;
+    padding-top: 20px;
+}
+
+.credentials-note {
+  margin: 12px 0 0;
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.info-card {
+  border-radius: 14px;
+  border: 1px solid #d9e4ef;
+  box-shadow: 0 10px 20px rgba(24, 44, 67, 0.08);
+}
+
+.info-card h3 {
+  margin: 0 0 8px;
+  color: #1f3d5a;
+  font-size: 18px;
+}
+
+.info-card p {
+  margin: 0;
+  color: #4b5f75;
+  line-height: 1.65;
+}
+
+.state-text {
+  margin: 0;
+  padding: 14px 0;
+  color: #4b5f75;
+  font-weight: 500;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.cctv-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cctv-table th,
+.cctv-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #dbe4ef;
+  text-align: left;
+  vertical-align: top;
+}
+
+.cctv-table th {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cctv-table td {
+  color: #25374a;
+}
+
+.cctv-table tbody tr:hover {
+  background: #f9fbfd;
+}
+
+@media (max-width: 768px) {
+  .cctv-page {
+    padding: 20px 14px 28px;
+  }
+
+  .cctv-hero {
+    padding: 20px;
+  }
+}

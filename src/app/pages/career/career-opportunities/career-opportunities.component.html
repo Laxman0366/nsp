@@ -1,8 +1,107 @@
-<div class="container">
-  <h1>Career Opportunities at NSP</h1>
-  <mat-card>
+<div class="container career-opportunities-page">
+  <section class="hero-section">
+    <h1>{{ 'page.careerOpportunitiesTitle' | translate }}</h1>
+    <p class="lead-text">
+      NSP welcomes people who are passionate about creating lasting impact through education,
+      community development, and service. We believe strong teams build strong communities.
+    </p>
+  </section>
+
+  <mat-card class="intro-card">
     <mat-card-content>
-      <p>Explore career opportunities and join our dedicated team.</p>
+      <p>{{ 'page.careerOpportunitiesHint' | translate }}</p>
+      <p>
+        Whether you bring field experience, technical expertise, or a fresh perspective,
+        your commitment can help us reach more people and strengthen local impact.
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="content-card">
+    <mat-card-content>
+      <div *ngIf="isLoading" class="loading-state">Loading current openings...</div>
+
+      <div *ngIf="hasLoaded && opportunities.length; else noOpenings">
+        <h2>Current openings</h2>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Name of post</th>
+                <th>Required qualification</th>
+                <th>Number of post</th>
+                <th>Remuneration</th>
+                <th>Age limit</th>
+                <th>Closing Date</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let opportunity of opportunities">
+                <td>{{ opportunity.name_of_post || '—' }}</td>
+                <td>{{ opportunity.req_qualification || '—' }}</td>
+                <td>{{ opportunity.number_of_post ?? '—' }}</td>
+                <td>{{ opportunity.remuneration || '—' }}</td>
+                <td>{{ (opportunity.lower_age || opportunity.upper_age) ? (opportunity.lower_age + ' - ' + opportunity.upper_age) : '—' }}</td>
+                <td>{{ opportunity.closing_date || '—' }}</td>
+                <td>
+                  <a routerLink="/career/apply-now">
+                    Apply now
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <ng-template #noOpenings>
+        <div class="no-openings">
+          <h2>No openings at the moment</h2>
+          <p>
+            We are not currently advertising a vacancy, but we welcome thoughtful applications from
+            individuals who want to support our mission.
+          </p>
+
+          <form class="application-form">
+            <div class="field-grid field-grid-2">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Full name</mat-label>
+                <input matInput placeholder="Enter your full name" />
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Email address</mat-label>
+                <input matInput type="email" placeholder="Enter your email address" />
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Phone number</mat-label>
+                <input matInput type="tel" placeholder="Enter your phone number" />
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Describe your experience</mat-label>
+                <textarea matInput rows="5" placeholder="Share a brief summary of your background and interest"></textarea>
+              </mat-form-field>
+            </div>
+
+            <div class="upload-card">
+              <div class="upload-head">
+                <div>
+                  <p class="upload-title">Upload your resume</p>
+                  <p class="upload-note">Attach a PDF or DOC file of your latest resume.</p>
+                </div>
+                <input #resumeInput type="file" accept=".pdf,.doc,.docx" hidden />
+                <button mat-stroked-button type="button" (click)="resumeInput.click()">Choose file</button>
+              </div>
+              <div class="upload-foot">
+                <span>No file chosen</span>
+                <button mat-button type="button">Clear</button>
+              </div>
+            </div>
+
+            <button mat-raised-button color="accent" type="button">Submit application</button>
+          </form>
+        </div>
+      </ng-template>
     </mat-card-content>
   </mat-card>
 </div>

@@ -3,8 +3,25 @@
   margin: 0 auto;
   padding: 24px;
 }
+th {
+    color: #d52a29;
+}
 
 h1 {
   color: #e63946;
   margin-bottom: 24px;
+}
+
+.table-wrap {
+  margin-top: 16px;
+  overflow-x: auto;
+}
+
+.donor-table {
+  min-width: 640px;
+}
+
+.table-state {
+  margin: 16px 0 0;
+  color: #4f4f4f;
 }

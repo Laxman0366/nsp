@@ -1,8 +1,8 @@
 <div class="gallery-page container">
   <section class="gallery-hero">
     <div>
-      <p class="eyebrow">Media Coverage</p>
-      <p class="title-hint">News stories and published highlights of NSP initiatives</p>
+      <p class="eyebrow">{{ 'nav.mediaCoverage' | translate }}</p>
+      <p class="title-hint">{{ 'page.mediaCoverageHint' | translate }}</p>
       <p class="hero-text">
         Browse selected media snapshots featuring NSP programmes, public events,
         and impact stories covered by local and regional outlets.
@@ -11,7 +11,7 @@
     <img src="/assets/images/banners/banner4.jpg" alt="Media coverage overview" />
   </section>
 
-  <section class="gallery-grid">
+  <section class="gallery-grid" *ngIf="mediaItems.length; else noMedia">
     @for (item of mediaItems; track item.image + item.caption; let i = $index) {
       <figure class="gallery-card" (click)="openLightbox(i)">
         <img [src]="item.image" [alt]="item.caption" />
@@ -19,6 +19,10 @@
       </figure>
     }
   </section>
+
+  <ng-template #noMedia>
+    <p class="title-hint">{{ 'common.noRecordsFound' | translate }}</p>
+  </ng-template>
 
   <div class="lightbox-backdrop" *ngIf="isLightboxOpen" (click)="closeLightbox()">
     <div class="lightbox-dialog" (click)="$event.stopPropagation()">

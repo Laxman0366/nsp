@@ -2,16 +2,37 @@
   <header>
     <div class="top-bar">
       <div class="top-bar-left">
-        <div class="social">
-          <a href="#">f</a>
-          <a href="#">𝕏</a>
-          <a href="#">◎</a>
+        <div class="lang-switcher">
+          <button
+            class="lang-btn"
+            [class.active]="currentLang === 'en'"
+            (click)="switchLanguage('en')"
+            title="English"
+          >
+            <span class="lang-label">EN</span>
+          </button>
+          <button
+            class="lang-btn"
+            [class.active]="currentLang === 'hi'"
+            (click)="switchLanguage('hi')"
+            title="हिन्दी"
+          >
+            <span class="lang-label">हिं</span>
+          </button>
+          <button
+            class="lang-btn"
+            [class.active]="currentLang === 'or'"
+            (click)="switchLanguage('or')"
+            title="ଓଡ଼ିଆ"
+          >
+            <span class="lang-label">ଓଡ଼ି</span>
+          </button>
         </div>
       </div>
       <div class="top-bar-right">
-        <span class="top-bar-item">✉ nspodisha@gmail.com</span>
-        <span class="top-bar-item">☎ 9437524416</span>
-        <span class="top-bar-item">📍 AT-Benagaon(Dayavihar), P.O-Gadasahi,P.S-Kanas, Dist-Puri, Odisha-752017</span>
+        <span class="top-bar-item">✉ {{ topBarEmail }}</span>
+        <span class="top-bar-item">☎ {{ topBarPhone }}</span>
+        <span class="top-bar-item">📍 {{ topBarAddress }}</span>
       </div>
     </div>
     <div class="website-logo">
@@ -22,37 +43,58 @@
           class="logo-image"
         />
       </a>
+      <a class="access-cctv-link" routerLink="/access-cctv">
+        <i class="fa fa-video-camera"></i>
+        <span>{{ 'nav.accessCctv' | translate }}</span>
+      </a>
       <div class="donate-apply">
         <div class="donate-now" routerLink="/donations/donate-now">
-          <a mat-flat-button class="donate-btn">Donate</a>
+          <a mat-flat-button class="donate-btn">{{
+            "nav.donate" | translate
+          }}</a>
         </div>
         <div class="apply-now" routerLink="/career/apply-now">
-          <a mat-flat-button class="apply-btn">Apply Now</a>
+          <a mat-flat-button class="apply-btn">{{
+            "nav.applyNow" | translate
+          }}</a>
         </div>
       </div>
-
     </div>
     <div class="website-header">
       <nav class="website-nav" aria-label="Primary navigation">
-        <a style="font-size:20px;" class="nav-link" routerLink="/home">
-              <i class="fa fa-home"></i>
+        <a style="font-size: 20px" class="nav-link" routerLink="/home">
+          <i class="fa fa-home"></i>
         </a>
         <div
           class="nav-item"
           (mouseenter)="toggleDropdown('about')"
           (mouseleave)="openDropdown = null"
         >
-          <a routerLink="/about" class="dropdown-toggle">About</a>
+          <a routerLink="/about" class="dropdown-toggle">{{
+            "nav.about" | translate
+          }}</a>
           <div class="submenu" *ngIf="openDropdown === 'about'">
-            <a routerLink="/about/organization">About Organization</a>
-            <a routerLink="/about/brief-profile">Brief Profile</a>
-            <a routerLink="/about/founder-message"
-              >Founder Cum Secretary Message</a
-            >
-            <a routerLink="/about/governing-body">Governing Body</a>
-            <a routerLink="/about/general-body">General Body</a>
-            <a routerLink="/about/legal-document">Legal Document</a>
-            <a routerLink="/about/legal-status">Legal Status</a>
+            <a routerLink="/about/organization">{{
+              "nav.aboutOrganization" | translate
+            }}</a>
+            <a routerLink="/about/brief-profile">{{
+              "nav.briefProfile" | translate
+            }}</a>
+            <a routerLink="/about/founder-message">{{
+              "nav.founderMessage" | translate
+            }}</a>
+            <a routerLink="/about/governing-body">{{
+              "nav.governingBody" | translate
+            }}</a>
+            <a routerLink="/about/general-body">{{
+              "nav.generalBody" | translate
+            }}</a>
+            <a routerLink="/about/legal-document">{{
+              "nav.legalDocument" | translate
+            }}</a>
+            <a routerLink="/about/legal-status">{{
+              "nav.legalStatus" | translate
+            }}</a>
           </div>
         </div>
 
@@ -61,7 +103,9 @@
           (mouseenter)="toggleDropdown('programmes')"
           (mouseleave)="openDropdown = null"
         >
-          <a routerLink="/programmes" class="dropdown-toggle">Programmes</a>
+          <a routerLink="/programmes" class="dropdown-toggle">{{
+            "nav.programmes" | translate
+          }}</a>
           <div class="submenu" *ngIf="openDropdown === 'programmes'">
             @if (isProgrammeMenuLoading) {
               <span class="submenu-info">Loading programmes...</span>
@@ -69,7 +113,9 @@
               <span class="submenu-info">No programmes available</span>
             } @else {
               @for (programme of programmeMenuItems; track programme.id) {
-                <a [routerLink]="['/programmes/category', programme.id]">{{ programme.name }}</a>
+                <a [routerLink]="['/programmes/category', programme.id]">{{
+                  getProgrammeMenuLabel(programme)
+                }}</a>
               }
             }
           </div>
@@ -80,10 +126,16 @@
           (mouseenter)="toggleDropdown('donations')"
           (mouseleave)="openDropdown = null"
         >
-          <a routerLink="/donations" class="dropdown-toggle">Donations</a>
+          <a routerLink="/donations" class="dropdown-toggle">{{
+            "nav.donations" | translate
+          }}</a>
           <div class="submenu" *ngIf="openDropdown === 'donations'">
-            <a routerLink="/donations/donate-now">Donate Now</a>
-            <a routerLink="/donations/donor-list">Donor List</a>
+            <a routerLink="/donations/donate-now">{{
+              "nav.donateNow" | translate
+            }}</a>
+            <a routerLink="/donations/donor-list">{{
+              "nav.donorList" | translate
+            }}</a>
           </div>
         </div>
 
@@ -92,13 +144,19 @@
           (mouseenter)="toggleDropdown('achievements')"
           (mouseleave)="openDropdown = null"
         >
-          <a routerLink="/achievements" class="dropdown-toggle">Achievements</a>
+          <a routerLink="/achievements" class="dropdown-toggle">{{
+            "nav.achievements" | translate
+          }}</a>
           <div class="submenu" *ngIf="openDropdown === 'achievements'">
-            <a routerLink="/achievements/success-story">Success Story</a>
-            <a routerLink="/achievements/media-coverage">Media Coverage</a>
-            <a routerLink="/achievements/awards-recognition"
-              >Awards & Recognition</a
-            >
+            <a routerLink="/achievements/success-story">{{
+              "nav.successStory" | translate
+            }}</a>
+            <a routerLink="/achievements/media-coverage">{{
+              "nav.mediaCoverage" | translate
+            }}</a>
+            <a routerLink="/achievements/awards-recognition">{{
+              "nav.awardsRecognition" | translate
+            }}</a>
           </div>
         </div>
 
@@ -107,13 +165,25 @@
           (mouseenter)="toggleDropdown('reports')"
           (mouseleave)="openDropdown = null"
         >
-          <a routerLink="/reports"  class="dropdown-toggle">Reports</a>
+          <a routerLink="/reports" class="dropdown-toggle">{{
+            "nav.reports" | translate
+          }}</a>
           <div class="submenu" *ngIf="openDropdown === 'reports'">
-            <a routerLink="/reports/annual-report">Annual Report</a>
-            <a routerLink="/reports/audit-report">Audit Reports</a>
-            <a routerLink="/reports/beneficiary-list">Beneficiary List</a>
-            <a routerLink="/reports/staff-list">Staff List</a>
-            <a routerLink="/reports/food-menu">Food Menu</a>
+            <a routerLink="/reports/annual-report">{{
+              "nav.annualReport" | translate
+            }}</a>
+            <a routerLink="/reports/audit-report">{{
+              "nav.auditReport" | translate
+            }}</a>
+            <a routerLink="/reports/beneficiary-list">{{
+              "nav.beneficiaryList" | translate
+            }}</a>
+            <a routerLink="/reports/staff-list">{{
+              "nav.staffList" | translate
+            }}</a>
+            <a routerLink="/reports/food-menu">{{
+              "nav.foodMenu" | translate
+            }}</a>
           </div>
         </div>
 
@@ -122,10 +192,14 @@
           (mouseenter)="toggleDropdown('gallery')"
           (mouseleave)="openDropdown = null"
         >
-          <a routerLink="/gallery">Gallery</a>
+          <a routerLink="/gallery" class="dropdown-toggle">{{ "nav.gallery" | translate }}</a>
           <div class="submenu" *ngIf="openDropdown === 'gallery'">
-            <a routerLink="/gallery/image-gallery">Image Gallery</a>
-            <a routerLink="/gallery/video-gallery">Video Gallery</a>
+            <a routerLink="/gallery/image-gallery">{{
+              "nav.imageGallery" | translate
+            }}</a>
+            <a routerLink="/gallery/video-gallery">{{
+              "nav.videoGallery" | translate
+            }}</a>
           </div>
         </div>
 
@@ -134,17 +208,20 @@
           (mouseenter)="toggleDropdown('career')"
           (mouseleave)="openDropdown = null"
         >
-          <a routerLink="/career">Career</a>
+          <a routerLink="/career" class="dropdown-toggle">{{ "nav.career" | translate }}</a>
           <div class="submenu" *ngIf="openDropdown === 'career'">
-            <a routerLink="/career/opportunities">Career Opportunities</a>
-            <a routerLink="/career/apply-now">Apply Now</a>
+            <a routerLink="/career/opportunities">{{
+              "nav.careerOpportunities" | translate
+            }}</a>
+            <a routerLink="/career/apply-now">{{
+              "nav.applyNow" | translate
+            }}</a>
           </div>
         </div>
 
-        <a routerLink="/contact">Contact</a>
+        <a routerLink="/contact">{{ "nav.contact" | translate }}</a>
       </nav>
     </div>
-
   </header>
 
   <main class="body-wrapper">
@@ -154,59 +231,108 @@
   </main>
 
   <footer class="footer" id="contact">
-  <div class="footer-grid">
-    <div class="footer-col footer-about">
-      <img
-        src="/assets/images/logos/nsp.jpeg"
-        alt="Nilachal Seva Pratisthan logo"
-        class="footer-logo"
-      />
-      <p class="proverb">
-        Serving communities across Odisha with social development, education,
-        health, and livelihood initiatives.
-      </p>
-      <p class="footer-contact">
-        AT-Benagaon (Dayavihar), P.O-Gadasahi, P.S-Kanas, Dist-Puri, Odisha-752017
-      </p>
-      <p class="footer-contact">Phone: 9437524416</p>
-      <a class="footer-mail" href="mailto:nspodisha@gmail.com">nspodisha@gmail.com</a>
-    </div>
+    <div class="footer-grid">
+      <div class="footer-col footer-about">
+        <img
+          src="/assets/images/logos/nsp.jpeg"
+          alt="Nilachal Seva Pratisthan logo"
+          class="footer-logo"
+        />
+        <p class="proverb">
+          {{ "footer.tagline" | translate }}
+        </p>
+        <p class="footer-contact">
+          {{ topBarAddress }}
+        </p>
+        <p class="footer-contact">☎ {{ topBarPhone }}</p>
+        <a class="footer-mail" [href]="'mailto:' + topBarEmail"
+          >{{ topBarEmail }}</a
+        >
+      </div>
 
-    <div class="footer-col footer-map">
-      <h4>Locate us</h4>
-      <iframe
-        title="NSP Location"
-        src="https://www.google.com/maps?q=Nilachal+Seva+Pratisthan,+Kanas&output=embed"
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
-      ></iframe>
-    </div>
+      <div class="footer-col footer-map">
+        <h4>{{ "nav.locateUs" | translate }}</h4>
+        <iframe
+          title="NSP Location"
+          src="https://www.google.com/maps?q=Nilachal+Seva+Pratisthan,+Kanas&output=embed"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </div>
 
-    <div class="footer-col footer-links-col">
-      <h4>Quick Links</h4>
-      <div class="footer-links-grid">
-        <div>
-          <p class="footer-links-title">Student Facilities</p>
-          <a routerLink="/career">Career Development</a>
-          <a routerLink="/about/brief-profile">Campus Information</a>
-          <a routerLink="/gallery/image-gallery">Photo Gallery</a>
-          <a routerLink="/reports/annual-report">Annual Report</a>
-          <a routerLink="/donations/donor-list">Donor List</a>
-          <a routerLink="/contact">Contact Us</a>
-        </div>
-        <div>
-          <p class="footer-links-title">Useful Links</p>
-          <a href="https://www.ugc.gov.in/" target="_blank" rel="noopener noreferrer">UGC</a>
-          <a href="http://naac.gov.in/index.php/en/" target="_blank" rel="noopener noreferrer">NAAC</a>
-          <a href="https://odisha.gov.in/" target="_blank" rel="noopener noreferrer">Govt. of Odisha</a>
-          <a routerLink="/about/legal-status">RTI</a>
-          <a href="https://www.education.gov.in/" target="_blank" rel="noopener noreferrer">MHRD</a>
-          <a href="https://swayam.gov.in/" target="_blank" rel="noopener noreferrer">SWAYAM</a>
+      <div class="footer-col footer-links-col">
+        <h4>{{ "nav.quickLinks" | translate }}</h4>
+        <div class="footer-links-grid">
+          <div>
+            <p class="footer-links-title">
+              {{ "nav.studentFacilities" | translate }}
+            </p>
+            <a routerLink="/career">{{
+              "footer.careerDevelopment" | translate
+            }}</a>
+            <a routerLink="/about/brief-profile">{{
+              "footer.campusInformation" | translate
+            }}</a>
+            <a routerLink="/gallery/image-gallery">{{
+              "nav.imageGallery" | translate
+            }}</a>
+            <a routerLink="/reports/annual-report">{{
+              "nav.annualReport" | translate
+            }}</a>
+            <a routerLink="/donations/donor-list">{{
+              "nav.donorList" | translate
+            }}</a>
+            <a routerLink="/contact">{{ "nav.contactUs" | translate }}</a>
+          </div>
+          <div>
+            <p class="footer-links-title">
+              {{ "nav.usefulLinks" | translate }}
+            </p>
+            <a
+              href="https://www.ugc.gov.in/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >UGC</a
+            >
+            <a
+              href="http://naac.gov.in/index.php/en/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >NAAC</a
+            >
+            <a
+              href="https://odisha.gov.in/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Govt. of Odisha</a
+            >
+            <a routerLink="/about/legal-status">RTI</a>
+            <a
+              href="https://www.education.gov.in/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >MHRD</a
+            >
+            <a
+              href="https://swayam.gov.in/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >SWAYAM</a
+            >
+          </div>
         </div>
       </div>
     </div>
-  </div>
-
-  <div class="footer-copy">© 2026 Nilachal Seva Pratisthan. All rights reserved.</div>
-</footer>
+    <div class="bottom-footer">
+      <div class="footer-copy">
+        © 2026 {{ "name" | translate }}.
+        {{ "nav.allRightsReserved" | translate }}.
+      </div>
+      <div class="social">
+          <a href="#">f</a>
+          <a href="#">𝕏</a>
+          <a href="#">◎</a>
+        </div>
+    </div>
+  </footer>
 </div>

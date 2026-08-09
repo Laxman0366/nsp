@@ -1,8 +1,8 @@
 <div class="gallery-page container">
   <section class="gallery-hero">
     <div>
-      <p class="eyebrow">Image Gallery</p>
-      <p class="title-hint">Have a look at our recent events</p>
+      <p class="eyebrow">{{ 'nav.imageGallery' | translate }}</p>
+      <p class="title-hint">{{ 'page.imageGalleryHint' | translate }}</p>
       <p class="hero-text">
         A simple photo gallery highlighting NSP activities, outreach, and
         community engagement moments.
@@ -11,7 +11,7 @@
     <img src="/assets/images/banners/banner4.jpg" alt="NSP gallery overview" />
   </section>
 
-  <section class="gallery-grid">
+  <section class="gallery-grid" *ngIf="galleryPhotos.length; else noPhotos">
     @for (photo of galleryPhotos; track photo.image + photo.caption; let i = $index) {
       <figure class="gallery-card" (click)="openLightbox(i)">
         <img [src]="photo.image" [alt]="photo.caption" />
@@ -19,6 +19,10 @@
       </figure>
     }
   </section>
+
+  <ng-template #noPhotos>
+    <p class="title-hint">{{ 'common.noRecordsFound' | translate }}</p>
+  </ng-template>
 
   <div class="lightbox-backdrop" *ngIf="isLightboxOpen" (click)="closeLightbox()">
     <div class="lightbox-dialog" (click)="$event.stopPropagation()">

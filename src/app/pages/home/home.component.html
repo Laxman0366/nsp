@@ -42,32 +42,10 @@
   <section class="" id="about">
     <mat-card class="banner-card cardWithShadow">
       <mat-card-content>
-        <p class="eyebrow">Our perspective</p>
-        <p class="title-hint">Thoughtful experiences that feel effortless.</p>
+        <p class="eyebrow">{{ 'page.ourPerspective' | translate }}</p>
+        <p class="title-hint">{{ 'page.ourPerspectiveHint' | translate }}</p>
         <p>
-          The devastating cyclone of 1978, accompanied by a prolonged drought
-          and a huge flood in 1980, left a significant number of people in a
-          state of shock and destitution in Odisha. In the face of such
-          adversity, a team of grass-roots volunteers, inspired by the Gandhian
-          philosophy, came forward to assist thousands of victims by collecting
-          relief materials from individual donors to meet their basic needs and
-          aid their recovery. The tremendous outpouring of humanitarian aid and
-          philanthropic initiative motivated these volunteers to establish
-          "Nilachal Seva Pratisthan (NSP)," an organization dedicated to the
-          values of equality, justice, and peace. Later, NSP was registered
-          under the Indian Societies Registration Act XXI of 1860, vide
-          Registration No.226/13 on 26.04.1981. Since then, NSP has been
-          unwavering in its commitment to implement various welfare activities
-          and programs for socio-economic, health, environmental and human
-          resource development. Seva (service to mankind) and Daya (sympathy and
-          empathy for the destitute and marginalized sections of society) are
-          our core values guiding our social actions. From its inception, NSP
-          has relentlessly pursued welfare and developmental activities to
-          alleviate the concerns, issues and problems affecting the
-          underprivileged and disadvantaged segments of society. NSP has been
-          the recipient of awards and commendations for its exceptional
-          accomplishments and accredited by Credibility Alliance for Good
-          Governance."
+          {{ 'text.perspective' | translate }}
         </p>
       </mat-card-content>
     </mat-card>
@@ -78,9 +56,9 @@
       <div class="notice-column">
         <div class="notice-header">
           <p class="notice-title eyebrow">
-            <i class="ti ti-bell"></i> Advertisements
+            <i class="ti ti-bell"></i> {{ 'page.advertisements' | translate }}
           </p>
-          <a class="notice-view-all" routerLink="/notices/advertisements">View all</a>
+          <a class="notice-view-all" routerLink="/notices/advertisements">{{ 'common.viewAll' | translate }}</a>
         </div>
         <div class="notice-marquee-container">
           <div class="notice-marquee">
@@ -144,9 +122,9 @@
       <div class="notice-column">
         <div class="notice-header">
           <p class="notice-title eyebrow">
-            <i class="ti ti-file-text"></i> Tenders Notice
+            <i class="ti ti-file-text"></i> {{ 'page.tendersNotice' | translate }}
           </p>
-          <a class="notice-view-all" routerLink="/notices/tender-notices">View all</a>
+          <a class="notice-view-all" routerLink="/notices/tender-notices">{{ 'common.viewAll' | translate }}</a>
         </div>
         <div class="notice-marquee-container">
           <div class="notice-marquee">
@@ -208,9 +186,9 @@
       <div class="notice-column">
         <div class="notice-header">
           <p class="notice-title eyebrow">
-            <i class="ti ti-news"></i> News & Events
+            <i class="ti ti-news"></i> {{ 'page.newsEvents' | translate }}
           </p>
-          <a class="notice-view-all" routerLink="/notices/news-events">View all</a>
+          <a class="notice-view-all" routerLink="/notices/news-events">{{ 'common.viewAll' | translate }}</a>
         </div>
         <div class="notice-marquee-container">
           <div class="notice-marquee">
@@ -247,8 +225,8 @@
   <section class="partners-section" id="partners">
     <div class="section-heading">
       <div>
-        <p class="eyebrow">Our partners</p>
-        <p class="title-hint">Organizations supporting our mission</p>
+        <p class="eyebrow">{{ 'page.ourPartners' | translate }}</p>
+        <p class="title-hint">{{ 'page.organizationsSupporting' | translate }}</p>
       </div>
     </div>
 
@@ -265,10 +243,10 @@
   <section class="gallery-section" id="gallery">
     <div class="section-heading">
       <div>
-        <p class="eyebrow">Photo gallery</p>
-        <p class="title-hint">Snapshots from our field initiatives</p>
+        <p class="eyebrow">{{ 'page.photoGallery' | translate }}</p>
+        <p class="title-hint">{{ 'page.snapshotsFromField' | translate }}</p>
       </div>
-      <a mat-button color="primary">Explore gallery</a>
+      <a mat-button color="primary">{{ 'common.exploreGallery' | translate }}</a>
     </div>
 
     <div class="gallery-grid">
@@ -288,10 +266,10 @@
   <section class="stories-section" id="stories">
     <div class="section-heading">
       <div>
-        <p class="eyebrow">Recent stories</p>
-        <p class="title-hint">Moments worth sharing</p>
+        <p class="eyebrow">{{ 'page.recentStories' | translate }}</p>
+        <p class="title-hint">{{ 'page.momentsWorthSharing' | translate }}</p>
       </div>
-      <a mat-button color="primary">View all</a>
+      <a mat-button color="primary">{{ 'common.viewAll' | translate }}</a>
     </div>
     <div id="carousel">
       <div class="carousel-container">
@@ -313,40 +291,40 @@
   <section class="impact-counts-section" id="impact-counts">
     <div class="section-heading">
       <div>
-        <p class="eyebrow">Our impact</p>
-        <p class="title-hint">Scale of work across years and communities</p>
+        <p class="eyebrow">{{ 'page.ourImpact' | translate }}</p>
+        <p class="title-hint">{{ 'page.scaleOfWork' | translate }}</p>
       </div>
     </div>
 
     <div class="impact-counts-grid">
       <mat-card class="impact-count-card cardWithShadow">
         <p class="impact-count-value">41</p>
-        <p class="impact-count-label">Years of presence</p>
+        <p class="impact-count-label">{{ 'page.yearsOfPresence' | translate }}</p>
       </mat-card>
 
       <mat-card class="impact-count-card cardWithShadow">
         <p class="impact-count-value">104,895</p>
-        <p class="impact-count-label">Beneficiaries</p>
+        <p class="impact-count-label">{{ 'page.beneficiaries' | translate }}</p>
       </mat-card>
 
       <mat-card class="impact-count-card cardWithShadow">
         <p class="impact-count-value">15</p>
-        <p class="impact-count-label">Volunteers</p>
+        <p class="impact-count-label">{{ 'page.volunteers' | translate }}</p>
       </mat-card>
 
       <mat-card class="impact-count-card cardWithShadow">
         <p class="impact-count-value">38</p>
-        <p class="impact-count-label">Projects</p>
+        <p class="impact-count-label">{{ 'page.projects' | translate }}</p>
       </mat-card>
 
       <mat-card class="impact-count-card cardWithShadow">
         <p class="impact-count-value">5</p>
-        <p class="impact-count-label">Locations serving</p>
+        <p class="impact-count-label">{{ 'page.locationsServing' | translate }}</p>
       </mat-card>
 
       <mat-card class="impact-count-card cardWithShadow">
         <p class="impact-count-value">315</p>
-        <p class="impact-count-label">Work force</p>
+        <p class="impact-count-label">{{ 'page.workForce' | translate }}</p>
       </mat-card>
     </div>
   </section>

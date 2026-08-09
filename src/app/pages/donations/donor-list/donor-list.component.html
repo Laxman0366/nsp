@@ -1,8 +1,36 @@
 <div class="container">
-  <h1>Donor List</h1>
+  <p class="eyebrow">{{ 'page.donorListTitle' | translate }}</p>
   <mat-card>
     <mat-card-content>
-      <p>View the list of our generous donors supporting NSP's mission.</p>
+      <p>{{ 'page.donorListIntro' | translate }}</p>
+
+      @if (isLoading) {
+        <p class="table-state">Loading donors...</p>
+      } @else if (!donors.length) {
+        <p class="table-state">No donor data available.</p>
+      } @else {
+        <div class="table-wrap">
+          <table mat-table [dataSource]="donors" class="w-100 donor-table">
+            <ng-container matColumnDef="donorName">
+              <th mat-header-cell *matHeaderCellDef>Donor Name</th>
+              <td mat-cell *matCellDef="let donor">{{ donor.donorName }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="amount">
+              <th mat-header-cell *matHeaderCellDef>Amount</th>
+              <td mat-cell *matCellDef="let donor">{{ donor.amount }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef>Date</th>
+              <td mat-cell *matCellDef="let donor">{{ donor.date }}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+        </div>
+      }
     </mat-card-content>
   </mat-card>
 </div>

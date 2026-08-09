@@ -2,23 +2,15 @@
   <section class="message-layout">
     <mat-card class="message-card">
       <mat-card-content>
-        <p class="section-label">Message</p>
+        <p class="section-label">{{ 'page.founderMessageSectionLabel' | translate }}</p>
         <p>
-          I am pleased to share NSP’s journey of care, resilience, and service.
-          What began as an urgent response to suffering has matured into a
-          centre of consistent support for vulnerable children, women, persons
-          with disabilities, older adults, and families in distress.
+          {{ 'page.founderMessageIntro1' | translate }}
         </p>
         <p>
-          Our work has never been about one intervention alone. We continue to
-          combine shelter, food, education, health care, counseling, awareness,
-          and rehabilitation so that people can move from dependence toward
-          dignity and participation.
+          {{ 'page.founderMessageIntro2' | translate }}
         </p>
         <p>
-          None of this is possible without the support of our staff, partners,
-          donors, volunteers, and governing members. Their commitment keeps the
-          organization accountable and mission-driven.
+          {{ 'page.founderMessageIntro3' | translate }}
         </p>
       </mat-card-content>
     </mat-card>
@@ -28,13 +20,12 @@
         <img
           style="max-height: 200px; text-align: center; margin: 0 auto; display: block;"
           src="/assets/images/profile/fcsm.png"
-          alt="NSP founder-cum-secretary"
+          [attr.alt]="'page.founderMessageImageAlt' | translate"
         />
-        <p class="eyebrow">Subas Chandra Gajendra</p>
-        <p class="title-hint">Founder-cum-Secretary, Nilachal Seva Pratisthan</p>
+        <p class="eyebrow">{{ 'page.founderMessageName' | translate }}</p>
+        <p class="title-hint">{{ 'page.founderMessageTitle' | translate }}</p>
         <div class="signature-note">
-          A steady commitment to equal opportunity, rehabilitation, and human
-          dignity.
+          {{ 'page.founderMessageSignatureNote' | translate }}
         </div>
       </mat-card-content>
     </mat-card>

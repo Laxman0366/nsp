@@ -1,13 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 import { apiEndpoints } from 'src/app/api-endpoints';
 
 @Component({
   selector: 'app-programme-category',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './programme-category.component.html',
   styleUrls: ['./programme-category.component.scss'],
 })
@@ -16,54 +18,72 @@ export class ProgrammeCategoryComponent implements OnInit {
   programmeName = 'Programme';
   isLoading = false;
   projects: ProgrammeProject[] = [];
+  private currentLang: 'en' | 'hi' | 'or' = 'en';
+  private selectedProgramme: ProgrammeRecord | null = null;
+  private allProjectRecords: ProjectRecord[] = [];
+  private readonly defaultProgrammeName = 'Programme';
+  private readonly subscriptions = new Subscription();
 
   constructor(
     private readonly route: ActivatedRoute,
-    private readonly http: HttpClient
+    private readonly http: HttpClient,
+    private readonly translate: TranslateService
   ) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((params) => {
+    this.currentLang = this.normalizeLanguage(this.translate.currentLang || this.translate.getDefaultLang() || 'en');
+
+    this.subscriptions.add(
+      this.translate.onLangChange.subscribe(({ lang }) => {
+        this.currentLang = this.normalizeLanguage(lang);
+        this.rebuildProgrammeView();
+      })
+    );
+
+    this.subscriptions.add(this.route.paramMap.subscribe((params) => {
       const id = params.get('programmeId');
       this.programmeId = id || '';
       this.loadProgrammeProjects();
-    });
+    }));
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   private loadProgrammeProjects(): void {
     if (!this.programmeId) {
+      this.selectedProgramme = null;
+      this.allProjectRecords = [];
       this.projects = [];
+      this.programmeName = this.defaultProgrammeName;
       return;
     }
 
     this.isLoading = true;
+    this.selectedProgramme = null;
+    this.allProjectRecords = [];
 
     this.http.get<unknown>(apiEndpoints.programmeMasters).subscribe({
       next: (response) => {
         const programmes = this.extractArray(response);
-        const selected = programmes.find((item) => String(item.id ?? '') === this.programmeId);
-        this.programmeName = selected?.programme_name || selected?.title || 'Programme';
+        const selected = programmes.find((item) => String(item.id ?? '') === this.programmeId) as ProgrammeRecord | undefined;
+        this.selectedProgramme = selected || null;
+        this.rebuildProgrammeView();
       },
       error: () => {
-        this.programmeName = 'Programme';
+        this.selectedProgramme = null;
+        this.rebuildProgrammeView();
       },
     });
 
     this.http.get<unknown>(apiEndpoints.programmeDetails).subscribe({
       next: (response) => {
-        const allProjects = this.extractArray(response);
-        this.projects = allProjects
-          .filter((item) => this.matchesProgramme(item, this.programmeId, this.programmeName))
-          .map((item) => ({
-            id: String(item.id ?? ''),
-            projectName: item.project_name || 'Untitled Project',
-            projectText: item.project_details || item.achievement_details || 'Project details will be updated soon.',
-            details: item.achievement_details || item.project_details || 'No additional details available.',
-            featureImageUrl: this.toAssetUrl(item.image_path || ''),
-            otherImageUrls: this.parseOtherImages(item.other_image_paths),
-          }));
+        this.allProjectRecords = this.extractArray(response) as ProjectRecord[];
+        this.rebuildProgrammeView();
       },
       error: () => {
+        this.allProjectRecords = [];
         this.projects = [];
       },
       complete: () => {
@@ -75,18 +95,111 @@ export class ProgrammeCategoryComponent implements OnInit {
   private matchesProgramme(
     project: ProjectRecord,
     programmeId: string,
-    programmeName: string
+    selectedProgramme: ProgrammeRecord | null
   ): boolean {
     const projectProgrammeFk = project.programme_master_fk ?? project.Programme_master_fk;
     if (projectProgrammeFk !== null && projectProgrammeFk !== undefined && projectProgrammeFk !== '') {
       return String(projectProgrammeFk) === programmeId;
     }
 
-    if (!programmeName) {
+    if (!selectedProgramme) {
       return false;
     }
 
-    return (project.programme_name || '').trim().toLowerCase() === programmeName.trim().toLowerCase();
+    const programmeNames = [
+      selectedProgramme.programme_name,
+      selectedProgramme.programme_name_hindi,
+      selectedProgramme.programme_name_odia,
+      selectedProgramme.title,
+    ]
+      .map((value) => (value || '').trim().toLowerCase())
+      .filter(Boolean);
+
+    const projectNames = [project.programme_name, project.programme_name_hindi, project.programme_name_odia]
+      .map((value) => (value || '').trim().toLowerCase())
+      .filter(Boolean);
+
+    return projectNames.some((projectName) => programmeNames.includes(projectName));
+  }
+
+  private rebuildProgrammeView(): void {
+    this.programmeName = this.getLocalizedText(
+      this.selectedProgramme?.programme_name,
+      this.selectedProgramme?.programme_name_hindi,
+      this.selectedProgramme?.programme_name_odia,
+      this.selectedProgramme?.title,
+      this.defaultProgrammeName
+    );
+
+    this.projects = this.allProjectRecords
+      .filter((item) => this.matchesProgramme(item, this.programmeId, this.selectedProgramme))
+      .map((item) => ({
+        id: String(item.id ?? ''),
+        projectName: this.getLocalizedText(
+          item.project_name,
+          item.project_name_hindi || item.project_name_hi,
+          item.project_name_odia || item.project_name_or,
+          'Untitled Project'
+        ),
+        projectText: this.getLocalizedText(
+          item.project_details,
+          item.project_details_hindi || item.project_details_hi,
+          item.project_details_odia || item.project_details_or,
+          item.achievement_details,
+          item.achievement_details_hindi || item.achievement_details_hi,
+          item.achievement_details_odia || item.achievement_details_or,
+          'Project details will be updated soon.'
+        ),
+        details: this.getLocalizedText(
+          item.achievement_details,
+          item.achievement_details_hindi || item.achievement_details_hi,
+          item.achievement_details_odia || item.achievement_details_or,
+          item.project_details,
+          item.project_details_hindi || item.project_details_hi,
+          item.project_details_odia || item.project_details_or,
+          'No additional details available.'
+        ),
+        featureImageUrl: this.toAssetUrl(item.image_path || ''),
+        otherImageUrls: this.parseOtherImages(item.other_image_paths),
+      }));
+  }
+
+  private getLocalizedText(
+    english?: string | null,
+    hindi?: string | null,
+    odia?: string | null,
+    ...fallbacks: Array<string | null | undefined>
+  ): string {
+    const valueForCurrentLanguage =
+      this.currentLang === 'hi'
+        ? hindi || english || odia
+        : this.currentLang === 'or'
+          ? odia || english || hindi
+          : english || hindi || odia;
+
+    if (valueForCurrentLanguage && valueForCurrentLanguage.trim()) {
+      return valueForCurrentLanguage;
+    }
+
+    for (const fallback of fallbacks) {
+      if (fallback && fallback.trim()) {
+        return fallback;
+      }
+    }
+
+    return '';
+  }
+
+  private normalizeLanguage(language: string): 'en' | 'hi' | 'or' {
+    if (language === 'hi') {
+      return 'hi';
+    }
+
+    if (language === 'or' || language === 'od') {
+      return 'or';
+    }
+
+    return 'en';
   }
 
   private extractArray(payload: unknown): GenericRecord[] {
@@ -174,16 +287,32 @@ interface GenericRecord {
   id?: number | string | null;
   title?: string | null;
   programme_name?: string | null;
+  programme_name_hindi?: string | null;
+  programme_name_odia?: string | null;
   Programme_master_fk?: number | string | null;
   programme_master_fk?: number | string | null;
   project_name?: string | null;
+  project_name_hindi?: string | null;
+  project_name_hi?: string | null;
+  project_name_odia?: string | null;
+  project_name_or?: string | null;
   project_details?: string | null;
+  project_details_hindi?: string | null;
+  project_details_hi?: string | null;
+  project_details_odia?: string | null;
+  project_details_or?: string | null;
   achievement_details?: string | null;
+  achievement_details_hindi?: string | null;
+  achievement_details_hi?: string | null;
+  achievement_details_odia?: string | null;
+  achievement_details_or?: string | null;
   image_path?: string | null;
   other_image_paths?: string | null;
 }
 
 interface ProjectRecord extends GenericRecord {}
+
+interface ProgrammeRecord extends GenericRecord {}
 
 interface ProgrammeProject {
   id: string;

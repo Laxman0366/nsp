@@ -1,10 +1,115 @@
-.container {
+.career-opportunities-page {
   max-width: 1200px;
   margin: 0 auto;
   padding: 24px;
 }
 
-h1 {
-  color: #e63946;
-  margin-bottom: 24px;
+.hero-section {
+  margin-bottom: 1.5rem;
+}
+
+.lead-text {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: #4b5563;
+  max-width: 860px;
+}
+
+.intro-card {
+  margin-bottom: 1.25rem;
+}
+
+.content-card {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+th, td {
+  padding: 0.9rem 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: #f3f4f6;
+  font-weight: 600;
+}
+
+a {
+  color: #b91c1c;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.loading-state {
+  color: #4b5563;
+  font-style: italic;
+}
+
+.application-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 1rem;
+  max-width: 760px;
+}
+
+.field-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.field-grid-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.upload-card {
+  padding: 16px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #f7fbff 0%, #ffffff 100%);
+  border: 1px solid #dbe6f3;
+}
+
+.upload-head,
+.upload-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.upload-title {
+  margin: 0;
+  color: #173153;
+  font-weight: 700;
+}
+
+.upload-note {
+  margin: 2px 0 0;
+  font-size: 0.88rem;
+  color: #4e647d;
+}
+
+button {
+  align-self: flex-start;
+}
+
+@media (max-width: 768px) {
+  .field-grid-2 {
+    grid-template-columns: 1fr;
+  }
 }

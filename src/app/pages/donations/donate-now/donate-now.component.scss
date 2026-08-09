@@ -1,10 +1,169 @@
 .container {
+  --ink: #152238;
+  --accent: #d6334c;
+  --accent-soft: #ffe3e7;
+  --sky: #e8f4ff;
+  --line: #dbe4f0;
+
   max-width: 1200px;
   margin: 0 auto;
   padding: 24px;
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
 }
 
 h1 {
-  color: #e63946;
-  margin-bottom: 24px;
+  color: var(--ink);
+  margin: 0;
+  font-size: clamp(1.9rem, 2.6vw, 2.5rem);
+  line-height: 1.1;
+}
+
+.donate-hero {
+  position: relative;
+  margin-bottom: 22px;
+  padding: 28px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background:
+    radial-gradient(circle at 100% 0%, #ffd7de 0 18%, transparent 19%),
+    radial-gradient(circle at 0% 100%, #d8ecff 0 18%, transparent 19%),
+    linear-gradient(135deg, #ffffff 0%, #f7fbff 100%);
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #bf1f38;
+}
+
+.hero-copy {
+  margin: 12px 0 0;
+  max-width: 760px;
+  color: #30425f;
+  line-height: 1.65;
+}
+
+.account-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.account-card {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #ffffff 0%, #f9fcff 100%);
+}
+
+.bank-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 56px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: #8f1730;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.account-card h2 {
+  margin: 10px 0 14px;
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+
+.details-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.details-list div {
+  padding: 10px 12px;
+  border: 1px solid #e8eef7;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.details-list dt {
+  margin: 0;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6b7b93;
+}
+
+.details-list dd {
+  margin: 5px 0 0;
+  color: #20314d;
+  font-weight: 600;
+}
+
+.contact-card {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+}
+
+.contact-header h2 {
+  margin: 0;
+}
+
+.contact-header p {
+  margin: 8px 0 0;
+}
+
+.contact-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 14px;
+  margin-top: 16px;
+}
+
+.span-2 {
+  grid-column: span 2;
+}
+
+.status {
+  margin: 0;
+  font-size: 0.92rem;
+  grid-column: span 2;
+}
+
+.status.error {
+  color: #b42318;
+}
+
+.status.success {
+  color: #05603a;
+}
+
+.form-actions {
+  grid-column: span 2;
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 900px) {
+  .account-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-form {
+    grid-template-columns: 1fr;
+  }
+
+  .span-2,
+  .status,
+  .form-actions {
+    grid-column: span 1;
+  }
 }

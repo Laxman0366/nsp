@@ -1,9 +1,79 @@
 <div class="container">
-  <h1>Donate Now</h1>
-  <mat-card>
+  <section class="donate-hero">
+    <p class="eyebrow">{{ 'page.donateNowTitle' | translate }}</p>
+    <p class="hero-copy">
+      {{ 'page.donateNowHeroCopy' | translate }}
+    </p>
+  </section>
+
+  <section class="account-grid">
+    @for (account of accounts; track account.bankCode) {
+      <mat-card class="account-card">
+        <mat-card-content>
+          <div class="bank-pill">{{ account.bankCode }}</div>
+          <h2>{{ account.bankName }}</h2>
+          <dl class="details-list">
+            <div>
+              <dt>Account Name</dt>
+              <dd>{{ account.accountName }}</dd>
+            </div>
+            <div>
+              <dt>Account Number</dt>
+              <dd>{{ account.accountNumber }}</dd>
+            </div>
+            <div>
+              <dt>IFSC</dt>
+              <dd>{{ account.ifsc }}</dd>
+            </div>
+            <div>
+              <dt>Branch</dt>
+              <dd>{{ account.branch }}</dd>
+            </div>
+          </dl>
+        </mat-card-content>
+      </mat-card>
+    }
+  </section>
+
+  <mat-card class="contact-card">
     <mat-card-content>
-      <p>Support our mission and help us serve the community better.</p>
-      <button mat-raised-button color="accent">Donate</button>
+      <div class="contact-header">
+        <p class="eyebrow">Contact For Donation</p>
+      </div>
+
+      <form class="contact-form" (ngSubmit)="submitDonationContact()" #donationForm="ngForm">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Name</mat-label>
+          <input matInput [(ngModel)]="form.name" name="name" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" [(ngModel)]="form.email" name="email" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Phone No</mat-label>
+          <input matInput [(ngModel)]="form.phone" name="phone" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100 span-2">
+          <mat-label>Message</mat-label>
+          <textarea matInput rows="5" [(ngModel)]="form.message" name="message" required></textarea>
+        </mat-form-field>
+
+        @if (formError) {
+          <p class="status error">{{ formError }}</p>
+        }
+
+        @if (submitInfo) {
+          <p class="status success">{{ submitInfo }}</p>
+        }
+
+        <div class="form-actions">
+          <button mat-raised-button color="accent" type="submit">Submit</button>
+        </div>
+      </form>
     </mat-card-content>
   </mat-card>
 </div>

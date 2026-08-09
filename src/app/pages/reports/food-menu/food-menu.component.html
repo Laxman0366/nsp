@@ -1,6 +1,6 @@
 <div class="container">
-  <p class="eyebrow">Food Menu</p>
-  <p class="title-hint">Published meal plans and menu records</p>
+  <p class="eyebrow">{{ 'nav.foodMenu' | translate }}</p>
+  <p class="title-hint">{{ 'page.foodMenuHint' | translate }}</p>
 
   <mat-card class="report-table-card">
     <mat-card-content>
@@ -8,10 +8,10 @@
         <table class="report-table">
           <thead>
             <tr>
-              <th>Sl No</th>
-              <th>Title</th>
-              <th>Created Date</th>
-              <th>Download</th>
+              <th>{{ 'common.slNo' | translate }}</th>
+              <th>{{ 'common.titleCol' | translate }}</th>
+              <th>{{ 'common.createdDate' | translate }}</th>
+              <th>{{ 'common.download' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -32,7 +32,7 @@
               </td>
             </tr>
             <tr *ngIf="!rows.length">
-              <td colspan="4" class="empty-state">No records found.</td>
+              <td colspan="4" class="empty-state">{{ 'common.noRecordsFound' | translate }}</td>
             </tr>
           </tbody>
         </table>

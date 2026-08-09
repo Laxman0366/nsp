@@ -19,7 +19,9 @@ import { AdminField, AdminFieldOption, AdminPageDefinition, AdminTableColumn, Ad
 export class AdminContentComponent implements OnInit {
   readonly page: AdminPageDefinition;
   private readonly annualReportsApiUrl = apiEndpoints.annualReports;
+  private readonly organizationDetailsFixedId = 1;
   isSavingAnnualReport = false;
+  isSavingOrganizationDetails = false;
   isUploadingAnnualReportFile = false;
   readonly quillModules = {
     toolbar: [
@@ -32,14 +34,32 @@ export class AdminContentComponent implements OnInit {
   private editingAnnualReportId: string | number | null = null;
   programmeMasterOptions: AdminFieldOption[] = [];
   projectOptions: AdminFieldOption[] = [];
+  private organizationDetailsId: string | number | null = null;
+
+  private organizationDetailsForm: OrganizationDetailsFormState = {
+    phoneNumber: '',
+    email: '',
+    officeAddress: '',
+    officeAddressHindi: '',
+    officeAddressOdia: '',
+    facebookUrl: '',
+    twitterUrl: '',
+    linkedinUrl: '',
+  };
 
   private annualReportForm: AnnualReportFormState = {
     programmeMasterFk: '',
     projectFk: '',
     programmeName: '',
+    programmeNameHindi: '',
+    programmeNameOdia: '',
     projectName: '',
     projectDetails: '',
+    projectDetailsHindi: '',
+    projectDetailsOdia: '',
     achievementDetails: '',
+    achievementDetailsHindi: '',
+    achievementDetailsOdia: '',
     startingYear: '',
     supportedBy: '',
     status: '',
@@ -53,11 +73,32 @@ export class AdminContentComponent implements OnInit {
     subTitle: '',
     altText: '',
     imagePath: '',
+    logoPath: '',
     otherImagePaths: '',
     beneficiaryName: '',
     details: '',
     dateTime: '',
     noOfBeneficiaries: '',
+    projectNameHindi: '',
+    projectNameOdia: '',
+    serialNumber: '',
+    nameOfPost: '',
+    reqQualification: '',
+    numberOfPost: '',
+    remuneration: '',
+    lowerAge: '',
+    upperAge: '',
+    governingBodyName: '',
+    governingBodyNameHindi: '',
+    governingBodyNameOdia: '',
+    governingBodyPosition: '',
+    governingBodyQualification: '',
+    governingBodyMessage: '',
+    governingBodyMessageHindi: '',
+    governingBodyMessageOdia: '',
+    donorName: '',
+    donationAmount: '',
+    donationDate: '',
     displayOrder: '',
     isActive: true,
     file: null,
@@ -83,6 +124,10 @@ export class AdminContentComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (this.isOrganizationDetailsPage()) {
+      this.loadOrganizationDetails();
+    }
+
     if (this.isProgrammeDetailsPage() || this.isProgrammeOverviewPage()) {
       this.loadProgrammeMasterOptions();
     }
@@ -94,10 +139,20 @@ export class AdminContentComponent implements OnInit {
     if (this.isReportPage() && this.page.table) {
       this.loadAnnualReportRows();
     }
+    if (this.isPartnersPage() && this.page.table) {
+      this.loadAnnualReportRows();
+    }
+    if (this.isCctvDetailsPage() && this.page.table) {
+      this.loadAnnualReportRows();
+    }
   }
 
   getFieldOptions(field: AdminField): AdminFieldOption[] {
     if (field.label === 'programme_name' && (this.isProgrammeDetailsPage() || this.isProgrammeOverviewPage())) {
+      return this.programmeMasterOptions;
+    }
+
+    if (field.label === 'project_name' && this.isProgrammeOverviewPage()) {
       return this.programmeMasterOptions;
     }
 
@@ -113,7 +168,14 @@ export class AdminContentComponent implements OnInit {
       return false;
     }
 
-    return label === 'project_details' || label === 'achievement_details';
+    return (
+      label === 'project_details' ||
+      label === 'project_details_hindi' ||
+      label === 'project_details_odia' ||
+      label === 'achievement_details' ||
+      label === 'achievement_details_hindi' ||
+      label === 'achievement_details_odia'
+    );
   }
 
   fieldClass(span?: 1 | 2 | 3 | 4): string {
@@ -176,9 +238,15 @@ export class AdminContentComponent implements OnInit {
             programmeMasterFk: '',
             projectFk: '',
             programmeName: '',
+            programmeNameHindi: '',
+            programmeNameOdia: '',
             projectName: '',
             projectDetails: '',
+            projectDetailsHindi: '',
+            projectDetailsOdia: '',
             achievementDetails: '',
+            achievementDetailsHindi: '',
+            achievementDetailsOdia: '',
             startingYear: '',
             supportedBy: '',
             status: '',
@@ -192,11 +260,35 @@ export class AdminContentComponent implements OnInit {
             subTitle: '',
             altText: '',
             imagePath: '',
+            logoPath: '',
             otherImagePaths: '',
             beneficiaryName: '',
             details: '',
             dateTime: '',
             noOfBeneficiaries: '',
+            projectNameHindi: '',
+            projectNameOdia: '',
+            serialNumber: '',
+            nameOfPost: '',
+            reqQualification: '',
+            numberOfPost: '',
+            remuneration: '',
+            lowerAge: '',
+            upperAge: '',
+            governingBodyName: report.name || '',
+            governingBodyNameHindi: report.name_hindi || '',
+            governingBodyNameOdia: report.name_odia || '',
+            governingBodyPosition: report.position || '',
+            governingBodyQualification: report.qualification || '',
+            governingBodyMessage: report.message || '',
+            governingBodyMessageHindi: report.message_hindi || '',
+            governingBodyMessageOdia: report.message_odia || '',
+            donorName: report.donor_name || '',
+            donationAmount:
+              report.donation_amount === null || report.donation_amount === undefined
+                ? ''
+                : String(report.donation_amount),
+            donationDate: this.toDateValue(report.donation_date),
             displayOrder: report.display_order === null || report.display_order === undefined
               ? ''
               : String(report.display_order),
@@ -251,9 +343,15 @@ export class AdminContentComponent implements OnInit {
           programmeMasterFk: this.resolveProgrammeMasterSelectionValue(report),
           projectFk: this.resolveProjectSelectionValue(report),
           programmeName: report.programme_name || '',
+          programmeNameHindi: report.programme_name_hindi || '',
+          programmeNameOdia: report.programme_name_odia || '',
           projectName: report.project_name || '',
           projectDetails: report.project_details || '',
+          projectDetailsHindi: report.project_details_hindi || '',
+          projectDetailsOdia: report.project_details_odia || '',
           achievementDetails: report.achievement_details || '',
+          achievementDetailsHindi: report.achievement_details_hindi || '',
+          achievementDetailsOdia: report.achievement_details_odia || '',
           startingYear:
             report.starting_year === null || report.starting_year === undefined
               ? ''
@@ -266,14 +364,15 @@ export class AdminContentComponent implements OnInit {
             report.beneficiaries_covered === null || report.beneficiaries_covered === undefined
               ? ''
               : String(report.beneficiaries_covered),
-          title: report.title || report.project_name || '',
+          title: report.title || report.programme_name || report.project_name || '',
           description: '',
           openingDate: '',
-          closingDate: '',
+          closingDate: this.toDateValue(report.closing_date),
           detailFilePath: '',
           subTitle: report.sub_title || '',
           altText: report.alt_text || '',
-          imagePath: report.image_path || '',
+          imagePath: report.image_path || report.logo_path || '',
+          logoPath: report.logo_path || '',
           otherImagePaths: report.other_image_paths || '',
           beneficiaryName: report.beneficiary_name || '',
           details: report.details || '',
@@ -282,15 +381,51 @@ export class AdminContentComponent implements OnInit {
             report.no_of_beneficiaries === null || report.no_of_beneficiaries === undefined
               ? ''
               : String(report.no_of_beneficiaries),
-          displayOrder: report.display_order === null || report.display_order === undefined
-            ? ''
-            : String(report.display_order),
-          isActive: this.toBoolean(report.is_active),
+          projectNameHindi: report.project_name_hindi || '',
+          projectNameOdia: report.project_name_odia || '',
+          serialNumber: report.serial_number || '',
+          nameOfPost: report.name_of_post || '',
+          reqQualification: report.req_qualification || '',
+          numberOfPost:
+            report.number_of_post === null || report.number_of_post === undefined
+              ? ''
+              : String(report.number_of_post),
+          remuneration: report.remuneration || '',
+          lowerAge:
+            report.lower_age === null || report.lower_age === undefined
+              ? ''
+              : String(report.lower_age),
+          upperAge:
+            report.upper_age === null || report.upper_age === undefined
+              ? ''
+              : String(report.upper_age),
+          governingBodyName: report.name || '',
+          governingBodyNameHindi: report.name_hindi || '',
+          governingBodyNameOdia: report.name_odia || '',
+          governingBodyPosition: report.position || '',
+          governingBodyQualification: report.qualification || '',
+          governingBodyMessage: report.message || '',
+          governingBodyMessageHindi: report.message_hindi || '',
+          governingBodyMessageOdia: report.message_odia || '',
+          donorName: report.donor_name || '',
+          donationAmount:
+            report.donation_amount === null || report.donation_amount === undefined
+              ? ''
+              : String(report.donation_amount),
+          donationDate: this.toDateValue(report.donation_date),
+          displayOrder:
+            report.display_order === null || report.display_order === undefined
+              ? report.displayOrder === null || report.displayOrder === undefined
+                ? ''
+                : String(report.displayOrder)
+              : String(report.display_order),
+          isActive: this.toBoolean(report.is_active ?? report.isactive),
           file: null,
           existingFileName: this.resolveExistingFileName(report),
           existingFilePath:
             report.video_path ||
             report.image_path ||
+            report.logo_path ||
             report.file_path ||
             report.file_url ||
             report.download_url ||
@@ -306,12 +441,13 @@ export class AdminContentComponent implements OnInit {
           hasNewUploadedFile: false,
           hasNewOtherUploadedFile: false,
         };
-        this.editingAnnualReportId = report.id ?? reportId;
+        this.editingAnnualReportId = this.resolveReportId(report) ?? reportId;
       },
       error: () => {
         this.showToast(`Failed to load ${this.getReportLabel()} details.`, 'error-toast');
       },
     });
+
   }
 
   onDeleteRow(row: AdminTableRow): void {
@@ -340,6 +476,47 @@ export class AdminContentComponent implements OnInit {
   }
 
   isAnnualReportFormValid(): boolean {
+    if (this.isGoverningBodyPage()) {
+      return Boolean(
+        this.annualReportForm.governingBodyName.trim() &&
+          this.annualReportForm.governingBodyPosition.trim() &&
+          this.annualReportForm.governingBodyQualification.trim() &&
+          this.annualReportForm.displayOrder.trim() &&
+          this.getAnnualReportFilePathForSave()
+      );
+    }
+
+    if (this.isGeneralBodyPage()) {
+      return Boolean(
+        this.annualReportForm.governingBodyName.trim() &&
+          this.annualReportForm.governingBodyPosition.trim() &&
+          this.annualReportForm.displayOrder.trim() &&
+          this.getAnnualReportFilePathForSave()
+      );
+    }
+
+    if (this.isDonorListPage()) {
+      return Boolean(
+        this.annualReportForm.donorName.trim() &&
+          this.annualReportForm.donationAmount.trim() &&
+          this.annualReportForm.donationDate.trim() &&
+          this.annualReportForm.displayOrder.trim()
+      );
+    }
+
+    if (this.isCareerOpportunitiesPage()) {
+      return Boolean(
+        this.annualReportForm.nameOfPost.trim() &&
+          this.annualReportForm.reqQualification.trim() &&
+          this.annualReportForm.numberOfPost.trim() &&
+          this.annualReportForm.remuneration.trim() &&
+          this.annualReportForm.closingDate.trim() &&
+          this.annualReportForm.lowerAge.trim() &&
+          this.annualReportForm.upperAge.trim() &&
+          this.annualReportForm.displayOrder.trim()
+      );
+    }
+
     if (this.isProgrammeOverviewPage()) {
       return Boolean(
         this.annualReportForm.programmeMasterFk.trim() &&
@@ -366,7 +543,7 @@ export class AdminContentComponent implements OnInit {
 
     if (this.isProgrammeMasterPage()) {
       return Boolean(
-        this.annualReportForm.title.trim() && this.annualReportForm.displayOrder.trim()
+        this.annualReportForm.programmeName.trim() && this.annualReportForm.displayOrder.trim()
       );
     }
 
@@ -383,12 +560,35 @@ export class AdminContentComponent implements OnInit {
       );
     }
 
+      if (this.isPartnersPage()) {
+        const hasPartnerLogoPath =
+          Boolean(this.getAnnualReportFilePathForSave()) ||
+          Boolean(this.annualReportForm.file) ||
+          Boolean(this.editingAnnualReportId);
+
+        return Boolean(
+          this.annualReportForm.title.trim() &&
+            this.annualReportForm.displayOrder.trim() &&
+            hasPartnerLogoPath
+        );
+      }
+
     if (this.isTenderNoticePage() || this.isAdvertisementPage()) {
       return Boolean(
         this.annualReportForm.title.trim() &&
           this.annualReportForm.description.trim() &&
           this.annualReportForm.openingDate.trim() &&
           this.annualReportForm.closingDate.trim() &&
+          this.annualReportForm.displayOrder.trim()
+      );
+    }
+
+    if (this.isCctvDetailsPage()) {
+      return Boolean(
+        this.annualReportForm.projectName.trim() &&
+          this.annualReportForm.projectNameHindi.trim() &&
+          this.annualReportForm.projectNameOdia.trim() &&
+          this.annualReportForm.serialNumber.trim() &&
           this.annualReportForm.displayOrder.trim()
       );
     }
@@ -450,6 +650,11 @@ export class AdminContentComponent implements OnInit {
   }
 
   onPrimaryActionClick(): void {
+    if (this.isOrganizationDetailsPage()) {
+      this.saveOrganizationDetails();
+      return;
+    }
+
     if (!this.isReportPage()) {
       return;
     }
@@ -458,6 +663,12 @@ export class AdminContentComponent implements OnInit {
   }
 
   onClearForm(): void {
+    if (this.isOrganizationDetailsPage()) {
+      this.resetOrganizationDetailsForm();
+      this.showToast('Form cleared.', 'success-toast');
+      return;
+    }
+
     if (!this.isReportPage()) {
       return;
     }
@@ -467,6 +678,11 @@ export class AdminContentComponent implements OnInit {
   }
 
   onAnnualReportInputChange(label: string, value: string): void {
+    if (this.isOrganizationDetailsPage()) {
+      this.onOrganizationDetailsInputChange(label, value);
+      return;
+    }
+
     if (!this.isReportPage()) {
       return;
     }
@@ -480,6 +696,9 @@ export class AdminContentComponent implements OnInit {
     ) {
       if (label === 'programme_name' && (this.isProgrammeDetailsPage() || this.isProgrammeOverviewPage())) {
         this.annualReportForm.programmeMasterFk = value;
+      } else if (label === 'programme_name' && this.isProgrammeMasterPage()) {
+        this.annualReportForm.programmeName = value;
+        this.annualReportForm.title = value;
       } else if (label === 'project_name' && this.isProgrammeOverviewPage()) {
         this.annualReportForm.projectFk = value;
       } else if (label === 'Project Name' || label === 'project_name') {
@@ -487,6 +706,14 @@ export class AdminContentComponent implements OnInit {
       } else {
         this.annualReportForm.title = value;
       }
+    }
+
+    if (label === 'programme_name_hindi') {
+      this.annualReportForm.programmeNameHindi = value;
+    }
+
+    if (label === 'programme_name_odia') {
+      this.annualReportForm.programmeNameOdia = value;
     }
 
     if (label === 'description') {
@@ -517,12 +744,32 @@ export class AdminContentComponent implements OnInit {
       this.annualReportForm.imagePath = value;
     }
 
+    if (label === 'logo_path') {
+      this.annualReportForm.logoPath = value;
+    }
+
     if (label === 'project_details') {
       this.annualReportForm.projectDetails = value;
     }
 
+    if (label === 'project_details_hindi') {
+      this.annualReportForm.projectDetailsHindi = value;
+    }
+
+    if (label === 'project_details_odia') {
+      this.annualReportForm.projectDetailsOdia = value;
+    }
+
     if (label === 'achievement_details') {
       this.annualReportForm.achievementDetails = value;
+    }
+
+    if (label === 'achievement_details_hindi') {
+      this.annualReportForm.achievementDetailsHindi = value;
+    }
+
+    if (label === 'achievement_details_odia') {
+      this.annualReportForm.achievementDetailsOdia = value;
     }
 
     if (label === 'starting_year') {
@@ -568,9 +815,93 @@ export class AdminContentComponent implements OnInit {
     if (label === 'No of Beneficiaries') {
       this.annualReportForm.noOfBeneficiaries = value;
     }
+
+    if (label === 'project_name_hindi') {
+      this.annualReportForm.projectNameHindi = value;
+    }
+
+    if (label === 'project_name_odia') {
+      this.annualReportForm.projectNameOdia = value;
+    }
+
+    if (label === 'serial_number') {
+      this.annualReportForm.serialNumber = value;
+    }
+
+    if (label === 'name_of_post') {
+      this.annualReportForm.nameOfPost = value;
+    }
+
+    if (label === 'req_qualification') {
+      this.annualReportForm.reqQualification = value;
+    }
+
+    if (label === 'number_of_post') {
+      this.annualReportForm.numberOfPost = value;
+    }
+
+    if (label === 'remuneration') {
+      this.annualReportForm.remuneration = value;
+    }
+
+    if (label === 'lower_age') {
+      this.annualReportForm.lowerAge = value;
+    }
+
+    if (label === 'upper_age') {
+      this.annualReportForm.upperAge = value;
+    }
+
+    if (label === 'name') {
+      this.annualReportForm.governingBodyName = value;
+    }
+
+    if (label === 'name_hindi') {
+      this.annualReportForm.governingBodyNameHindi = value;
+    }
+
+    if (label === 'name_odia') {
+      this.annualReportForm.governingBodyNameOdia = value;
+    }
+
+    if (label === 'position') {
+      this.annualReportForm.governingBodyPosition = value;
+    }
+
+    if (label === 'qualification') {
+      this.annualReportForm.governingBodyQualification = value;
+    }
+
+    if (label === 'message') {
+      this.annualReportForm.governingBodyMessage = value;
+    }
+
+    if (label === 'message_hindi') {
+      this.annualReportForm.governingBodyMessageHindi = value;
+    }
+
+    if (label === 'message_odia') {
+      this.annualReportForm.governingBodyMessageOdia = value;
+    }
+
+    if (label === 'donor_name') {
+      this.annualReportForm.donorName = value;
+    }
+
+    if (label === 'donation_amount') {
+      this.annualReportForm.donationAmount = value;
+    }
+
+    if (label === 'donation_date') {
+      this.annualReportForm.donationDate = value;
+    }
   }
 
   getAnnualReportInputValue(label: string): string {
+    if (this.isOrganizationDetailsPage()) {
+      return this.getOrganizationDetailsInputValue(label);
+    }
+
     if (!this.isReportPage()) {
       return '';
     }
@@ -586,6 +917,10 @@ export class AdminContentComponent implements OnInit {
         return this.annualReportForm.programmeMasterFk;
       }
 
+      if (label === 'programme_name' && this.isProgrammeMasterPage()) {
+        return this.annualReportForm.programmeName;
+      }
+
       if (label === 'project_name' && this.isProgrammeOverviewPage()) {
         return this.annualReportForm.projectFk;
       }
@@ -595,6 +930,14 @@ export class AdminContentComponent implements OnInit {
       }
 
       return this.annualReportForm.title;
+    }
+
+    if (label === 'programme_name_hindi') {
+      return this.annualReportForm.programmeNameHindi;
+    }
+
+    if (label === 'programme_name_odia') {
+      return this.annualReportForm.programmeNameOdia;
     }
 
     if (label === 'description') {
@@ -625,6 +968,10 @@ export class AdminContentComponent implements OnInit {
       return this.annualReportForm.imagePath;
     }
 
+    if (label === 'logo_path') {
+      return this.annualReportForm.logoPath;
+    }
+
     if (label === 'beneficiary_name') {
       return this.annualReportForm.beneficiaryName;
     }
@@ -633,8 +980,24 @@ export class AdminContentComponent implements OnInit {
       return this.annualReportForm.projectDetails;
     }
 
+    if (label === 'project_details_hindi') {
+      return this.annualReportForm.projectDetailsHindi;
+    }
+
+    if (label === 'project_details_odia') {
+      return this.annualReportForm.projectDetailsOdia;
+    }
+
     if (label === 'achievement_details') {
       return this.annualReportForm.achievementDetails;
+    }
+
+    if (label === 'achievement_details_hindi') {
+      return this.annualReportForm.achievementDetailsHindi;
+    }
+
+    if (label === 'achievement_details_odia') {
+      return this.annualReportForm.achievementDetailsOdia;
     }
 
     if (label === 'other_image_paths') {
@@ -677,6 +1040,86 @@ export class AdminContentComponent implements OnInit {
       return this.annualReportForm.noOfBeneficiaries;
     }
 
+    if (label === 'project_name_hindi') {
+      return this.annualReportForm.projectNameHindi;
+    }
+
+    if (label === 'project_name_odia') {
+      return this.annualReportForm.projectNameOdia;
+    }
+
+    if (label === 'serial_number') {
+      return this.annualReportForm.serialNumber;
+    }
+
+    if (label === 'name_of_post') {
+      return this.annualReportForm.nameOfPost;
+    }
+
+    if (label === 'req_qualification') {
+      return this.annualReportForm.reqQualification;
+    }
+
+    if (label === 'number_of_post') {
+      return this.annualReportForm.numberOfPost;
+    }
+
+    if (label === 'remuneration') {
+      return this.annualReportForm.remuneration;
+    }
+
+    if (label === 'lower_age') {
+      return this.annualReportForm.lowerAge;
+    }
+
+    if (label === 'upper_age') {
+      return this.annualReportForm.upperAge;
+    }
+
+    if (label === 'name') {
+      return this.annualReportForm.governingBodyName;
+    }
+
+    if (label === 'name_hindi') {
+      return this.annualReportForm.governingBodyNameHindi;
+    }
+
+    if (label === 'name_odia') {
+      return this.annualReportForm.governingBodyNameOdia;
+    }
+
+    if (label === 'position') {
+      return this.annualReportForm.governingBodyPosition;
+    }
+
+    if (label === 'qualification') {
+      return this.annualReportForm.governingBodyQualification;
+    }
+
+    if (label === 'message') {
+      return this.annualReportForm.governingBodyMessage;
+    }
+
+    if (label === 'message_hindi') {
+      return this.annualReportForm.governingBodyMessageHindi;
+    }
+
+    if (label === 'message_odia') {
+      return this.annualReportForm.governingBodyMessageOdia;
+    }
+
+    if (label === 'donor_name') {
+      return this.annualReportForm.donorName;
+    }
+
+    if (label === 'donation_amount') {
+      return this.annualReportForm.donationAmount;
+    }
+
+    if (label === 'donation_date') {
+      return this.annualReportForm.donationDate;
+    }
+
     return '';
   }
 
@@ -689,7 +1132,7 @@ export class AdminContentComponent implements OnInit {
   }
 
   getAnnualReportIsActive(label: string): boolean {
-    if (!this.isReportPage() || (label !== 'Is Active' && label !== 'is_active')) {
+    if (!this.isReportPage() || (label !== 'Is Active' && label !== 'is_active' && label !== 'isactive')) {
       return false;
     }
 
@@ -731,6 +1174,15 @@ export class AdminContentComponent implements OnInit {
       );
     }
 
+    if (label === 'logo_path') {
+      return (
+        this.annualReportForm.file?.name ||
+        this.annualReportForm.existingFileName ||
+        defaultNote ||
+        'No file chosen'
+      );
+    }
+
     return (
       this.annualReportForm.file?.name ||
       this.annualReportForm.existingFileName ||
@@ -742,6 +1194,10 @@ export class AdminContentComponent implements OnInit {
   getAnnualReportFileName(label: string): string {
     if (label === 'other_image_paths') {
       return this.annualReportForm.otherFile?.name || this.annualReportForm.otherExistingFileName || '';
+    }
+
+    if (label === 'logo_path') {
+      return this.annualReportForm.file?.name || this.annualReportForm.existingFileName || '';
     }
 
     return this.annualReportForm.file?.name || this.annualReportForm.existingFileName || '';
@@ -797,6 +1253,10 @@ export class AdminContentComponent implements OnInit {
       return this.annualReportForm.otherExistingFileUrl;
     }
 
+    if (label === 'logo_path') {
+      return this.annualReportForm.existingFileUrl;
+    }
+
     return this.annualReportForm.existingFileUrl;
   }
 
@@ -812,6 +1272,12 @@ export class AdminContentComponent implements OnInit {
       this.page.title === 'Tender Notices' ||
       this.page.title === 'Advertisements' ||
       this.page.title === 'News & Events' ||
+      this.page.title === 'Partners' ||
+      this.page.title === 'CCTV Details' ||
+      this.page.title === 'Governing Body' ||
+      this.page.title === 'General Body' ||
+      this.page.title === 'Donor List' ||
+      this.page.title === 'Career Opportunities' ||
       this.page.title === 'Image Gallery' ||
       this.page.title === 'Video Gallery' ||
       this.page.title === 'Annual Report' ||
@@ -862,6 +1328,14 @@ export class AdminContentComponent implements OnInit {
     return this.page.title === 'Image Gallery';
   }
 
+  isCareerOpportunitiesPage(): boolean {
+    return this.page.title === 'Career Opportunities';
+  }
+
+  isCctvDetailsPage(): boolean {
+    return this.page.title === 'CCTV Details';
+  }
+
   isVideoGalleryPage(): boolean {
     return this.page.title === 'Video Gallery';
   }
@@ -886,8 +1360,294 @@ export class AdminContentComponent implements OnInit {
     return this.page.title === 'Food Menu';
   }
 
+  isGoverningBodyPage(): boolean {
+    return this.page.title === 'Governing Body';
+  }
+
+  isGeneralBodyPage(): boolean {
+    return this.page.title === 'General Body';
+  }
+
+  isDonorListPage(): boolean {
+    return this.page.title === 'Donor List';
+  }
+
   isBannerPage(): boolean {
     return this.page.title === 'Banner Management';
+  }
+
+  isPartnersPage(): boolean {
+    return this.page.title === 'Partners';
+  }
+
+  isOrganizationDetailsPage(): boolean {
+    return this.page.title === 'Organization Details';
+  }
+
+  private loadOrganizationDetails(): void {
+    this.http.get<unknown>(apiEndpoints.organizationDetailById(this.organizationDetailsFixedId)).subscribe({
+      next: (response) => {
+        const details = this.extractOrganizationDetails(response);
+        if (!details) {
+          this.resetOrganizationDetailsForm();
+          this.organizationDetailsId = this.organizationDetailsFixedId;
+          return;
+        }
+
+        this.organizationDetailsId = this.resolveOrganizationDetailsId(details) ?? this.organizationDetailsFixedId;
+        this.organizationDetailsForm = {
+          phoneNumber: this.getOrganizationFieldValue(details.phone_number, details.phoneNumber, details.phone),
+          email: this.getOrganizationFieldValue(details.email, details.email_id, details.emailId),
+          officeAddress: this.getOrganizationFieldValue(
+            details.office_address,
+            details.officeAddress,
+            details.address
+          ),
+          officeAddressHindi: this.getOrganizationFieldValue(
+            details.office_address_hindi,
+            details.office_address_hi,
+            details.officeAddressHindi
+          ),
+          officeAddressOdia: this.getOrganizationFieldValue(
+            details.office_address_odia,
+            details.office_address_or,
+            details.officeAddressOdia
+          ),
+          facebookUrl: this.getOrganizationFieldValue(details.facebook_url, details.facebookUrl),
+          twitterUrl: this.getOrganizationFieldValue(details.twitter_url, details.twitterUrl),
+          linkedinUrl: this.getOrganizationFieldValue(details.linkedin_url, details.linkedinUrl),
+        };
+      },
+      error: () => {
+        this.resetOrganizationDetailsForm();
+        this.showToast('Failed to load organization details.', 'error-toast');
+      },
+    });
+  }
+
+  private saveOrganizationDetails(): void {
+    const payload = {
+      id: this.organizationDetailsFixedId,
+      phone_number: this.organizationDetailsForm.phoneNumber.trim(),
+      email: this.organizationDetailsForm.email.trim(),
+      office_address: this.organizationDetailsForm.officeAddress.trim(),
+      office_address_hindi: this.organizationDetailsForm.officeAddressHindi.trim(),
+      office_address_odia: this.organizationDetailsForm.officeAddressOdia.trim(),
+      facebook_url: this.organizationDetailsForm.facebookUrl.trim(),
+      twitter_url: this.organizationDetailsForm.twitterUrl.trim(),
+      linkedin_url: this.organizationDetailsForm.linkedinUrl.trim(),
+    };
+
+    this.isSavingOrganizationDetails = true;
+    const request = this.http.put(
+      apiEndpoints.organizationDetailById(this.organizationDetailsFixedId),
+      payload
+    );
+
+    request.subscribe({
+      next: () => {
+        this.showToast('Organization details updated successfully.', 'success-toast');
+        this.loadOrganizationDetails();
+      },
+      error: () => {
+        this.showToast('Failed to update organization details.', 'error-toast');
+      },
+      complete: () => {
+        this.isSavingOrganizationDetails = false;
+      },
+    });
+  }
+
+  private resetOrganizationDetailsForm(): void {
+    this.organizationDetailsForm = {
+      phoneNumber: '',
+      email: '',
+      officeAddress: '',
+      officeAddressHindi: '',
+      officeAddressOdia: '',
+      facebookUrl: '',
+      twitterUrl: '',
+      linkedinUrl: '',
+    };
+  }
+
+  private onOrganizationDetailsInputChange(label: string, value: string): void {
+    if (label === 'Phone Number') {
+      this.organizationDetailsForm.phoneNumber = value;
+      return;
+    }
+
+    if (label === 'Email') {
+      this.organizationDetailsForm.email = value;
+      return;
+    }
+
+    if (label === 'Office address') {
+      this.organizationDetailsForm.officeAddress = value;
+      return;
+    }
+
+    if (label === 'Office address(Hindi)') {
+      this.organizationDetailsForm.officeAddressHindi = value;
+      return;
+    }
+
+    if (label === 'Office address(Odia)') {
+      this.organizationDetailsForm.officeAddressOdia = value;
+      return;
+    }
+
+    if (label === 'facebook_url') {
+      this.organizationDetailsForm.facebookUrl = value;
+      return;
+    }
+
+    if (label === 'twitter_url') {
+      this.organizationDetailsForm.twitterUrl = value;
+      return;
+    }
+
+    if (label === 'linkedin_url') {
+      this.organizationDetailsForm.linkedinUrl = value;
+    }
+  }
+
+  private getOrganizationDetailsInputValue(label: string): string {
+    if (label === 'Phone Number') {
+      return this.organizationDetailsForm.phoneNumber;
+    }
+
+    if (label === 'Email') {
+      return this.organizationDetailsForm.email;
+    }
+
+    if (label === 'Office address') {
+      return this.organizationDetailsForm.officeAddress;
+    }
+
+    if (label === 'Office address(Hindi)') {
+      return this.organizationDetailsForm.officeAddressHindi;
+    }
+
+    if (label === 'Office address(Odia)') {
+      return this.organizationDetailsForm.officeAddressOdia;
+    }
+
+    if (label === 'facebook_url') {
+      return this.organizationDetailsForm.facebookUrl;
+    }
+
+    if (label === 'twitter_url') {
+      return this.organizationDetailsForm.twitterUrl;
+    }
+
+    if (label === 'linkedin_url') {
+      return this.organizationDetailsForm.linkedinUrl;
+    }
+
+    return '';
+  }
+
+  private extractOrganizationDetails(response: unknown): OrganizationDetailsApiItem | null {
+    if (Array.isArray(response)) {
+      return response.length ? (response[0] as OrganizationDetailsApiItem) : null;
+    }
+
+    if (!response || typeof response !== 'object') {
+      return null;
+    }
+
+    const payload = response as {
+      data?: unknown;
+      organization_details?: unknown;
+      organizationDetails?: unknown;
+    };
+
+    if (this.isOrganizationDetailsRecord(response)) {
+      return response as OrganizationDetailsApiItem;
+    }
+
+    if (Array.isArray(payload.data)) {
+      return payload.data.length ? (payload.data[0] as OrganizationDetailsApiItem) : null;
+    }
+
+    if (payload.data && this.isOrganizationDetailsRecord(payload.data)) {
+      return payload.data as OrganizationDetailsApiItem;
+    }
+
+    if (Array.isArray(payload.organization_details)) {
+      return payload.organization_details.length
+        ? (payload.organization_details[0] as OrganizationDetailsApiItem)
+        : null;
+    }
+
+    if (
+      payload.organization_details &&
+      !Array.isArray(payload.organization_details) &&
+      this.isOrganizationDetailsRecord(payload.organization_details)
+    ) {
+      return payload.organization_details as OrganizationDetailsApiItem;
+    }
+
+    if (Array.isArray(payload.organizationDetails)) {
+      return payload.organizationDetails.length
+        ? (payload.organizationDetails[0] as OrganizationDetailsApiItem)
+        : null;
+    }
+
+    if (
+      payload.organizationDetails &&
+      !Array.isArray(payload.organizationDetails) &&
+      this.isOrganizationDetailsRecord(payload.organizationDetails)
+    ) {
+      return payload.organizationDetails as OrganizationDetailsApiItem;
+    }
+
+    return null;
+  }
+
+  private isOrganizationDetailsRecord(value: unknown): boolean {
+    if (!value || typeof value !== 'object') {
+      return false;
+    }
+
+    const details = value as OrganizationDetailsApiItem;
+    return Boolean(
+      details.id !== undefined ||
+        details.phone_number !== undefined ||
+        details.phoneNumber !== undefined ||
+        details.office_address !== undefined ||
+        details.officeAddress !== undefined ||
+        details.facebook_url !== undefined
+    );
+  }
+
+  private resolveOrganizationDetailsId(details: OrganizationDetailsApiItem): string | number | null {
+    const candidateIds: Array<string | number | null | undefined> = [
+      details.id,
+      details.organization_details_id,
+      details.organization_details_fk,
+      details.organization_id,
+      details.pk,
+    ];
+
+    for (const candidateId of candidateIds) {
+      if (candidateId !== null && candidateId !== undefined && candidateId !== '') {
+        return candidateId;
+      }
+    }
+
+    return null;
+  }
+
+  private getOrganizationFieldValue(...values: Array<string | null | undefined>): string {
+    for (const value of values) {
+      if (typeof value === 'string') {
+        return value;
+      }
+    }
+
+    return '';
   }
 
   private getReportsApiUrl(): string {
@@ -937,6 +1697,34 @@ export class AdminContentComponent implements OnInit {
 
     if (this.isNewsEventsPage()) {
       return apiEndpoints.newsEvents;
+    }
+
+    if (this.isCareerOpportunitiesPage()) {
+      return apiEndpoints.opportunities;
+    }
+
+    if (this.isPartnersPage()) {
+      return apiEndpoints.partners;
+    }
+
+    if (this.isCctvDetailsPage()) {
+      return apiEndpoints.cctvDetails;
+    }
+
+    if (this.isGoverningBodyPage()) {
+      return apiEndpoints.governingBodies;
+    }
+
+    if (this.isGeneralBodyPage()) {
+      return apiEndpoints.generalBodies;
+    }
+
+    if (this.isDonorListPage()) {
+      return apiEndpoints.donations;
+    }
+
+    if (this.isCctvDetailsPage()) {
+      return apiEndpoints.cctvDetails;
     }
 
     if (this.isFoodMenuPage()) {
@@ -1001,6 +1789,34 @@ export class AdminContentComponent implements OnInit {
 
     if (this.isNewsEventsPage()) {
       return apiEndpoints.newsEventById(id);
+    }
+
+    if (this.isCareerOpportunitiesPage()) {
+      return apiEndpoints.opportunityById(id);
+    }
+
+    if (this.isPartnersPage()) {
+      return apiEndpoints.partnerById(id);
+    }
+
+    if (this.isCctvDetailsPage()) {
+      return apiEndpoints.cctvDetailById(id);
+    }
+
+    if (this.isGoverningBodyPage()) {
+      return apiEndpoints.governingBodyById(id);
+    }
+
+    if (this.isGeneralBodyPage()) {
+      return apiEndpoints.generalBodyById(id);
+    }
+
+    if (this.isDonorListPage()) {
+      return apiEndpoints.donationById(id);
+    }
+
+    if (this.isCctvDetailsPage()) {
+      return apiEndpoints.cctvDetailById(id);
     }
 
     if (this.isFoodMenuPage()) {
@@ -1069,6 +1885,34 @@ export class AdminContentComponent implements OnInit {
       return 'news event';
     }
 
+    if (this.isCareerOpportunitiesPage()) {
+      return 'career opportunity';
+    }
+
+    if (this.isPartnersPage()) {
+      return 'partner';
+    }
+
+    if (this.isCctvDetailsPage()) {
+      return 'cctv details';
+    }
+
+    if (this.isGoverningBodyPage()) {
+      return 'governing body';
+    }
+
+    if (this.isGeneralBodyPage()) {
+      return 'general body';
+    }
+
+    if (this.isDonorListPage()) {
+      return 'donor';
+    }
+
+    if (this.isCctvDetailsPage()) {
+      return 'cctv details';
+    }
+
     if (this.isFoodMenuPage()) {
       return 'food menu';
     }
@@ -1133,6 +1977,34 @@ export class AdminContentComponent implements OnInit {
       return 'News event';
     }
 
+    if (this.isCareerOpportunitiesPage()) {
+      return 'Career opportunity';
+    }
+
+    if (this.isPartnersPage()) {
+      return 'Partner';
+    }
+
+    if (this.isCctvDetailsPage()) {
+      return 'CCTV details';
+    }
+
+    if (this.isGoverningBodyPage()) {
+      return 'Governing body';
+    }
+
+    if (this.isGeneralBodyPage()) {
+      return 'General body';
+    }
+
+    if (this.isDonorListPage()) {
+      return 'Donor';
+    }
+
+    if (this.isCctvDetailsPage()) {
+      return 'CCTV details';
+    }
+
     if (this.isFoodMenuPage()) {
       return 'Food menu';
     }
@@ -1159,6 +2031,11 @@ export class AdminContentComponent implements OnInit {
       !this.isProgrammeMasterPage() &&
       !this.isProgrammeDetailsPage() &&
       !this.isProgrammeOverviewPage() &&
+      !this.isCareerOpportunitiesPage() &&
+      !this.isCctvDetailsPage() &&
+      !this.isGoverningBodyPage() &&
+      !this.isGeneralBodyPage() &&
+      !this.isDonorListPage() &&
       !filePath
     ) {
       return;
@@ -1176,12 +2053,20 @@ export class AdminContentComponent implements OnInit {
     } else if (this.isProgrammeDetailsPage()) {
       payload.append('programme_master_fk', this.annualReportForm.programmeMasterFk.trim());
       payload.append('project_name', this.annualReportForm.projectName.trim());
+      payload.append('project_name_hindi', this.annualReportForm.projectNameHindi.trim());
+      payload.append('project_name_odia', this.annualReportForm.projectNameOdia.trim());
       payload.append('project_details', this.annualReportForm.projectDetails.trim());
+      payload.append('project_details_hindi', this.annualReportForm.projectDetailsHindi.trim());
+      payload.append('project_details_odia', this.annualReportForm.projectDetailsOdia.trim());
       payload.append('achievement_details', this.annualReportForm.achievementDetails.trim());
+      payload.append('achievement_details_hindi', this.annualReportForm.achievementDetailsHindi.trim());
+      payload.append('achievement_details_odia', this.annualReportForm.achievementDetailsOdia.trim());
       payload.append('image_path', this.getAnnualReportFilePathForSave('image_path'));
       payload.append('other_image_paths', this.getAnnualReportFilePathForSave('other_image_paths'));
     } else if (this.isProgrammeMasterPage()) {
-      payload.append('programme_name', this.annualReportForm.title.trim());
+      payload.append('programme_name', this.annualReportForm.programmeName.trim());
+      payload.append('programme_name_hindi', this.annualReportForm.programmeNameHindi.trim());
+      payload.append('programme_name_odia', this.annualReportForm.programmeNameOdia.trim());
     } else if (this.isBannerPage()) {
       const bannerImagePath =
         this.getAnnualReportFilePathForSave() || this.annualReportForm.imagePath.trim();
@@ -1200,7 +2085,6 @@ export class AdminContentComponent implements OnInit {
       payload.append('image_path', filePath);
     } else if (this.isTenderNoticePage() || this.isAdvertisementPage() || this.isNewsEventsPage()) {
       payload.append('title', this.annualReportForm.title.trim());
-      payload.append('description', this.annualReportForm.description.trim());
       payload.append('opening_date', this.annualReportForm.openingDate.trim());
       payload.append('closing_date', this.annualReportForm.closingDate.trim());
       payload.append('detail_file_path', this.getAnnualReportFilePathForSave('detail_file_path'));
@@ -1218,11 +2102,50 @@ export class AdminContentComponent implements OnInit {
     } else if (this.isBeneficiaryListPage()) {
       payload.append('project_name', this.annualReportForm.title.trim());
       payload.append('no_of_beneficiaries', this.annualReportForm.noOfBeneficiaries.trim());
+    } else if (this.isCareerOpportunitiesPage()) {
+      payload.append('name_of_post', this.annualReportForm.nameOfPost.trim());
+      payload.append('req_qualification', this.annualReportForm.reqQualification.trim());
+      payload.append('number_of_post', this.annualReportForm.numberOfPost.trim());
+      payload.append('remuneration', this.annualReportForm.remuneration.trim());
+      payload.append('closing_date', this.annualReportForm.closingDate.trim());
+      payload.append('lower_age', this.annualReportForm.lowerAge.trim());
+      payload.append('upper_age', this.annualReportForm.upperAge.trim());
+    } else if (this.isPartnersPage()) {
+      payload.append('title', this.annualReportForm.title.trim());
+      payload.append('logo_path', filePath);
+    } else if (this.isCctvDetailsPage()) {
+      payload.append('title', this.annualReportForm.title.trim());
+      payload.append('project_name', this.annualReportForm.projectName.trim());
+      payload.append('project_name_hindi', this.annualReportForm.projectNameHindi.trim());
+      payload.append('project_name_odia', this.annualReportForm.projectNameOdia.trim());
+      payload.append('serial_number', this.annualReportForm.serialNumber.trim());
+    } else if (this.isGoverningBodyPage()) {
+      payload.append('name', this.annualReportForm.governingBodyName.trim());
+      payload.append('name_hindi', this.annualReportForm.governingBodyNameHindi.trim());
+      payload.append('name_odia', this.annualReportForm.governingBodyNameOdia.trim());
+      payload.append('position', this.annualReportForm.governingBodyPosition.trim());
+      payload.append('qualification', this.annualReportForm.governingBodyQualification.trim());
+      payload.append('message', this.annualReportForm.governingBodyMessage.trim());
+      payload.append('message_hindi', this.annualReportForm.governingBodyMessageHindi.trim());
+      payload.append('message_odia', this.annualReportForm.governingBodyMessageOdia.trim());
+      payload.append('image_path', filePath);
+    } else if (this.isGeneralBodyPage()) {
+      payload.append('name', this.annualReportForm.governingBodyName.trim());
+      payload.append('name_hindi', this.annualReportForm.governingBodyNameHindi.trim());
+      payload.append('name_odia', this.annualReportForm.governingBodyNameOdia.trim());
+      payload.append('position', this.annualReportForm.governingBodyPosition.trim());
+      payload.append('image_path', filePath);
+    } else if (this.isDonorListPage()) {
+      payload.append('donor_name', this.annualReportForm.donorName.trim());
+      payload.append('donation_amount', this.annualReportForm.donationAmount.trim());
+      payload.append('donation_date', this.annualReportForm.donationDate.trim());
     } else {
       payload.append('title', this.annualReportForm.title.trim());
     }
     payload.append('display_order', this.annualReportForm.displayOrder);
     payload.append('is_active', this.annualReportForm.isActive ? '1' : '0');
+    payload.append('is_uploaded_file', this.annualReportForm.hasNewUploadedFile ? 'true' : 'false');
+
     if (
       !this.isProgrammeOverviewPage() &&
       !this.isProgrammeDetailsPage() &&
@@ -1235,11 +2158,16 @@ export class AdminContentComponent implements OnInit {
       !this.isMediaCoveragePage() &&
       !this.isAwardsRecognitionPage() &&
       !this.isImageGalleryPage() &&
-      !this.isVideoGalleryPage()
+      !this.isVideoGalleryPage() &&
+      !this.isCareerOpportunitiesPage() &&
+      !this.isPartnersPage() &&
+      !this.isCctvDetailsPage() &&
+      !this.isGoverningBodyPage() &&
+      !this.isGeneralBodyPage() &&
+      !this.isDonorListPage()
     ) {
       payload.append('file_path', filePath);
     }
-    payload.append('is_uploaded_file', this.annualReportForm.hasNewUploadedFile ? 'true' : 'false');
 
     this.isSavingAnnualReport = true;
     const isEditing = this.editingAnnualReportId !== null && this.editingAnnualReportId !== undefined;
@@ -1280,9 +2208,15 @@ export class AdminContentComponent implements OnInit {
       programmeMasterFk: '',
       projectFk: '',
       programmeName: '',
+      programmeNameHindi: '',
+      programmeNameOdia: '',
       projectName: '',
       projectDetails: '',
+      projectDetailsHindi: '',
+      projectDetailsOdia: '',
       achievementDetails: '',
+      achievementDetailsHindi: '',
+      achievementDetailsOdia: '',
       startingYear: '',
       supportedBy: '',
       status: '',
@@ -1296,11 +2230,32 @@ export class AdminContentComponent implements OnInit {
       subTitle: '',
       altText: '',
       imagePath: '',
+      logoPath: '',
       otherImagePaths: '',
       beneficiaryName: '',
       details: '',
       dateTime: '',
       noOfBeneficiaries: '',
+      projectNameHindi: '',
+      projectNameOdia: '',
+      serialNumber: '',
+      nameOfPost: '',
+      reqQualification: '',
+      numberOfPost: '',
+      remuneration: '',
+      lowerAge: '',
+      upperAge: '',
+      governingBodyName: '',
+      governingBodyNameHindi: '',
+      governingBodyNameOdia: '',
+      governingBodyPosition: '',
+      governingBodyQualification: '',
+      governingBodyMessage: '',
+      governingBodyMessageHindi: '',
+      governingBodyMessageOdia: '',
+      donorName: '',
+      donationAmount: '',
+      donationDate: '',
       displayOrder: '',
       isActive: true,
       file: null,
@@ -1385,6 +2340,23 @@ export class AdminContentComponent implements OnInit {
       imageGalleries?: unknown;
       video_galleries?: unknown;
       videoGalleries?: unknown;
+      partners?: unknown;
+      partner?: unknown;
+      cctv_details?: unknown;
+      cctvDetails?: unknown;
+      opportunities?: unknown;
+      opportunity?: unknown;
+      governing_bodies?: unknown;
+      governingBodies?: unknown;
+      governing_body?: unknown;
+      governingBody?: unknown;
+      general_bodies?: unknown;
+      generalBodies?: unknown;
+      general_body?: unknown;
+      generalBody?: unknown;
+      donations?: unknown;
+      donor_list?: unknown;
+      donorList?: unknown;
     };
 
     if (Array.isArray(payload.data)) {
@@ -1507,12 +2479,90 @@ export class AdminContentComponent implements OnInit {
       return payload.videoGalleries as AnnualReportApiItem[];
     }
 
+    if (Array.isArray(payload.partners)) {
+      return payload.partners as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.partner)) {
+      return payload.partner as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.cctv_details)) {
+      return payload.cctv_details as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.cctvDetails)) {
+      return payload.cctvDetails as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.opportunities)) {
+      return payload.opportunities as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.opportunity)) {
+      return payload.opportunity as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.governing_bodies)) {
+      return payload.governing_bodies as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.governingBodies)) {
+      return payload.governingBodies as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.governing_body)) {
+      return payload.governing_body as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.governingBody)) {
+      return payload.governingBody as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.general_bodies)) {
+      return payload.general_bodies as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.generalBodies)) {
+      return payload.generalBodies as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.general_body)) {
+      return payload.general_body as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.generalBody)) {
+      return payload.generalBody as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.donations)) {
+      return payload.donations as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.donor_list)) {
+      return payload.donor_list as AnnualReportApiItem[];
+    }
+
+    if (Array.isArray(payload.donorList)) {
+      return payload.donorList as AnnualReportApiItem[];
+    }
+
     return [];
   }
 
   private extractReport(response: unknown): AnnualReportApiItem | null {
     if (!response || typeof response !== 'object') {
       return null;
+    }
+
+    const directReport = response as AnnualReportApiItem;
+    if (
+      directReport.id !== undefined ||
+      directReport.title !== undefined ||
+      directReport.name_of_post !== undefined ||
+      directReport.name !== undefined
+    ) {
+      return directReport;
     }
 
     const payload = response as {
@@ -1541,6 +2591,17 @@ export class AdminContentComponent implements OnInit {
       imageGallery?: unknown;
       video_gallery?: unknown;
       videoGallery?: unknown;
+      opportunity?: unknown;
+      partner?: unknown;
+      partners?: unknown;
+      cctv_detail?: unknown;
+      cctvDetails?: unknown;
+      cctv_details?: unknown;
+      governing_body?: unknown;
+      governingBody?: unknown;
+      governing_bodies?: unknown;
+      donation?: unknown;
+      donor?: unknown;
     };
 
     if (payload.data && !Array.isArray(payload.data) && typeof payload.data === 'object') {
@@ -1735,6 +2796,82 @@ export class AdminContentComponent implements OnInit {
       return payload.videoGallery as AnnualReportApiItem;
     }
 
+    if (payload.partners && !Array.isArray(payload.partners) && typeof payload.partners === 'object') {
+      return payload.partners as AnnualReportApiItem;
+    }
+
+    if (payload.partner && !Array.isArray(payload.partner) && typeof payload.partner === 'object') {
+      return payload.partner as AnnualReportApiItem;
+    }
+
+    if (
+      payload.cctv_detail &&
+      !Array.isArray(payload.cctv_detail) &&
+      typeof payload.cctv_detail === 'object'
+    ) {
+      return payload.cctv_detail as AnnualReportApiItem;
+    }
+
+    if (
+      payload.cctv_details &&
+      !Array.isArray(payload.cctv_details) &&
+      typeof payload.cctv_details === 'object'
+    ) {
+      return payload.cctv_details as AnnualReportApiItem;
+    }
+
+    if (
+      payload.cctvDetails &&
+      !Array.isArray(payload.cctvDetails) &&
+      typeof payload.cctvDetails === 'object'
+    ) {
+      return payload.cctvDetails as AnnualReportApiItem;
+    }
+
+    if (
+      payload.opportunity &&
+      !Array.isArray(payload.opportunity) &&
+      typeof payload.opportunity === 'object'
+    ) {
+      return payload.opportunity as AnnualReportApiItem;
+    }
+
+    if (
+      payload.governing_body &&
+      !Array.isArray(payload.governing_body) &&
+      typeof payload.governing_body === 'object'
+    ) {
+      return payload.governing_body as AnnualReportApiItem;
+    }
+
+    if (
+      payload.governingBody &&
+      !Array.isArray(payload.governingBody) &&
+      typeof payload.governingBody === 'object'
+    ) {
+      return payload.governingBody as AnnualReportApiItem;
+    }
+
+    if (
+      payload.governing_bodies &&
+      !Array.isArray(payload.governing_bodies) &&
+      typeof payload.governing_bodies === 'object'
+    ) {
+      return payload.governing_bodies as AnnualReportApiItem;
+    }
+
+    if (
+      payload.donation &&
+      !Array.isArray(payload.donation) &&
+      typeof payload.donation === 'object'
+    ) {
+      return payload.donation as AnnualReportApiItem;
+    }
+
+    if (payload.donor && !Array.isArray(payload.donor) && typeof payload.donor === 'object') {
+      return payload.donor as AnnualReportApiItem;
+    }
+
     return null;
   }
 
@@ -1746,10 +2883,19 @@ export class AdminContentComponent implements OnInit {
     });
 
     return sortedReports.map((report, index) => ({
-      id: report.id ?? '',
+      id: this.resolveReportId(report) ?? '',
       slNo: String(index + 1).padStart(2, '0'),
       programme_name: report.programme_name || report.title || 'Untitled',
+      programme_name_hindi: report.programme_name_hindi || '-',
+      programme_name_odia: report.programme_name_odia || '-',
       project_name: report.project_name || '-',
+      project_name_hindi: report.project_name_hindi || '-',
+      project_name_odia: report.project_name_odia || '-',
+      project_details_hindi: report.project_details_hindi || '-',
+      project_details_odia: report.project_details_odia || '-',
+      achievement_details_hindi: report.achievement_details_hindi || '-',
+      achievement_details_odia: report.achievement_details_odia || '-',
+      serial_number: report.serial_number || '-',
       starting_year:
         report.starting_year === null || report.starting_year === undefined
           ? '-'
@@ -1776,16 +2922,52 @@ export class AdminContentComponent implements OnInit {
       date_time: this.formatDateTime(report.date_time),
       video_path: report.video_path || '-',
       image_path: report.image_path || '-',
+      logo_path: report.logo_path || '-',
       other_image_paths: report.other_image_paths || '-',
       display_order:
         report.display_order === null || report.display_order === undefined
           ? '-'
           : String(report.display_order),
-      is_active: this.toBoolean(report.is_active) ? 'Active' : 'Inactive',
+      is_active: this.toBoolean(report.is_active ?? report.isactive) ? 'Active' : 'Inactive',
       noOfBeneficiaries:
         report.no_of_beneficiaries === null || report.no_of_beneficiaries === undefined
           ? '-'
           : String(report.no_of_beneficiaries),
+      name_of_post: report.name_of_post || report.nameOfPost || '-',
+      req_qualification: report.req_qualification || report.reqQualification || '-',
+      number_of_post:
+        report.number_of_post === null || report.number_of_post === undefined
+          ? report.numberOfPost === null || report.numberOfPost === undefined
+            ? '-'
+            : String(report.numberOfPost)
+          : String(report.number_of_post),
+      remuneration: report.remuneration || '-',
+      lower_age:
+        report.lower_age === null || report.lower_age === undefined
+          ? report.lowerAge === null || report.lowerAge === undefined
+            ? '-'
+            : String(report.lowerAge)
+          : String(report.lower_age),
+      upper_age:
+        report.upper_age === null || report.upper_age === undefined
+          ? report.upperAge === null || report.upperAge === undefined
+            ? '-'
+            : String(report.upperAge)
+          : String(report.upper_age),
+      donor_name: report.donor_name || '-',
+      name: report.name || '-',
+      name_hindi: report.name_hindi || '-',
+      name_odia: report.name_odia || '-',
+      position: report.position || '-',
+      qualification: report.qualification || '-',
+      message: report.message || '-',
+      message_hindi: report.message_hindi || '-',
+      message_odia: report.message_odia || '-',
+      donation_amount:
+        report.donation_amount === null || report.donation_amount === undefined
+          ? '-'
+          : String(report.donation_amount),
+      donation_date: this.formatDate(report.donation_date),
       createdDate: this.formatDate(report.created_at),
       action: this.resolveActionLabel(report),
     }));
@@ -1794,6 +2976,36 @@ export class AdminContentComponent implements OnInit {
   private toNumber(value: unknown): number {
     const parsed = Number(value);
     return Number.isFinite(parsed) ? parsed : Number.MAX_SAFE_INTEGER;
+  }
+
+  private resolveReportId(report: AnnualReportApiItem): string | number | null {
+    const candidateIds: Array<string | number | null | undefined> = [
+      report.id,
+      report.cctv_details_id,
+      report.cctv_details_fk,
+      report.cctv_detail_id,
+      report.cctv_id,
+      report.governing_bodies_id,
+      report.governing_body_id,
+      report.governing_body_fk,
+      report.general_bodies_id,
+      report.general_body_id,
+      report.general_body_fk,
+      report.donation_id,
+      report.donor_id,
+      report.opportunity_id,
+      report.opportunityId,
+      report.report_id,
+      report.reportId,
+    ];
+
+    for (const candidateId of candidateIds) {
+      if (candidateId !== null && candidateId !== undefined && candidateId !== '') {
+        return candidateId;
+      }
+    }
+
+    return null;
   }
 
   private toBoolean(value: unknown): boolean {
@@ -1897,6 +3109,7 @@ export class AdminContentComponent implements OnInit {
     const fallbackPath =
       report.video_path ||
       report.image_path ||
+      report.logo_path ||
       report.file_path ||
       report.file_url ||
       report.download_url ||
@@ -1909,6 +3122,7 @@ export class AdminContentComponent implements OnInit {
     const fileUrl =
       report.video_path ||
       report.image_path ||
+      report.logo_path ||
       report.download_url ||
       report.file_url ||
       report.file_path ||
@@ -1921,6 +3135,10 @@ export class AdminContentComponent implements OnInit {
     if (label === 'other_image_paths') {
       const joinedPaths = this.getOtherImagePathList().join(',');
       return joinedPaths || this.annualReportForm.otherUploadedFilePath || this.annualReportForm.otherExistingFilePath;
+    }
+
+    if (this.isPartnersPage()) {
+      return this.annualReportForm.uploadedFilePath || this.annualReportForm.existingFilePath;
     }
 
     if (label === 'detail_file_path') {
@@ -2045,6 +3263,17 @@ export class AdminContentComponent implements OnInit {
           return;
         }
 
+        if (label === 'logo_path') {
+          this.annualReportForm.uploadedFilePath = filePath;
+          this.annualReportForm.existingFilePath = filePath;
+          this.annualReportForm.existingFileUrl = apiEndpoints.publicAsset(filePath);
+          this.annualReportForm.existingFileName = file.name;
+          this.annualReportForm.logoPath = filePath;
+          this.annualReportForm.imagePath = filePath;
+          this.annualReportForm.hasNewUploadedFile = true;
+          return;
+        }
+
         this.annualReportForm.uploadedFilePath = filePath;
         this.annualReportForm.existingFilePath = filePath;
         this.annualReportForm.existingFileUrl = apiEndpoints.publicAsset(filePath);
@@ -2094,6 +3323,14 @@ export class AdminContentComponent implements OnInit {
           this.annualReportForm.existingFilePath = filePath;
           this.annualReportForm.existingFileUrl = apiEndpoints.publicAsset(filePath);
           this.annualReportForm.existingFileName = file.name;
+          this.annualReportForm.hasNewUploadedFile = true;
+        } else if (label === 'logo_path') {
+          this.annualReportForm.uploadedFilePath = filePath;
+          this.annualReportForm.existingFilePath = filePath;
+          this.annualReportForm.existingFileUrl = apiEndpoints.publicAsset(filePath);
+          this.annualReportForm.existingFileName = file.name;
+          this.annualReportForm.logoPath = filePath;
+          this.annualReportForm.imagePath = filePath;
           this.annualReportForm.hasNewUploadedFile = true;
         } else {
           this.annualReportForm.uploadedFilePath = filePath;
@@ -2153,12 +3390,29 @@ export class AdminContentComponent implements OnInit {
 
 interface AnnualReportApiItem {
   id?: number | string | null;
+  cctv_details_id?: number | string | null;
+  cctv_details_fk?: number | string | null;
+  cctv_detail_id?: number | string | null;
+  cctv_id?: number | string | null;
+  opportunity_id?: number | string | null;
+  opportunityId?: number | string | null;
+  report_id?: number | string | null;
+  reportId?: number | string | null;
   programme_master_fk?: number | string | null;
   projects_fk?: number | string | null;
   programme_name?: string;
+  programme_name_hindi?: string;
+  programme_name_odia?: string;
   project_name?: string;
+  project_name_hindi?: string;
+  project_name_odia?: string;
+  serial_number?: string;
   project_details?: string;
+  project_details_hindi?: string;
+  project_details_odia?: string;
   achievement_details?: string;
+  achievement_details_hindi?: string;
+  achievement_details_odia?: string;
   starting_year?: number | string | null;
   supported_by?: string | null;
   status?: string | null;
@@ -2176,25 +3430,64 @@ interface AnnualReportApiItem {
   date_time?: string | null;
   video_path?: string | null;
   image_path?: string | null;
+  logo_path?: string | null;
   other_image_paths?: string | null;
   no_of_beneficiaries?: number | string | null;
+  name_of_post?: string;
+  nameOfPost?: string;
+  req_qualification?: string;
+  reqQualification?: string;
+  number_of_post?: number | string | null;
+  numberOfPost?: number | string | null;
+  remuneration?: string;
+  lower_age?: number | string | null;
+  lowerAge?: number | string | null;
+  upper_age?: number | string | null;
+  upperAge?: number | string | null;
+  name?: string;
+  name_hindi?: string;
+  name_odia?: string;
+  position?: string;
+  qualification?: string;
+  message?: string;
+  message_hindi?: string;
+  message_odia?: string;
+  governing_bodies_id?: number | string | null;
+  governing_body_id?: number | string | null;
+  governing_body_fk?: number | string | null;
+  general_bodies_id?: number | string | null;
+  general_body_id?: number | string | null;
+  general_body_fk?: number | string | null;
+  donor_name?: string;
+  donation_amount?: number | string | null;
+  donation_date?: string | null;
+  donation_id?: number | string | null;
+  donor_id?: number | string | null;
   created_at?: string | null;
   is_active?: boolean | number | string | null;
+  isactive?: boolean | number | string | null;
   file?: string | null;
   file_name?: string | null;
   file_path?: string | null;
   file_url?: string | null;
   download_url?: string | null;
   display_order?: number | string | null;
+  displayOrder?: number | string | null;
 }
 
 interface AnnualReportFormState {
   programmeMasterFk: string;
   projectFk: string;
   programmeName: string;
+  programmeNameHindi: string;
+  programmeNameOdia: string;
   projectName: string;
   projectDetails: string;
+  projectDetailsHindi: string;
+  projectDetailsOdia: string;
   achievementDetails: string;
+  achievementDetailsHindi: string;
+  achievementDetailsOdia: string;
   startingYear: string;
   supportedBy: string;
   status: string;
@@ -2208,11 +3501,32 @@ interface AnnualReportFormState {
   subTitle: string;
   altText: string;
   imagePath: string;
+  logoPath: string;
   otherImagePaths: string;
   beneficiaryName: string;
   details: string;
   dateTime: string;
   noOfBeneficiaries: string;
+  projectNameHindi: string;
+  projectNameOdia: string;
+  serialNumber: string;
+  nameOfPost: string;
+  reqQualification: string;
+  numberOfPost: string;
+  remuneration: string;
+  lowerAge: string;
+  upperAge: string;
+  governingBodyName: string;
+  governingBodyNameHindi: string;
+  governingBodyNameOdia: string;
+  governingBodyPosition: string;
+  governingBodyQualification: string;
+  governingBodyMessage: string;
+  governingBodyMessageHindi: string;
+  governingBodyMessageOdia: string;
+  donorName: string;
+  donationAmount: string;
+  donationDate: string;
   displayOrder: string;
   isActive: boolean;
   file: File | null;
@@ -2227,4 +3541,44 @@ interface AnnualReportFormState {
   otherUploadedFilePath: string;
   hasNewUploadedFile: boolean;
   hasNewOtherUploadedFile: boolean;
+}
+
+interface OrganizationDetailsApiItem {
+  id?: number | string | null;
+  pk?: number | string | null;
+  organization_details_id?: number | string | null;
+  organization_details_fk?: number | string | null;
+  organization_id?: number | string | null;
+  phone_number?: string;
+  phoneNumber?: string;
+  phone?: string;
+  email?: string;
+  email_id?: string;
+  emailId?: string;
+  office_address?: string;
+  officeAddress?: string;
+  address?: string;
+  office_address_hindi?: string;
+  office_address_hi?: string;
+  officeAddressHindi?: string;
+  office_address_odia?: string;
+  office_address_or?: string;
+  officeAddressOdia?: string;
+  facebook_url?: string;
+  facebookUrl?: string;
+  twitter_url?: string;
+  twitterUrl?: string;
+  linkedin_url?: string;
+  linkedinUrl?: string;
+}
+
+interface OrganizationDetailsFormState {
+  phoneNumber: string;
+  email: string;
+  officeAddress: string;
+  officeAddressHindi: string;
+  officeAddressOdia: string;
+  facebookUrl: string;
+  twitterUrl: string;
+  linkedinUrl: string;
 }
