@@ -66,7 +66,11 @@ export class AdminContentComponent implements OnInit {
     strength: '',
     beneficiariesCovered: '',
     title: '',
+    titleHindi: '',
+    titleOdia: '',
     description: '',
+    descriptionHindi: '',
+    descriptionOdia: '',
     openingDate: '',
     closingDate: '',
     detailFilePath: '',
@@ -76,7 +80,11 @@ export class AdminContentComponent implements OnInit {
     logoPath: '',
     otherImagePaths: '',
     beneficiaryName: '',
+    beneficiaryNameHindi: '',
+    beneficiaryNameOdia: '',
     details: '',
+    detailsHindi: '',
+    detailsOdia: '',
     dateTime: '',
     noOfBeneficiaries: '',
     projectNameHindi: '',
@@ -164,18 +172,22 @@ export class AdminContentComponent implements OnInit {
   }
 
   isProgrammeDetailsRichTextField(label: string): boolean {
-    if (!this.isProgrammeDetailsPage()) {
-      return false;
+    if (this.isProgrammeDetailsPage()) {
+      return (
+        label === 'project_details' ||
+        label === 'project_details_hindi' ||
+        label === 'project_details_odia' ||
+        label === 'achievement_details' ||
+        label === 'achievement_details_hindi' ||
+        label === 'achievement_details_odia'
+      );
     }
 
-    return (
-      label === 'project_details' ||
-      label === 'project_details_hindi' ||
-      label === 'project_details_odia' ||
-      label === 'achievement_details' ||
-      label === 'achievement_details_hindi' ||
-      label === 'achievement_details_odia'
-    );
+    if (this.isSuccessStoryPage()) {
+      return label === 'details' || label === 'details_hindi' || label === 'details_odia';
+    }
+
+    return false;
   }
 
   fieldClass(span?: 1 | 2 | 3 | 4): string {
@@ -253,7 +265,11 @@ export class AdminContentComponent implements OnInit {
             strength: '',
             beneficiariesCovered: '',
             title: report.title || '',
+            titleHindi: report.title_hindi || '',
+            titleOdia: report.title_odia || '',
             description: report.description || '',
+            descriptionHindi: report.description_hindi || '',
+            descriptionOdia: report.description_odia || '',
             openingDate: this.toDateValue(report.opening_date),
             closingDate: this.toDateValue(report.closing_date),
             detailFilePath: report.detail_file_path || '',
@@ -263,7 +279,11 @@ export class AdminContentComponent implements OnInit {
             logoPath: '',
             otherImagePaths: '',
             beneficiaryName: '',
+            beneficiaryNameHindi: '',
+            beneficiaryNameOdia: '',
             details: '',
+            detailsHindi: '',
+            detailsOdia: '',
             dateTime: '',
             noOfBeneficiaries: '',
             projectNameHindi: '',
@@ -365,17 +385,25 @@ export class AdminContentComponent implements OnInit {
               ? ''
               : String(report.beneficiaries_covered),
           title: report.title || report.programme_name || report.project_name || '',
-          description: '',
-          openingDate: '',
+          description: report.description || '',
+          descriptionHindi: report.description_hindi || '',
+          descriptionOdia: report.description_odia || '',
+          openingDate: this.toDateValue(report.opening_date),
           closingDate: this.toDateValue(report.closing_date),
-          detailFilePath: '',
+          detailFilePath: report.detail_file_path || '',
           subTitle: report.sub_title || '',
           altText: report.alt_text || '',
           imagePath: report.image_path || report.logo_path || '',
           logoPath: report.logo_path || '',
           otherImagePaths: report.other_image_paths || '',
           beneficiaryName: report.beneficiary_name || '',
+          beneficiaryNameHindi: report.beneficiary_name_hindi || '',
+          beneficiaryNameOdia: report.beneficiary_name_odia || '',
           details: report.details || '',
+          detailsHindi: report.details_hindi || '',
+          detailsOdia: report.details_odia || '',
+          titleHindi: report.title_hindi || '',
+          titleOdia: report.title_odia || '',
           dateTime: this.toDateTimeLocalValue(report.date_time),
           noOfBeneficiaries:
             report.no_of_beneficiaries === null || report.no_of_beneficiaries === undefined
@@ -576,9 +604,25 @@ export class AdminContentComponent implements OnInit {
     if (this.isTenderNoticePage() || this.isAdvertisementPage()) {
       return Boolean(
         this.annualReportForm.title.trim() &&
+          this.annualReportForm.titleHindi.trim() &&
+          this.annualReportForm.titleOdia.trim() &&
           this.annualReportForm.description.trim() &&
+          this.annualReportForm.descriptionHindi.trim() &&
+          this.annualReportForm.descriptionOdia.trim() &&
           this.annualReportForm.openingDate.trim() &&
           this.annualReportForm.closingDate.trim() &&
+          this.annualReportForm.displayOrder.trim()
+      );
+    }
+
+    if (this.isNewsEventsPage()) {
+      return Boolean(
+        this.annualReportForm.title.trim() &&
+          this.annualReportForm.titleHindi.trim() &&
+          this.annualReportForm.titleOdia.trim() &&
+          this.annualReportForm.description.trim() &&
+          this.annualReportForm.descriptionHindi.trim() &&
+          this.annualReportForm.descriptionOdia.trim() &&
           this.annualReportForm.displayOrder.trim()
       );
     }
@@ -596,8 +640,14 @@ export class AdminContentComponent implements OnInit {
     if (this.isSuccessStoryPage()) {
       return Boolean(
         this.annualReportForm.title.trim() &&
+          this.annualReportForm.titleHindi.trim() &&
+          this.annualReportForm.titleOdia.trim() &&
           this.annualReportForm.beneficiaryName.trim() &&
+          this.annualReportForm.beneficiaryNameHindi.trim() &&
+          this.annualReportForm.beneficiaryNameOdia.trim() &&
           this.annualReportForm.details.trim() &&
+          this.annualReportForm.detailsHindi.trim() &&
+          this.annualReportForm.detailsOdia.trim() &&
           this.annualReportForm.displayOrder.trim() &&
           this.getAnnualReportFilePathForSave()
       );
@@ -720,6 +770,14 @@ export class AdminContentComponent implements OnInit {
       this.annualReportForm.description = value;
     }
 
+    if (label === 'description_hindi') {
+      this.annualReportForm.descriptionHindi = value;
+    }
+
+    if (label === 'description_odia') {
+      this.annualReportForm.descriptionOdia = value;
+    }
+
     if (label === 'opening_date') {
       this.annualReportForm.openingDate = value;
     }
@@ -800,8 +858,32 @@ export class AdminContentComponent implements OnInit {
       this.annualReportForm.beneficiaryName = value;
     }
 
+    if (label === 'beneficiary_name_hindi') {
+      this.annualReportForm.beneficiaryNameHindi = value;
+    }
+
+    if (label === 'beneficiary_name_odia') {
+      this.annualReportForm.beneficiaryNameOdia = value;
+    }
+
     if (label === 'details') {
       this.annualReportForm.details = value;
+    }
+
+    if (label === 'details_hindi') {
+      this.annualReportForm.detailsHindi = value;
+    }
+
+    if (label === 'details_odia') {
+      this.annualReportForm.detailsOdia = value;
+    }
+
+    if (label === 'title_hindi') {
+      this.annualReportForm.titleHindi = value;
+    }
+
+    if (label === 'title_odia') {
+      this.annualReportForm.titleOdia = value;
     }
 
     if (label === 'date_time') {
@@ -944,6 +1026,14 @@ export class AdminContentComponent implements OnInit {
       return this.annualReportForm.description;
     }
 
+    if (label === 'description_hindi') {
+      return this.annualReportForm.descriptionHindi;
+    }
+
+    if (label === 'description_odia') {
+      return this.annualReportForm.descriptionOdia;
+    }
+
     if (label === 'opening_date') {
       return this.annualReportForm.openingDate;
     }
@@ -974,6 +1064,14 @@ export class AdminContentComponent implements OnInit {
 
     if (label === 'beneficiary_name') {
       return this.annualReportForm.beneficiaryName;
+    }
+
+    if (label === 'beneficiary_name_hindi') {
+      return this.annualReportForm.beneficiaryNameHindi;
+    }
+
+    if (label === 'beneficiary_name_odia') {
+      return this.annualReportForm.beneficiaryNameOdia;
     }
 
     if (label === 'project_details') {
@@ -1026,6 +1124,22 @@ export class AdminContentComponent implements OnInit {
 
     if (label === 'details') {
       return this.annualReportForm.details;
+    }
+
+    if (label === 'details_hindi') {
+      return this.annualReportForm.detailsHindi;
+    }
+
+    if (label === 'details_odia') {
+      return this.annualReportForm.detailsOdia;
+    }
+
+    if (label === 'title_hindi') {
+      return this.annualReportForm.titleHindi;
+    }
+
+    if (label === 'title_odia') {
+      return this.annualReportForm.titleOdia;
     }
 
     if (label === 'date_time') {
@@ -2036,6 +2150,9 @@ export class AdminContentComponent implements OnInit {
       !this.isGoverningBodyPage() &&
       !this.isGeneralBodyPage() &&
       !this.isDonorListPage() &&
+      !this.isTenderNoticePage() &&
+      !this.isAdvertisementPage() &&
+      !this.isNewsEventsPage() &&
       !filePath
     ) {
       return;
@@ -2085,9 +2202,17 @@ export class AdminContentComponent implements OnInit {
       payload.append('image_path', filePath);
     } else if (this.isTenderNoticePage() || this.isAdvertisementPage() || this.isNewsEventsPage()) {
       payload.append('title', this.annualReportForm.title.trim());
+      payload.append('title_hindi', this.annualReportForm.titleHindi.trim());
+      payload.append('title_odia', this.annualReportForm.titleOdia.trim());
+      payload.append('description', this.annualReportForm.description.trim());
+      payload.append('description_hindi', this.annualReportForm.descriptionHindi.trim());
+      payload.append('description_odia', this.annualReportForm.descriptionOdia.trim());
       payload.append('opening_date', this.annualReportForm.openingDate.trim());
       payload.append('closing_date', this.annualReportForm.closingDate.trim());
-      payload.append('detail_file_path', this.getAnnualReportFilePathForSave('detail_file_path'));
+      const detailFilePath = this.getAnnualReportFilePathForSave('detail_file_path');
+      if (detailFilePath) {
+        payload.append('detail_file_path', detailFilePath);
+      }
     } else if (this.isVideoGalleryPage()) {
       payload.append('title', this.annualReportForm.title.trim());
       payload.append('video_path', filePath);
@@ -2096,8 +2221,14 @@ export class AdminContentComponent implements OnInit {
       payload.append('image_path', filePath);
     } else if (this.isSuccessStoryPage()) {
       payload.append('title', this.annualReportForm.title.trim());
+      payload.append('title_hindi', this.annualReportForm.titleHindi.trim());
+      payload.append('title_odia', this.annualReportForm.titleOdia.trim());
       payload.append('beneficiary_name', this.annualReportForm.beneficiaryName.trim());
+      payload.append('beneficiary_name_hindi', this.annualReportForm.beneficiaryNameHindi.trim());
+      payload.append('beneficiary_name_odia', this.annualReportForm.beneficiaryNameOdia.trim());
       payload.append('details', this.annualReportForm.details.trim());
+      payload.append('details_hindi', this.annualReportForm.detailsHindi.trim());
+      payload.append('details_odia', this.annualReportForm.detailsOdia.trim());
       payload.append('image_path', filePath);
     } else if (this.isBeneficiaryListPage()) {
       payload.append('project_name', this.annualReportForm.title.trim());
@@ -2223,7 +2354,11 @@ export class AdminContentComponent implements OnInit {
       strength: '',
       beneficiariesCovered: '',
       title: '',
+      titleHindi: '',
+      titleOdia: '',
       description: '',
+      descriptionHindi: '',
+      descriptionOdia: '',
       openingDate: '',
       closingDate: '',
       detailFilePath: '',
@@ -2233,7 +2368,11 @@ export class AdminContentComponent implements OnInit {
       logoPath: '',
       otherImagePaths: '',
       beneficiaryName: '',
+      beneficiaryNameHindi: '',
+      beneficiaryNameOdia: '',
       details: '',
+      detailsHindi: '',
+      detailsOdia: '',
       dateTime: '',
       noOfBeneficiaries: '',
       projectNameHindi: '',
@@ -2911,14 +3050,22 @@ export class AdminContentComponent implements OnInit {
       project_details: report.project_details || '-',
       achievement_details: report.achievement_details || '-',
       title: report.title || 'Untitled',
+      title_hindi: report.title_hindi || '-',
+      title_odia: report.title_odia || '-',
       description: report.description || '-',
+      description_hindi: report.description_hindi || '-',
+      description_odia: report.description_odia || '-',
       opening_date: this.formatDate(report.opening_date),
       closing_date: this.formatDate(report.closing_date),
       detail_file_path: report.detail_file_path || '-',
       sub_title: report.sub_title || '-',
       alt_text: report.alt_text || '-',
       beneficiary_name: report.beneficiary_name || '-',
+      beneficiary_name_hindi: report.beneficiary_name_hindi || '-',
+      beneficiary_name_odia: report.beneficiary_name_odia || '-',
       details: report.details || '-',
+      details_hindi: report.details_hindi || '-',
+      details_odia: report.details_odia || '-',
       date_time: this.formatDateTime(report.date_time),
       video_path: report.video_path || '-',
       image_path: report.image_path || '-',
@@ -3419,14 +3566,22 @@ interface AnnualReportApiItem {
   strength?: number | string | null;
   beneficiaries_covered?: number | string | null;
   title?: string;
+  title_hindi?: string;
+  title_odia?: string;
   description?: string;
+  description_hindi?: string;
+  description_odia?: string;
   opening_date?: string | null;
   closing_date?: string | null;
   detail_file_path?: string | null;
   sub_title?: string;
   alt_text?: string;
   beneficiary_name?: string;
+  beneficiary_name_hindi?: string;
+  beneficiary_name_odia?: string;
   details?: string;
+  details_hindi?: string;
+  details_odia?: string;
   date_time?: string | null;
   video_path?: string | null;
   image_path?: string | null;
@@ -3494,7 +3649,11 @@ interface AnnualReportFormState {
   strength: string;
   beneficiariesCovered: string;
   title: string;
+  titleHindi: string;
+  titleOdia: string;
   description: string;
+  descriptionHindi: string;
+  descriptionOdia: string;
   openingDate: string;
   closingDate: string;
   detailFilePath: string;
@@ -3504,7 +3663,11 @@ interface AnnualReportFormState {
   logoPath: string;
   otherImagePaths: string;
   beneficiaryName: string;
+  beneficiaryNameHindi: string;
+  beneficiaryNameOdia: string;
   details: string;
+  detailsHindi: string;
+  detailsOdia: string;
   dateTime: string;
   noOfBeneficiaries: string;
   projectNameHindi: string;

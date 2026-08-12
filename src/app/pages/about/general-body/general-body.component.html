@@ -11,76 +11,24 @@
     <img src="/assets/images/banners/banner3.jpg" alt="NSP general body meeting" />
   </section>
 
-  <section class="body-card">
+  <section class="body-card" *ngIf="members.length; else noMembers">
     <mat-card>
       <mat-card-content>
         <p class="section-label">{{ 'section.members' | translate }}</p>
         <div class="member-list">
-          <div class="member-item">
-            <img class="member-photo" src="/assets/images/profile/user-1.jpg" alt="Jitendra Kumar Harichandan" />
+          <div class="member-item" *ngFor="let member of members; trackBy: trackMember">
+            <img class="member-photo" [src]="member.image || '/assets/images/profile/default-profile.png'" [alt]="getMemberName(member)" />
             <div class="member-copy">
-              <strong>Jitendra Kumar Harichandan</strong>
-              <em>Member</em>
-            </div>
-          </div>
-          <div class="member-item">
-            <img class="member-photo" src="/assets/images/profile/user-2.jpg" alt="Umakanta Pattanayak" />
-            <div class="member-copy">
-              <strong>Umakanta Pattanayak</strong>
-              <em>Member</em>
-            </div>
-          </div>
-          <div class="member-item">
-            <img class="member-photo" src="/assets/images/profile/user-3.jpg" alt="Pravas Chandra Sundaray" />
-            <div class="member-copy">
-              <strong>Pravas Chandra Sundaray</strong>
-              <em>Member</em>
-            </div>
-          </div>
-          <div class="member-item">
-            <img class="member-photo" src="/assets/images/profile/user-4.jpg" alt="Biswo Bhusan Mangaraj" />
-            <div class="member-copy">
-              <strong>Biswo Bhusan Mangaraj</strong>
-              <em>Member</em>
-            </div>
-          </div>
-          <div class="member-item">
-            <img class="member-photo" src="/assets/images/profile/user-5.jpg" alt="Sudarsan Parida" />
-            <div class="member-copy">
-              <strong>Sudarsan Parida</strong>
-              <em>Member</em>
-            </div>
-          </div>
-          <div class="member-item">
-            <img class="member-photo" src="/assets/images/profile/user-6.jpg" alt="Minati Biswa" />
-            <div class="member-copy">
-              <strong>Minati Biswa</strong>
-              <em>Member</em>
-            </div>
-          </div>
-          <div class="member-item">
-            <img class="member-photo" src="/assets/images/profile/user-7.jpg" alt="Sudhansu Mohan Moharatha" />
-            <div class="member-copy">
-              <strong>Sudhansu Mohan Moharatha</strong>
-              <em>Member</em>
-            </div>
-          </div>
-          <div class="member-item">
-            <img class="member-photo" src="/assets/images/profile/user-8.jpg" alt="Gangadhar Patashani" />
-            <div class="member-copy">
-              <strong>Gangadhar Patashani</strong>
-              <em>Member</em>
-            </div>
-          </div>
-          <div class="member-item">
-            <img class="member-photo" src="/assets/images/profile/user-9.jpg" alt="Gyan Bikash Gajendra" />
-            <div class="member-copy">
-              <strong>Gyan Bikash Gajendra</strong>
-              <em>Member</em>
+              <strong>{{ getMemberName(member) }}</strong>
+              <em>{{ getMemberPosition(member) }}</em>
             </div>
           </div>
         </div>
       </mat-card-content>
     </mat-card>
   </section>
+
+  <ng-template #noMembers>
+    <p class="empty-state">{{ 'common.noRecordsFound' | translate }}</p>
+  </ng-template>
 </div>

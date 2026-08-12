@@ -64,8 +64,8 @@
           <div class="notice-marquee">
             @for (item of advertisements; track item.id) {
               <div class="notice-item">
-                <p class="notice-text notice-headline">{{ item.title }}</p>
-                <p class="notice-desc">{{ item.description }}</p>
+                <p class="notice-text notice-headline">{{ getNoticeTitle(item) }}</p>
+                <p class="notice-desc">{{ getNoticeDescription(item) }}</p>
                 <div class="notice-meta">
                   <div class="notice-dates">
                     <span class="notice-date"
@@ -90,8 +90,8 @@
             }
             @for (item of advertisements; track item.id) {
               <div class="notice-item">
-                <p class="notice-text notice-headline">{{ item.title }}</p>
-                <p class="notice-desc">{{ item.description }}</p>
+                <p class="notice-text notice-headline">{{ getNoticeTitle(item) }}</p>
+                <p class="notice-desc">{{ getNoticeDescription(item) }}</p>
                 <div class="notice-meta">
                   <div class="notice-dates">
                     <span class="notice-date"
@@ -130,8 +130,8 @@
           <div class="notice-marquee">
             @for (item of tendersNotice; track item.id) {
               <div class="notice-item">
-                <p class="notice-text notice-headline">{{ item.title }}</p>
-                <p class="notice-desc">{{ item.description }}</p>
+                <p class="notice-text notice-headline">{{ getNoticeTitle(item) }}</p>
+                <p class="notice-desc">{{ getNoticeDescription(item) }}</p>
                 <div class="notice-meta">
                   <div class="notice-dates">
                     <span class="notice-date"
@@ -155,8 +155,8 @@
             }
             @for (item of tendersNotice; track item.id) {
               <div class="notice-item">
-                <p class="notice-text notice-headline">{{ item.title }}</p>
-                <p class="notice-desc">{{ item.description }}</p>
+                <p class="notice-text notice-headline">{{ getNoticeTitle(item) }}</p>
+                <p class="notice-desc">{{ getNoticeDescription(item) }}</p>
                 <div class="notice-meta">
                   <div class="notice-dates">
                     <span class="notice-date"
@@ -194,8 +194,8 @@
           <div class="notice-marquee">
             @for (item of newsAndEvents; track item.id) {
               <div class="notice-item">
-                <p class="notice-text notice-headline">{{ item.title }}</p>
-                <p class="notice-desc">{{ item.description }}</p>
+                <p class="notice-text notice-headline">{{ getNoticeTitle(item) }}</p>
+                <p class="notice-desc">{{ getNoticeDescription(item) }}</p>
                 <div class="notice-meta">
                   <span class="notice-date"
                     >Posted: {{ item.date | date: "dd MMM yyyy" }}</span
@@ -206,8 +206,8 @@
             }
             @for (item of newsAndEvents; track item.id) {
               <div class="notice-item">
-                <p class="notice-text notice-headline">{{ item.title }}</p>
-                <p class="notice-desc">{{ item.description }}</p>
+                <p class="notice-text notice-headline">{{ getNoticeTitle(item) }}</p>
+                <p class="notice-desc">{{ getNoticeDescription(item) }}</p>
                 <div class="notice-meta">
                   <span class="notice-date"
                     >Posted: {{ item.date | date: "dd MMM yyyy" }}</span
@@ -250,10 +250,15 @@
     </div>
 
     <div class="gallery-grid">
-      @for (photo of galleryPhotos; track photo.image; let i = $index) {
+      @for (photo of visibleGalleryPhotos; track photo.image; let i = $index) {
         <mat-card
           class="gallery-card cardWithShadow"
           [class.gallery-card-featured]="i === 0"
+          tabindex="0"
+          role="button"
+          (click)="openGalleryLightbox(i)"
+          (keydown.enter)="openGalleryLightbox(i)"
+          (keydown.space)="openGalleryLightbox(i)"
         >
           <img [src]="photo.image" [alt]="photo.title" />
           <div class="gallery-overlay">
@@ -262,6 +267,25 @@
         </mat-card>
       }
     </div>
+
+    @if (isGalleryLightboxOpen) {
+      <div class="gallery-lightbox-backdrop" (click)="closeGalleryLightbox()">
+        <div class="gallery-lightbox-dialog" (click)="$event.stopPropagation()">
+          <button type="button" class="gallery-lightbox-close" (click)="closeGalleryLightbox()">×</button>
+          <button type="button" class="gallery-lightbox-nav left" (click)="showPrevGalleryPhoto()">&#10094;</button>
+
+          <figure class="gallery-lightbox-figure">
+            <img [src]="activeGalleryPhoto.image" [alt]="activeGalleryPhoto.title" />
+            <figcaption>
+              <span>{{ activeGalleryPhoto.title }}</span>
+              <span>{{ activeGalleryIndex + 1 }} / {{ visibleGalleryPhotos.length }}</span>
+            </figcaption>
+          </figure>
+
+          <button type="button" class="gallery-lightbox-nav right" (click)="showNextGalleryPhoto()">&#10095;</button>
+        </div>
+      </div>
+    }
   </section>
   <section class="stories-section" id="stories">
     <div class="section-heading">
@@ -276,11 +300,11 @@
         <div class="owl-carousel owl-theme stories-carousel">
           @for (story of stories; track story.title) {
             <mat-card class="item story-card cardWithShadow">
-              <img mat-card-image [src]="story.image" [alt]="story.title" />
-              <mat-card-content>
+              <img mat-card-image [src]="story.image" [alt]="getStoryTitle(story)" />
+              <mat-card-content class="story-content overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:7]">
                 <!-- <span class="story-tag">{{ story.tag }}</span> -->
-                <p class="story-title">{{ story.title }}</p>
-                <p class="story-text">{{ story.summary }}</p>
+                <p class="story-title">{{ getStoryTitle(story) }}</p>
+                <div class="story-text project-rich-text" [innerHTML]="getStorySummary(story)"></div>
               </mat-card-content>
             </mat-card>
           }

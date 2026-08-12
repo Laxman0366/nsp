@@ -4,20 +4,22 @@
     <mat-card-content class="contact-card-content">
       <div class="contact-form-panel">
         <p>{{ 'page.contactUsHint' | translate }}</p>
-        <form>
+        <form (ngSubmit)="submitContact()">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>{{ 'common.name' | translate }}</mat-label>
-            <input matInput />
+            <input matInput name="name" [(ngModel)]="form.name" />
           </mat-form-field>
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>{{ 'common.email' | translate }}</mat-label>
-            <input matInput type="email" />
+            <input matInput type="email" name="email" [(ngModel)]="form.email" />
           </mat-form-field>
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>{{ 'common.message' | translate }}</mat-label>
-            <textarea matInput rows="5"></textarea>
+            <textarea matInput rows="5" name="message" [(ngModel)]="form.message"></textarea>
           </mat-form-field>
-          <button mat-raised-button color="accent">{{ 'common.send' | translate }}</button>
+          <p *ngIf="formError" class="text-danger mb-2">{{ formError }}</p>
+          <p *ngIf="submitInfo" class="text-success mb-2">{{ submitInfo }}</p>
+          <button mat-raised-button color="accent" type="submit">{{ 'common.send' | translate }}</button>
         </form>
       </div>
 

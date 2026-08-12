@@ -2,13 +2,18 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { MaterialModule } from '../../material.module';
 import { apiEndpoints } from '../../api-endpoints';
 
 interface NoticeRow {
   id: number;
   title: string;
+  title_hindi?: string | null;
+  title_odia?: string | null;
   description?: string;
+  description_hindi?: string | null;
+  description_odia?: string | null;
   displayDate: string;
   downloadUrl: string;
 }
@@ -24,11 +29,18 @@ export class NoticeListComponent implements OnInit {
   notices: NoticeRow[] = [];
   pageTitle = 'Notices';
   isLoading = true;
+  private currentLang: 'en' | 'hi' | 'or' = 'en';
 
   constructor(
     private readonly route: ActivatedRoute,
-    private readonly http: HttpClient
-  ) {}
+    private readonly http: HttpClient,
+    private readonly translate: TranslateService
+  ) {
+    this.currentLang = this.normalizeLanguage(this.translate.currentLang || this.translate.getDefaultLang() || 'en');
+    this.translate.onLangChange.subscribe(({ lang }) => {
+      this.currentLang = this.normalizeLanguage(lang);
+    });
+  }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
@@ -86,14 +98,22 @@ export class NoticeListComponent implements OnInit {
 
     return payload.map((item: Record<string, unknown>, index: number) => {
       const title = this.getStringValue(item, ['title', 'name']);
+      const titleHindi = this.getStringValue(item, ['title_hindi', 'title_hi', 'titleHindi']);
+      const titleOdia = this.getStringValue(item, ['title_odia', 'title_or', 'titleOdia']);
       const description = this.getStringValue(item, ['description', 'details', 'summary']);
+      const descriptionHindi = this.getStringValue(item, ['description_hindi', 'details_hindi', 'summary_hindi', 'descriptionHi']);
+      const descriptionOdia = this.getStringValue(item, ['description_odia', 'details_odia', 'summary_odia', 'descriptionOr']);
       const displayDate = this.resolveDisplayDate(type, item);
       const filePath = this.getStringValue(item, ['detail_file_path', 'file_path', 'pdf_path', 'download_url', 'file_url', 'file']);
 
       return {
         id: Number(this.getValue(item, 'id', index + 1)),
-        title: title || 'Untitled item',
-        description,
+        title: this.getLocalizedText(title, titleHindi, titleOdia, 'Untitled item'),
+        title_hindi: titleHindi || null,
+        title_odia: titleOdia || null,
+        description: this.getLocalizedText(description, descriptionHindi, descriptionOdia, ''),
+        description_hindi: descriptionHindi || null,
+        description_odia: descriptionOdia || null,
         displayDate,
         downloadUrl: filePath ? apiEndpoints.publicAsset(filePath) : '',
       };
@@ -144,5 +164,45 @@ export class NoticeListComponent implements OnInit {
 
   private getValue(item: Record<string, unknown>, key: string, fallback: unknown): unknown {
     return item[key] ?? fallback;
+  }
+
+  getNoticeTitle(notice: NoticeRow): string {
+    return this.getLocalizedText(notice.title, notice.title_hindi, notice.title_odia, 'Untitled item');
+  }
+
+  getNoticeDescription(notice: NoticeRow): string {
+    return this.getLocalizedText(notice.description, notice.description_hindi, notice.description_odia, '');
+  }
+
+  private getLocalizedText(
+    english?: string | null,
+    hindi?: string | null,
+    odia?: string | null,
+    fallback?: string | null
+  ): string {
+    const valueForCurrentLanguage =
+      this.currentLang === 'hi'
+        ? hindi || english || odia
+        : this.currentLang === 'or'
+          ? odia || english || hindi
+          : english || hindi || odia;
+
+    if (valueForCurrentLanguage && valueForCurrentLanguage.trim()) {
+      return valueForCurrentLanguage;
+    }
+
+    return fallback && fallback.trim() ? fallback : '';
+  }
+
+  private normalizeLanguage(language: string): 'en' | 'hi' | 'or' {
+    if (language === 'hi') {
+      return 'hi';
+    }
+
+    if (language === 'or' || language === 'od') {
+      return 'or';
+    }
+
+    return 'en';
   }
 }

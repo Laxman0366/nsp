@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,6 +25,8 @@ interface BankAccountDetails {
   styleUrls: ['./donate-now.component.scss']
 })
 export class DonateNowComponent {
+  private readonly http = inject(HttpClient);
+
   readonly accounts: BankAccountDetails[] = [
     {
       bankCode: 'IOB',
@@ -77,9 +80,21 @@ export class DonateNowComponent {
       this.form.message.trim(),
     ].join('\n');
 
-    const mailtoUrl = `mailto:paikaraylaxman423@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.location.href = mailtoUrl;
-    this.submitInfo = 'Your email app is opening with a prefilled message.';
+    this.http.post('/api/send-mail', {
+      subject,
+      body,
+      name: this.form.name.trim(),
+      email: this.form.email.trim(),
+      phone: this.form.phone.trim(),
+      message: this.form.message.trim(),
+    }).subscribe({
+      next: () => {
+        this.submitInfo = 'Your message has been sent successfully.';
+      },
+      error: () => {
+        this.formError = 'Unable to send your message right now. Please try again.';
+      },
+    });
   }
 
   private isValidEmail(email: string): boolean {

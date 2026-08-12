@@ -26,8 +26,8 @@
             <tbody>
               @for (notice of notices; track notice.id) {
                 <tr>
-                  <td>{{ notice.title }}</td>
-                  <td>{{ notice.description || '—' }}</td>
+                  <td>{{ getNoticeTitle(notice) }}</td>
+                  <td>{{ getNoticeDescription(notice) || '—' }}</td>
                   <td>{{ notice.displayDate || '—' }}</td>
                   <td>
                     @if (notice.downloadUrl) {

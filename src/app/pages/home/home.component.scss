@@ -135,8 +135,19 @@ section#about {
     letter-spacing: 0.1em;
     color: #00458f;
 }
+.story-content {
+  display: flex;
+  flex-direction: column;
+}
+
 .story-text {
   font-size: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 7;
+  -webkit-box-orient: vertical;
+  line-clamp: 7;
 }
 .story-grid {
   display: grid;
@@ -221,6 +232,16 @@ section#about {
   }
 }
 
+.gallery-card {
+  cursor: pointer;
+  outline: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:focus-visible {
+    box-shadow: 0 0 0 3px rgba(29, 108, 224, 0.26);
+  }
+}
+
 .gallery-overlay {
   position: absolute;
   left: 0;
@@ -236,6 +257,80 @@ section#about {
     font-weight: 600;
     letter-spacing: 0.01em;
   }
+}
+
+.gallery-lightbox-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(8, 15, 28, 0.82);
+}
+
+.gallery-lightbox-dialog {
+  position: relative;
+  width: min(980px, 100%);
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) 56px;
+  gap: 12px;
+  align-items: center;
+}
+
+.gallery-lightbox-close {
+  position: absolute;
+  top: -12px;
+  right: -10px;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #173153;
+  font-size: 1.5rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.gallery-lightbox-nav {
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.gallery-lightbox-figure {
+  margin: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #0d1f38;
+}
+
+.gallery-lightbox-figure img {
+  display: block;
+  width: 100%;
+  max-height: 78vh;
+  object-fit: contain;
+}
+
+.gallery-lightbox-figure figcaption {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  color: #f3f6fb;
+  background: rgba(13, 31, 56, 0.9);
+}
+
+.gallery-lightbox-figure figcaption span:last-child {
+  opacity: 0.8;
+  white-space: nowrap;
 }
 
 .partners-carousel-wrap {
@@ -744,7 +839,14 @@ section#about {
   font-size: 0.85rem;
   font-weight: 600;
 }
-
+.story-text.project-rich-text {
+    overflow-wrap: break-word;
+}
+.story-content {
+    max-height: 250px;
+    overflow-y: hidden;
+    margin-bottom: 15px;
+}
 .notice-view-all:hover {
   text-decoration: underline;
 }
