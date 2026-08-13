@@ -135,7 +135,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   private loadStories(): void {
-    this.http.get<unknown>('/api/success_stories').subscribe({
+    this.http.get<unknown>(apiEndpoints.successStories).subscribe({
       next: (response) => {
         this.stories = this.mapStories(response);
         this.scheduleStoriesCarouselUpdate();
@@ -147,7 +147,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   private loadGalleryPhotos(): void {
-    this.http.get<unknown>('/api/image_gallery').subscribe({
+    this.http.get<unknown>(apiEndpoints.imageGalleries).subscribe({
       next: (response) => {
         this.galleryPhotos = this.mapGalleryPhotos(response);
       },
@@ -158,7 +158,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   private loadPartnerLogos(): void {
-    this.http.get<unknown>('/api/partners').subscribe({
+    this.http.get<unknown>(apiEndpoints.partners).subscribe({
       next: (response) => {
         this.partnerLogos = this.mapPartnerLogos(response);
         this.schedulePartnerCarouselUpdate();
