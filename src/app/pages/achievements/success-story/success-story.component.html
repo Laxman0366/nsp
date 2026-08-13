@@ -13,13 +13,28 @@
   <div class="story-list" *ngIf="stories.length; else emptyState">
     <mat-card class="story-row" *ngFor="let story of stories; trackBy: trackByStoryId">
       <mat-card-content>
-        <div class="story-media" *ngIf="getStoryImage(story)">
-          <img [src]="getStoryImage(story)" [alt]="story.title || 'Success story'" />
+        <div class="story-media" *ngIf="story.imageUrl">
+          <img [src]="story.imageUrl" [alt]="story.altText" />
         </div>
         <div class="story-body">
           <p class="story-title">{{ story.title || ('common.untitled' | translate) }}</p>
-          <p class="story-proverb" *ngIf="story.sub_title">{{ story.sub_title }}</p>
-          <p>{{ story.description }}</p>
+          <p class="story-proverb" *ngIf="story.subTitle">{{ story.subTitle }}</p>
+          <div
+            class="story-description"
+            *ngIf="story.description"
+            #storyText
+            [attr.data-story-id]="story.id"
+            [class.expanded]="isExpanded(story.id)"
+            [innerHTML]="story.description"
+          ></div>
+          <button
+            type="button"
+            class="story-toggle"
+            *ngIf="story.description && isToggleVisible(story.id)"
+            (click)="toggleStory(story.id)"
+          >
+            {{ (isExpanded(story.id) ? 'common.readLess' : 'common.readMore') | translate }}
+          </button>
         </div>
       </mat-card-content>
     </mat-card>

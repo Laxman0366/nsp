@@ -108,110 +108,9 @@ const staffRows: AdminTableRow[] = [];
 
 const foodMenuRows: AdminTableRow[] = [];
 
-const legalDocumentRows: AdminTableRow[] = [
-  {
-    slNo: '01',
-    title: 'Society Registration Certificate',
-    createdDate: 'Ready for upload',
-    action: 'Download PDF',
-  },
-  {
-    slNo: '02',
-    title: 'PAN Registration Document',
-    createdDate: 'Ready for upload',
-    action: 'Download PDF',
-  },
-  {
-    slNo: '03',
-    title: '12A Registration Certificate',
-    createdDate: 'Ready for upload',
-    action: 'Download PDF',
-  },
-  {
-    slNo: '04',
-    title: '80G Approval Certificate',
-    createdDate: 'Ready for upload',
-    action: 'Download PDF',
-  },
-  {
-    slNo: '05',
-    title: 'FCRA Registration Certificate',
-    createdDate: 'Ready for upload',
-    action: 'Download PDF',
-  },
-];
+const legalDocumentRows: AdminTableRow[] = [];
 
-const legalStatusRows: AdminTableRow[] = [
-  {
-    slNo: '01',
-    title:
-      'Certified by RCI for D.Ed. Special Education (VI), valid up to 2025-26.',
-    createdDate: '27 Oct 2022',
-    action: '',
-  },
-  {
-    slNo: '02',
-    title:
-      'Certified by RCI for B.Ed. Special Education (ID), valid up to 2025-26.',
-    createdDate: '24 Jan 2022',
-    action: '',
-  },
-  {
-    slNo: '03',
-    title:
-      'Certified by RCI for B.Ed. Special Education (HI), valid up to 2025-26.',
-    createdDate: '26 May 2022',
-    action: '',
-  },
-  {
-    slNo: '04',
-    title:
-      'Recognized as a Specialized Adoption Agency by the WCD Department, Government of Odisha.',
-    createdDate: '17 May 2021',
-    action: '',
-  },
-  {
-    slNo: '05',
-    title:
-      'Registered under section 41(1) of the JJ Act with renewal validity up to November 2027.',
-    createdDate: '11 Nov 2022',
-    action: '',
-  },
-  {
-    slNo: '06',
-    title:
-      'Licensed under the Immoral Traffic (Prevention) Act and renewed up to February 2024.',
-    createdDate: '2016',
-    action: '',
-  },
-  {
-    slNo: '07',
-    title:
-      'Accredited by Credibility Alliance for Good Governance of Voluntary Organizations.',
-    createdDate: '08 Oct 2018',
-    action: '',
-  },
-  {
-    slNo: '08',
-    title:
-      'Registered under the National Trust with validity up to April 2026.',
-    createdDate: '15 Apr 2021',
-    action: '',
-  },
-  {
-    slNo: '09',
-    title: 'Registered under RPWD Act, 2016 with renewal up to April 2024.',
-    createdDate: '05 Apr 2004',
-    action: '',
-  },
-  {
-    slNo: '10',
-    title:
-      'NGO Darpan, NITI Aayog registration with Unique ID OR/2009/0005189.',
-    createdDate: '2009',
-    action: '',
-  },
-];
+const legalStatusRows: AdminTableRow[] = [];
 
 const donorRows: AdminTableRow[] = [];
 
@@ -935,11 +834,39 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
           title: 'Legal Document',
           eyebrow: 'About Us',
           summary: 'Registration and compliance documents ready for upload.',
-          kind: 'table',
+          kind: 'form',
+          form: {
+            primaryAction: 'Save Legal Document',
+            sections: [
+              {
+                title: 'Legal Document Details',
+                columns: 2,
+                fields: [
+                  {
+                    label: 'document_name',
+                    type: 'text',
+                    placeholder: 'Enter document name',
+                  },
+                  {
+                    label: 'file_path',
+                    type: 'file',
+                    note: 'No file chosen',
+                  },
+                  {
+                    label: 'display_order',
+                    type: 'number',
+                    placeholder: 'Enter display order',
+                  },
+                  { label: 'is_active', type: 'checkbox' },
+                ],
+              },
+            ],
+          },
           table: {
             columns: [
               { key: 'slNo', label: 'Sl No' },
               { key: 'title', label: 'Document Name' },
+              { key: 'createdDate', label: 'Created Date' },
               { key: 'action', label: 'Download', type: 'download' },
             ],
             rows: legalDocumentRows,
@@ -955,12 +882,36 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
           eyebrow: 'About Us',
           summary:
             'Track approvals, certifications, and statutory recognition.',
-          kind: 'table',
+          kind: 'form',
+          form: {
+            primaryAction: 'Save Legal Status',
+            sections: [
+              {
+                title: 'Legal Status Details',
+                columns: 2,
+                fields: [
+                  {
+                    label: 'status_details',
+                    type: 'textarea',
+                    placeholder: 'Enter status details',
+                    span: 2,
+                  },
+                  {
+                    label: 'display_order',
+                    type: 'number',
+                    placeholder: 'Enter display order',
+                  },
+                  { label: 'is_active', type: 'checkbox' },
+                ],
+              },
+            ],
+          },
           table: {
             columns: [
               { key: 'slNo', label: 'Sl No' },
               { key: 'title', label: 'Status Details' },
               { key: 'createdDate', label: 'Created Date' },
+              { key: 'action', label: 'Action' },
             ],
             rows: legalStatusRows,
           },

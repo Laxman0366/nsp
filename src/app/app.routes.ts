@@ -47,10 +47,12 @@ import { ContactComponent } from './pages/contact/contact.component';
 import { HomeComponent } from './pages/home/home.component';
 import { AccessCctvComponent } from './pages/access-cctv/access-cctv.component';
 import { NoticeListComponent } from './pages/notices/notice-list.component';
+import { adminAuthGuard } from './services/auth.guard';
 
 export const routes: Routes = [
   {
     path: 'admin',
+    canActivate: [adminAuthGuard],
     loadChildren: () =>
       import('./admin/admin.routes').then((m) => m.AdminRoutes),
   },

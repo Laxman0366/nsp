@@ -384,7 +384,7 @@ export class AdminContentComponent implements OnInit {
             report.beneficiaries_covered === null || report.beneficiaries_covered === undefined
               ? ''
               : String(report.beneficiaries_covered),
-          title: report.title || report.programme_name || report.project_name || '',
+          title: report.title || report.document_name || report.status_details || report.programme_name || report.project_name || '',
           description: report.description || '',
           descriptionHindi: report.description_hindi || '',
           descriptionOdia: report.description_odia || '',
@@ -529,6 +529,12 @@ export class AdminContentComponent implements OnInit {
           this.annualReportForm.donationAmount.trim() &&
           this.annualReportForm.donationDate.trim() &&
           this.annualReportForm.displayOrder.trim()
+      );
+    }
+
+    if (this.isLegalStatusPage()) {
+      return Boolean(
+        this.annualReportForm.title.trim() && this.annualReportForm.displayOrder.trim()
       );
     }
 
@@ -742,6 +748,8 @@ export class AdminContentComponent implements OnInit {
       label === 'Project Name' ||
       label === 'project_name' ||
       label === 'title' ||
+      label === 'document_name' ||
+      label === 'status_details' ||
       label === 'programme_name'
     ) {
       if (label === 'programme_name' && (this.isProgrammeDetailsPage() || this.isProgrammeOverviewPage())) {
@@ -993,6 +1001,8 @@ export class AdminContentComponent implements OnInit {
       label === 'Project Name' ||
       label === 'project_name' ||
       label === 'title' ||
+      label === 'document_name' ||
+      label === 'status_details' ||
       label === 'programme_name'
     ) {
       if (label === 'programme_name' && (this.isProgrammeDetailsPage() || this.isProgrammeOverviewPage())) {
@@ -1380,6 +1390,8 @@ export class AdminContentComponent implements OnInit {
       this.isProgrammeDetailsPage() ||
       this.isProgrammeOverviewPage() ||
       this.isBannerPage() ||
+      this.isLegalDocumentPage() ||
+      this.isLegalStatusPage() ||
       this.page.title === 'Success Story' ||
       this.page.title === 'Media Coverage' ||
       this.page.title === 'Awards Recognition' ||
@@ -1492,6 +1504,14 @@ export class AdminContentComponent implements OnInit {
 
   isPartnersPage(): boolean {
     return this.page.title === 'Partners';
+  }
+
+  isLegalDocumentPage(): boolean {
+    return this.page.title === 'Legal Document';
+  }
+
+  isLegalStatusPage(): boolean {
+    return this.page.title === 'Legal Status';
   }
 
   isOrganizationDetailsPage(): boolean {
@@ -1853,6 +1873,14 @@ export class AdminContentComponent implements OnInit {
       return apiEndpoints.beneficiaryLists;
     }
 
+    if (this.isLegalDocumentPage()) {
+      return apiEndpoints.legalDocuments;
+    }
+
+    if (this.isLegalStatusPage()) {
+      return apiEndpoints.legalStatuses;
+    }
+
     return this.isAuditReportPage() ? apiEndpoints.auditReports : apiEndpoints.annualReports;
   }
 
@@ -1943,6 +1971,14 @@ export class AdminContentComponent implements OnInit {
 
     if (this.isBeneficiaryListPage()) {
       return apiEndpoints.beneficiaryListById(id);
+    }
+
+    if (this.isLegalDocumentPage()) {
+      return apiEndpoints.legalDocumentById(id);
+    }
+
+    if (this.isLegalStatusPage()) {
+      return apiEndpoints.legalStatusById(id);
     }
 
     return this.isAuditReportPage()
@@ -2039,6 +2075,14 @@ export class AdminContentComponent implements OnInit {
       return 'beneficiary list';
     }
 
+    if (this.isLegalDocumentPage()) {
+      return 'legal document';
+    }
+
+    if (this.isLegalStatusPage()) {
+      return 'legal status';
+    }
+
     return this.isAuditReportPage() ? 'audit report' : 'annual report';
   }
 
@@ -2131,6 +2175,14 @@ export class AdminContentComponent implements OnInit {
       return 'Beneficiary list';
     }
 
+    if (this.isLegalDocumentPage()) {
+      return 'Legal document';
+    }
+
+    if (this.isLegalStatusPage()) {
+      return 'Legal status';
+    }
+
     return this.isAuditReportPage() ? 'Audit report' : 'Annual report';
   }
 
@@ -2153,6 +2205,7 @@ export class AdminContentComponent implements OnInit {
       !this.isTenderNoticePage() &&
       !this.isAdvertisementPage() &&
       !this.isNewsEventsPage() &&
+      !this.isLegalStatusPage() &&
       !filePath
     ) {
       return;
@@ -2270,6 +2323,10 @@ export class AdminContentComponent implements OnInit {
       payload.append('donor_name', this.annualReportForm.donorName.trim());
       payload.append('donation_amount', this.annualReportForm.donationAmount.trim());
       payload.append('donation_date', this.annualReportForm.donationDate.trim());
+    } else if (this.isLegalStatusPage()) {
+      payload.append('status_details', this.annualReportForm.title.trim());
+    } else if (this.isLegalDocumentPage()) {
+      payload.append('document_name', this.annualReportForm.title.trim());
     } else {
       payload.append('title', this.annualReportForm.title.trim());
     }
@@ -2295,7 +2352,8 @@ export class AdminContentComponent implements OnInit {
       !this.isCctvDetailsPage() &&
       !this.isGoverningBodyPage() &&
       !this.isGeneralBodyPage() &&
-      !this.isDonorListPage()
+      !this.isDonorListPage() &&
+      !this.isLegalStatusPage()
     ) {
       payload.append('file_path', filePath);
     }
@@ -3049,9 +3107,10 @@ export class AdminContentComponent implements OnInit {
           : String(report.beneficiaries_covered),
       project_details: report.project_details || '-',
       achievement_details: report.achievement_details || '-',
-      title: report.title || 'Untitled',
+      title: report.title || report.document_name || report.status_details || 'Untitled',
       title_hindi: report.title_hindi || '-',
       title_odia: report.title_odia || '-',
+      status_details: report.status_details || '-',
       description: report.description || '-',
       description_hindi: report.description_hindi || '-',
       description_odia: report.description_odia || '-',
@@ -3568,6 +3627,8 @@ interface AnnualReportApiItem {
   title?: string;
   title_hindi?: string;
   title_odia?: string;
+  document_name?: string;
+  status_details?: string;
   description?: string;
   description_hindi?: string;
   description_odia?: string;

@@ -3,6 +3,8 @@ import { apiEndpoints } from '../../api-endpoints';
 export interface ReportApiItem {
   id?: number | string | null;
   title?: string;
+  document_name?: string;
+  status_details?: string;
   project_name?: string;
   no_of_beneficiaries?: number | string | null;
   created_at?: string | null;
@@ -47,6 +49,10 @@ export function extractReports(response: unknown): ReportApiItem[] {
     staffs?: unknown;
     food_menu?: unknown;
     foodMenu?: unknown;
+    legal_documents?: unknown;
+    legalDocuments?: unknown;
+    legal_status?: unknown;
+    legalStatus?: unknown;
   };
 
   if (Array.isArray(payload.data)) {
@@ -89,13 +95,29 @@ export function extractReports(response: unknown): ReportApiItem[] {
     return payload.foodMenu as ReportApiItem[];
   }
 
+  if (Array.isArray(payload.legal_documents)) {
+    return payload.legal_documents as ReportApiItem[];
+  }
+
+  if (Array.isArray(payload.legalDocuments)) {
+    return payload.legalDocuments as ReportApiItem[];
+  }
+
+  if (Array.isArray(payload.legal_status)) {
+    return payload.legal_status as ReportApiItem[];
+  }
+
+  if (Array.isArray(payload.legalStatus)) {
+    return payload.legalStatus as ReportApiItem[];
+  }
+
   return [];
 }
 
 export function toReportRows(reports: ReportApiItem[]): ReportTableRow[] {
   return sortReports(reports).map((report, index) => ({
     slNo: String(index + 1).padStart(2, '0'),
-    title: report.title || 'Untitled',
+    title: report.title || report.document_name || report.status_details || 'Untitled',
     createdDate: formatDate(report.created_at),
     downloadLabel: resolveDownloadLabel(report),
     downloadUrl: resolveDownloadUrl(report),

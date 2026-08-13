@@ -3,11 +3,11 @@
     <div>
       <p class="eyebrow">{{ 'nav.legalDocument' | translate }}</p>
       <p class="titile-hint">{{ 'page.legalDocumentHint' | translate }}</p>
-      <p>
+      <!-- <p>
         NSP’s legal documentation reflects its long-standing registration,
         recognized charitable status, and sector-specific approvals that keep
         the organization accountable and operationally clear.
-      </p>
+      </p> -->
     </div>
     <img src="/assets/images/banners/banner2.jpg" alt="NSP legal documents" />
   </section>
@@ -28,30 +28,23 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>01</td>
-                <td>Society Registration Certificate</td>
-                <td><button class="download-btn" type="button" disabled>{{ 'common.downloadPdf' | translate }}</button></td>
+              <tr *ngFor="let row of rows">
+                <td>{{ row.slNo }}</td>
+                <td>{{ row.title }}</td>
+                <td>
+                  <a
+                    class="download-btn"
+                    [class.disabled]="!row.downloadUrl"
+                    [attr.href]="row.downloadUrl || null"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {{ row.downloadLabel }}
+                  </a>
+                </td>
               </tr>
-              <tr>
-                <td>02</td>
-                <td>PAN Registration Document</td>
-                <td><button class="download-btn" type="button" disabled>{{ 'common.downloadPdf' | translate }}</button></td>
-              </tr>
-              <tr>
-                <td>03</td>
-                <td>12A Registration Certificate</td>
-                <td><button class="download-btn" type="button" disabled>{{ 'common.downloadPdf' | translate }}</button></td>
-              </tr>
-              <tr>
-                <td>04</td>
-                <td>80G Approval Certificate</td>
-                <td><button class="download-btn" type="button" disabled>{{ 'common.downloadPdf' | translate }}</button></td>
-              </tr>
-              <tr>
-                <td>05</td>
-                <td>FCRA Registration Certificate</td>
-                <td><button class="download-btn" type="button" disabled>{{ 'common.downloadPdf' | translate }}</button></td>
+              <tr *ngIf="!rows.length">
+                <td colspan="3" class="empty-state">{{ 'common.noRecordsFound' | translate }}</td>
               </tr>
             </tbody>
           </table>

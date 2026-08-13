@@ -2,6 +2,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { MaterialModule } from 'src/app/material.module';
 import { ADMIN_MENU, AdminMenuGroup } from '../../admin/admin-data';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-admin-layout',
@@ -13,7 +14,12 @@ import { ADMIN_MENU, AdminMenuGroup } from '../../admin/admin-data';
 export class AdminLayoutComponent {
   readonly menuGroups: AdminMenuGroup[] = ADMIN_MENU;
 
-  constructor(public router: Router) {}
+  constructor(public router: Router, private authService: AuthService) {}
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/authentication/login']);
+  }
 
   isGroupActive(group: AdminMenuGroup): boolean {
     const activePath = `/admin/${group.path}`;

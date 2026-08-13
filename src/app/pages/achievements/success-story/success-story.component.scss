@@ -68,6 +68,54 @@
   line-height: 1.65;
 }
 
+.story-description {
+  --story-line-height: 1.7;
+  --story-visible-lines: 8;
+  color: #4e647d;
+  line-height: var(--story-line-height);
+  word-break: break-word;
+  overflow: hidden;
+  max-height: calc(var(--story-line-height) * var(--story-visible-lines) * 1em);
+  transition: max-height 0.4s ease;
+}
+
+.story-description.expanded {
+  max-height: 4000px;
+}
+
+.story-toggle {
+  justify-self: start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #1c5da5;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.story-toggle:hover {
+  text-decoration: underline;
+}
+
+.story-description ::ng-deep :where(p, ul, ol, blockquote, h1, h2, h3, h4) {
+  margin: 0 0 8px;
+}
+
+.story-description ::ng-deep :where(ul, ol) {
+  padding-left: 18px;
+}
+
+.story-description ::ng-deep :where(img) {
+  max-width: 100%;
+  height: auto;
+}
+
+.story-description ::ng-deep :where(table) {
+  width: 100%;
+  border-collapse: collapse;
+}
+
 @media (max-width: 992px) {
   .story-row mat-card-content {
     grid-template-columns: 180px 1fr;
