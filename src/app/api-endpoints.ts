@@ -71,5 +71,7 @@ export const apiEndpoints = {
   legalStatuses: `${apiBaseUrl}/legal_status`,
   legalStatusById: (id: string | number) => `${apiBaseUrl}/legal_status/${id}`,
   upload: `${apiBaseUrl}/upload`,
+  jobApplications: `${apiBaseUrl}/job_applications`,
+  jobApplicationResumes: `${apiBaseUrl}/job_application_resumes`,
   publicAsset: (path: string) => toPublicAssetUrl(path),
 } as const;

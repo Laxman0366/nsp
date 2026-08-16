@@ -2,44 +2,47 @@
   <section class="hero-banner">
     <div class="hero-copy">
       <p class="eyebrow">{{ 'page.careerApplication' | translate }}</p>
-      <p class="title-hint">{{ 'page.applyNowHint' | translate }}</p>
-      <p class="hero-text">
-        The earlier form has been reorganized into a modern workflow with progress tracking,
-        upload previews, collapsible education blocks, and a live summary panel.
-      </p>
+      <!-- <mat-card-content class="instructions"> -->
+              <ul>
+                <li>Use clear, readable details to avoid follow-up corrections.</li>
+                <li>Upload image files under 200 KB for photo and signature.</li>
+                <li>Keep reference contact information current and reachable.</li>
+                <li>Save the application only after the declaration is checked.</li>
+              </ul>
+            <!-- </mat-card-content> -->
 
     </div>
+<!-- <aside class="form-aside">
 
-    <mat-card class="progress-card">
-      <mat-card-content>
-        <p class="section-label">{{ 'section.applicationProgress' | translate }}</p>
-        <mat-progress-bar mode="determinate" [value]="progressPercent"></mat-progress-bar>
-        <div class="progress-row">
-          <span>{{ progressPercent }}% complete</span>
-          <span>{{ (formReady ? 'form.readyToSubmit' : 'form.inProgress') | translate }}</span>
-        </div>
-
-        <div class="summary-grid">
-          <div>
-            <span>{{ 'form.selectedPost' | translate }}</span>
-            <strong>{{ selectedPostLabel || ('form.chooseRole' | translate) }}</strong>
-          </div>
-          <div>
-            <span>{{ 'form.applicant' | translate }}</span>
-            <strong>{{ form.get('personal.applicantName')?.value || ('form.awaitingEntry' | translate) }}</strong>
-          </div>
-          <div>
-            <span>{{ 'form.uploads' | translate }}</span>
-            <strong>{{ uploadedCount }} / 2</strong>
-          </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
+          <mat-card class="aside-card preview-card">
+            <mat-card-content>
+              <p class="section-label">{{ 'section.imagePreview' | translate }}</p>
+              <div class="aside-preview">
+                <div>
+                  <span>{{ 'common.photograph' | translate }}</span>
+                  @if (photoPreview) {
+                    <img [src]="photoPreview" alt="Photograph preview" />
+                  } @else {
+                    <p>{{ 'form.noPhotoUploaded' | translate }}</p>
+                  }
+                </div>
+                <div>
+                  <span>{{ 'common.signature' | translate }}</span>
+                  @if (signaturePreview) {
+                    <img [src]="signaturePreview" alt="Signature preview" />
+                  } @else {
+                    <p>{{ 'form.noSignatureUploaded' | translate }}</p>
+                  }
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </aside> -->
   </section>
 
   <form class="application-form" [formGroup]="form" (ngSubmit)="submit()">
     <mat-card class="form-shell">
-      <mat-card-content class="form-layout">
+      <mat-card-content>
         <main class="form-main">
           <section class="section-card">
             <div class="section-header">
@@ -67,7 +70,6 @@
                 <p class="section-label">{{ 'section.step2' | translate }}</p>
                 <h2 class="form-hint">{{ 'section.personalDetails' | translate }}</h2>
               </div>
-              <p class="section-note">{{ 'section.personalDetailsNote' | translate }}</p>
             </div>
 
             <div class="field-grid field-grid-4">
@@ -136,7 +138,6 @@
                 <p class="section-label">{{ 'section.step3' | translate }}</p>
                 <h2 class="form-hint">{{ 'section.photoUploads' | translate }}</h2>
               </div>
-              <p class="section-note">{{ 'section.photoUploadsNote' | translate }}</p>
             </div>
 
             <div class="upload-grid">
@@ -160,7 +161,7 @@
 
                 <div class="upload-foot">
                   <span>{{ form.get('personal.photo')?.value || ('common.noFileChosen' | translate) }}</span>
-                  <button mat-button type="button" (click)="removePreview('photo', 'personal.photo')">{{ 'common.clear' | translate }}</button>
+                  <!-- <button mat-button type="button" (click)="removePreview('photo', 'personal.photo')">{{ 'common.clear' | translate }}</button> -->
                 </div>
               </div>
 
@@ -184,7 +185,7 @@
 
                 <div class="upload-foot">
                   <span>{{ form.get('personal.signature')?.value || ('common.noFileChosen' | translate) }}</span>
-                  <button mat-button type="button" (click)="removePreview('signature', 'personal.signature')">{{ 'common.clear' | translate }}</button>
+                  <!-- <button mat-button type="button" (click)="removePreview('signature', 'personal.signature')">{{ 'common.clear' | translate }}</button> -->
                 </div>
               </div>
             </div>
@@ -234,20 +235,6 @@
                     <mat-label>{{ 'form.percentileLabel' | translate }}</mat-label>
                     <input matInput formControlName="percentage" />
                   </mat-form-field>
-
-                  <div class="certificate-upload">
-                    <p class="upload-title">{{ 'form.photocopyOfCertificates' | translate }}</p>
-                    <input
-                      #certificateInput
-                      type="file"
-                      hidden
-                      (change)="onFileSelected($event, section.key + '.certificate')"
-                    />
-                    <div class="certificate-row">
-                      <button mat-stroked-button type="button" (click)="certificateInput.click()">{{ 'common.chooseFile' | translate }}</button>
-                      <span>{{ form.get(section.key + '.certificate')?.value || ('common.noFileChosen' | translate) }}</span>
-                    </div>
-                  </div>
                 </div>
               </mat-expansion-panel>
             }
@@ -259,7 +246,6 @@
                 <p class="section-label">{{ 'section.employmentDetails' | translate }}</p>
                 <h2 class="form-hint">{{ 'section.employmentRecord' | translate }}</h2>
               </div>
-              <p class="section-note">{{ 'section.employmentNote' | translate }}</p>
             </div>
 
             <div class="field-grid field-grid-4">
@@ -293,10 +279,9 @@
           <section class="section-card" formGroupName="computer">
             <div class="section-header">
               <div>
-                <p class="section-label">{{ 'section.skills' | translate }}</p>
+                <p class="section-label">{{ 'section.skills' | translate }} *</p>
                 <h2 class="form-hint">{{ 'section.computerLiteracy' | translate }}</h2>
               </div>
-              <p class="section-note">{{ 'section.computerNote' | translate }}</p>
             </div>
 
             <div class="field-grid field-grid-2">
@@ -318,7 +303,6 @@
                 <p class="section-label">Skills</p>
                 <h2 class="form-hint">{{ 'section.languageProficiency' | translate }}</h2>
               </div>
-              <p class="section-note">{{ 'section.languageNote' | translate }}</p>
             </div>
 
             <div class="language-grid">
@@ -334,7 +318,6 @@
                 <p class="section-label">References</p>
                 <h2 class="form-hint">{{ 'section.referenceContacts' | translate }}</h2>
               </div>
-              <p class="section-note">{{ 'section.referenceNote' | translate }}</p>
             </div>
 
             <div class="reference-list">
@@ -364,82 +347,15 @@
             </mat-checkbox>
 
             <div class="action-row">
-              <button mat-stroked-button type="button" (click)="resetForm()">{{ 'form.resetForm' | translate }}</button>
-              <button mat-raised-button color="accent" type="submit">{{ 'form.saveApplication' | translate }}</button>
+              <!-- <button mat-stroked-button type="button" (click)="resetForm()">{{ 'form.resetForm' | translate }}</button> -->
+              <button mat-stroked-button color="accent" type="submit">{{ 'form.submitApplication' | translate }}</button>
             </div>
 
-            @if (submitted && form.invalid) {
+            <ng-container *ngIf="submitted && form.invalid">
               <p class="error-text">{{ 'form.validationError' | translate }}</p>
-            }
+            </ng-container>
           </section>
         </main>
-
-        <aside class="form-aside">
-          <mat-card class="aside-card summary-card">
-            <mat-card-content>
-              <p class="section-label">{{ 'section.quickSummary' | translate }}</p>
-              <h3>{{ selectedPostLabel || ('form.noPostSelected' | translate) }}</h3>
-              <p class="aside-copy">
-                {{ 'section.checklistHint' | translate }}
-              </p>
-
-              <div class="checklist">
-                <div>
-                  <span>{{ 'section.personalDetails' | translate }}</span>
-                  <strong>{{ (form.get('personal.applicantName')?.value ? 'common.done' : 'common.pending') | translate }}</strong>
-                </div>
-                <div>
-                  <span>{{ 'form.photoUpload' | translate }}</span>
-                  <strong>{{ (photoPreview ? 'common.done' : 'common.pending') | translate }}</strong>
-                </div>
-                <div>
-                  <span>{{ 'form.signatureUpload' | translate }}</span>
-                  <strong>{{ (signaturePreview ? 'common.done' : 'common.pending') | translate }}</strong>
-                </div>
-                <div>
-                  <span>{{ 'form.declarationLabel' | translate }}</span>
-                  <strong>{{ (form.get('declaration')?.value ? 'common.accepted' : 'common.pending') | translate }}</strong>
-                </div>
-              </div>
-            </mat-card-content>
-          </mat-card>
-
-          <mat-card class="aside-card preview-card">
-            <mat-card-content>
-              <p class="section-label">{{ 'section.imagePreview' | translate }}</p>
-              <div class="aside-preview">
-                <div>
-                  <span>{{ 'common.photograph' | translate }}</span>
-                  @if (photoPreview) {
-                    <img [src]="photoPreview" alt="Photograph preview" />
-                  } @else {
-                    <p>{{ 'form.noPhotoUploaded' | translate }}</p>
-                  }
-                </div>
-                <div>
-                  <span>{{ 'common.signature' | translate }}</span>
-                  @if (signaturePreview) {
-                    <img [src]="signaturePreview" alt="Signature preview" />
-                  } @else {
-                    <p>{{ 'form.noSignatureUploaded' | translate }}</p>
-                  }
-                </div>
-              </div>
-            </mat-card-content>
-          </mat-card>
-
-          <mat-card class="aside-card tips-card">
-            <mat-card-content>
-              <p class="section-label">{{ 'section.helpfulTips' | translate }}</p>
-              <ul>
-                <li>Use clear, readable details to avoid follow-up corrections.</li>
-                <li>Upload image files under 200 KB for photo and signature.</li>
-                <li>Keep reference contact information current and reachable.</li>
-                <li>Save the application only after the declaration is checked.</li>
-              </ul>
-            </mat-card-content>
-          </mat-card>
-        </aside>
       </mat-card-content>
     </mat-card>
   </form>
