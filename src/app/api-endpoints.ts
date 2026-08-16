@@ -52,6 +52,7 @@ export const apiEndpoints = {
   videoGalleryById: (id: string | number) => `${apiBaseUrl}/video_gallery/${id}`,
   opportunities: `${apiBaseUrl}/opportunities/`,
   opportunityById: (id: string | number) => `${apiBaseUrl}/opportunities/${id}/`,
+  openJobs: `${apiBaseUrl}/open_jobs`,
   partners: `${apiBaseUrl}/partners/`,
   partnerById: (id: string | number) => `${apiBaseUrl}/partners/${id}/`,
   cctvDetails: `${apiBaseUrl}/cctv_details/`,

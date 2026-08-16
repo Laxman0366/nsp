@@ -287,20 +287,37 @@
                             >
                               @if (column.key === "action") {
                                 <div class="action-buttons">
-                                  <button
-                                    type="button"
-                                    class="table-action-btn edit-btn"
-                                    (click)="onEditRow(row)"
-                                  >
-                                    Edit
-                                  </button>
-                                  <button
-                                    type="button"
-                                    class="table-action-btn delete-btn"
-                                    (click)="onDeleteRow(row)"
-                                  >
-                                    Delete
-                                  </button>
+                                  @if (isOpenJobsPage()) {
+                                    <button
+                                      type="button"
+                                      class="table-action-btn edit-btn"
+                                      (click)="viewOpenJob(row)"
+                                    >
+                                      View
+                                    </button>
+                                    <button
+                                      type="button"
+                                      class="table-action-btn"
+                                      (click)="downloadOpenJobExcel(row)"
+                                    >
+                                      Download Excel
+                                    </button>
+                                  } @else {
+                                    <button
+                                      type="button"
+                                      class="table-action-btn edit-btn"
+                                      (click)="onEditRow(row)"
+                                    >
+                                      Edit
+                                    </button>
+                                    <button
+                                      type="button"
+                                      class="table-action-btn delete-btn"
+                                      (click)="onDeleteRow(row)"
+                                    >
+                                      Delete
+                                    </button>
+                                  }
                                 </div>
                               } @else if (column.type === "download") {
                                 <button type="button" class="download-btn">
@@ -356,6 +373,39 @@
     @case ("table") {
       <mat-card class="content-card table-card">
         <mat-card-content>
+          @if (isJobApplicationsPage()) {
+            <div class="table-toolbar">
+              <button
+                mat-raised-button
+                color="primary"
+                type="button"
+                [disabled]="!(page.table?.rows || []).length"
+                (click)="downloadJobApplicationsExcel()"
+              >
+                Download Excel
+              </button>
+            </div>
+
+            @if (selectedJobApplication) {
+              <section class="job-application-details">
+                <div class="job-application-details-header">
+                  <h3>Application Details</h3>
+                  <button mat-button type="button" (click)="closeJobApplicationView()">
+                    Close
+                  </button>
+                </div>
+                <div class="job-application-details-grid">
+                  @for (item of selectedJobApplication | keyvalue; track item.key) {
+                    <div>
+                      <span>{{ item.key }}</span>
+                      <strong>{{ item.value ?? '-' }}</strong>
+                    </div>
+                  }
+                </div>
+              </section>
+            }
+          }
+
           <div class="table-wrap">
             @if (!(page.table?.rows || []).length) {
               <div class="table-empty-state">
@@ -382,20 +432,52 @@
                         >
                           @if (column.key === "action") {
                             <div class="action-buttons">
-                              <button
-                                type="button"
-                                class="table-action-btn edit-btn"
-                                (click)="onEditRow(row)"
-                              >
-                                Edit
-                              </button>
-                              <button
-                                type="button"
-                                class="table-action-btn delete-btn"
-                                (click)="onDeleteRow(row)"
-                              >
-                                Delete
-                              </button>
+                              @if (isJobApplicationsPage()) {
+                                <button
+                                  type="button"
+                                  class="table-action-btn edit-btn"
+                                  (click)="viewJobApplication(row)"
+                                >
+                                  View
+                                </button>
+                                <button
+                                  type="button"
+                                  class="table-action-btn"
+                                  (click)="downloadJobApplicationResume(row)"
+                                >
+                                  Download Resume
+                                </button>
+                              } @else if (isOpenJobsPage()) {
+                                <button
+                                  type="button"
+                                  class="table-action-btn edit-btn"
+                                  (click)="viewOpenJob(row)"
+                                >
+                                  View
+                                </button>
+                                <button
+                                  type="button"
+                                  class="table-action-btn"
+                                  (click)="downloadOpenJobExcel(row)"
+                                >
+                                  Download Excel
+                                </button>
+                              } @else {
+                                <button
+                                  type="button"
+                                  class="table-action-btn edit-btn"
+                                  (click)="onEditRow(row)"
+                                >
+                                  Edit
+                                </button>
+                                <button
+                                  type="button"
+                                  class="table-action-btn delete-btn"
+                                  (click)="onDeleteRow(row)"
+                                >
+                                  Delete
+                                </button>
+                              }
                             </div>
                           } @else if (column.type === "download") {
                             <button type="button" class="download-btn">

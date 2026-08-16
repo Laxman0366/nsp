@@ -14,6 +14,52 @@
   box-shadow: 0 14px 38px rgba(25, 43, 89, 0.08);
 }
 
+.table-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px;
+}
+
+.job-application-details {
+  margin: 0 12px 12px;
+  padding: 16px;
+  border: 1px solid rgba(29, 37, 76, 0.12);
+  border-radius: 5px;
+  background: #f8fafc;
+}
+
+.job-application-details-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.job-application-details-header h3 {
+  margin: 0;
+}
+
+.job-application-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.job-application-details-grid div {
+  display: grid;
+  gap: 4px;
+}
+
+.job-application-details-grid span {
+  color: #60708f;
+  font-size: 0.8rem;
+}
+
+.job-application-details-grid strong {
+  overflow-wrap: anywhere;
+}
+
 .form-card mat-card-header,
 .table-card mat-card-content {
   padding-inline: 4px;

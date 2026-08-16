@@ -1967,171 +1967,50 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
         },
       },
       {
-        label: 'Apply Now',
-        path: 'apply-now',
-        icon: 'assignment_ind',
+        label: 'Open Jobs',
+        path: 'open-jobs',
+        icon: 'work_history',
         page: {
-          title: 'Apply Now',
+          title: 'Open Jobs',
           eyebrow: 'Career',
-          summary:
-            'A structured application form with the same field groups as the public workflow.',
-          kind: 'form',
-          form: {
-            primaryAction: 'Submit Application',
-            secondaryAction: 'Reset',
-            sections: [
-              {
-                title: 'Step 1 - Select the post',
-                columns: 2,
-                fields: [
-                  {
-                    label: 'Select application for the post',
-                    type: 'select',
-                    options: [
-                      {
-                        label: 'Programme Coordinator',
-                        value: 'programme-coordinator',
-                      },
-                      { label: 'Field Officer', value: 'field-officer' },
-                      { label: 'Counsellor', value: 'counsellor' },
-                    ],
-                  },
-                  {
-                    label: 'Registration number',
-                    type: 'readonly',
-                    placeholder: 'Auto-generated',
-                  },
-                ],
-              },
-              {
-                title: 'Step 2 - Personal details',
-                columns: 4,
-                fields: [
-                  { label: 'Applicant name', type: 'text' },
-                  {
-                    label: 'Gender',
-                    type: 'select',
-                    options: [
-                      { label: 'Male', value: 'male' },
-                      { label: 'Female', value: 'female' },
-                      { label: 'Other', value: 'other' },
-                    ],
-                  },
-                  {
-                    label: 'Marital status',
-                    type: 'select',
-                    options: [
-                      { label: 'Unmarried', value: 'unmarried' },
-                      { label: 'Married', value: 'married' },
-                    ],
-                  },
-                  { label: 'Date of birth', type: 'date' },
-                  { label: 'Email', type: 'email' },
-                  { label: 'Mobile number', type: 'tel' },
-                  { label: "Father's name", type: 'text' },
-                  { label: "Mother's name", type: 'text' },
-                  {
-                    label: 'Present address',
-                    type: 'textarea',
-                    rows: 3,
-                    span: 2,
-                  },
-                  {
-                    label: 'Permanent address',
-                    type: 'textarea',
-                    rows: 3,
-                    span: 2,
-                  },
-                ],
-              },
-              {
-                title: 'Step 3 - Photo and signature',
-                columns: 2,
-                fields: [
-                  { label: 'Affix photograph', type: 'file' },
-                  { label: 'Signature', type: 'file' },
-                ],
-              },
-              {
-                title: 'Step 4 - Education',
-                columns: 2,
-                fields: [
-                  {
-                    label: 'Qualification awarded',
-                    type: 'text',
-                    placeholder: 'Secondary / Higher Secondary / Graduation',
-                  },
-                  { label: 'Board / University', type: 'text' },
-                  { label: 'Subject specialisation', type: 'text' },
-                  {
-                    label: 'Year of passing',
-                    type: 'text',
-                    placeholder: 'YYYY',
-                  },
-                  {
-                    label: 'Passing category',
-                    type: 'select',
-                    options: [
-                      { label: 'First Class', value: 'first-class' },
-                      { label: 'Second Class', value: 'second-class' },
-                      { label: 'Distinction', value: 'distinction' },
-                    ],
-                  },
-                  {
-                    label: 'Percentile / Percentage / OGPA / Grade',
-                    type: 'text',
-                  },
-                  {
-                    label: 'Photocopies of certificates',
-                    type: 'file',
-                    span: 2,
-                  },
-                ],
-              },
-              {
-                title: 'Step 5 - Employment and skills',
-                columns: 2,
-                fields: [
-                  { label: 'Organization / agency', type: 'text' },
-                  { label: 'Designation', type: 'text' },
-                  { label: 'Period', type: 'text' },
-                  { label: 'Gross salary', type: 'text' },
-                  {
-                    label: 'Assignment / nature of responsibility',
-                    type: 'textarea',
-                    rows: 3,
-                    span: 2,
-                  },
-                  { label: 'Computer proficiency', type: 'text' },
-                  { label: 'Tools and applications', type: 'text' },
-                ],
-              },
-              {
-                title: 'Step 6 - Reference contacts',
-                columns: 2,
-                fields: [
-                  { label: 'Reference 1 name', type: 'text' },
-                  { label: 'Reference 1 phone', type: 'tel' },
-                  {
-                    label: 'Reference 1 address',
-                    type: 'textarea',
-                    rows: 3,
-                    span: 2,
-                  },
-                  { label: 'Reference 2 name', type: 'text' },
-                  { label: 'Reference 2 phone', type: 'tel' },
-                  {
-                    label: 'Reference 2 address',
-                    type: 'textarea',
-                    rows: 3,
-                    span: 2,
-                  },
-                ],
-              },
+          summary: 'Current job openings and application totals.',
+          kind: 'table',
+          table: {
+            columns: [
+              { key: 'position_for', label: 'Position For' },
+              { key: 'closing_date', label: 'Closing Date' },
+              { key: 'number_of_vacancies', label: 'Number of Vacancies' },
+              { key: 'applied_candidates', label: 'Applied Candidates' },
+              { key: 'action', label: 'Action' },
             ],
+            rows: [],
           },
         },
       },
+      {
+        label: 'Job Applications',
+        path: 'job-applications',
+        icon: 'assignment',
+        page: {
+          title: 'Job Applications',
+          eyebrow: 'Career',
+          summary: 'Applications received for the selected open job.',
+          kind: 'table',
+          table: {
+            columns: [
+              { key: 'application_number', label: 'Application Number' },
+              { key: 'position_applied', label: 'Position Applied' },
+              { key: 'applicant_name', label: 'Applicant Name' },
+              { key: 'gender', label: 'Gender' },
+              { key: 'date_of_birth', label: 'Date of Birth' },
+              { key: 'mobile_no', label: 'Mobile No.' },
+              { key: 'applied_on', label: 'Applied On' },
+              { key: 'action', label: 'Action' },
+            ],
+            rows: [],
+          },
+        },
+      }
     ],
   },
 ];

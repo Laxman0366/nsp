@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { KeyValuePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { QuillModule } from 'ngx-quill';
 import { firstValueFrom } from 'rxjs';
 import { apiEndpoints } from '../api-endpoints';
@@ -12,7 +13,7 @@ import { AdminField, AdminFieldOption, AdminPageDefinition, AdminTableColumn, Ad
 @Component({
   selector: 'app-admin-content',
   standalone: true,
-  imports: [MaterialModule, FormsModule, QuillModule],
+  imports: [MaterialModule, FormsModule, QuillModule, KeyValuePipe],
   templateUrl: './admin-content.component.html',
   styleUrls: ['./admin-content.component.scss'],
 })
@@ -32,6 +33,7 @@ export class AdminContentComponent implements OnInit {
     ],
   };
   private editingAnnualReportId: string | number | null = null;
+  selectedJobApplication: AdminTableRow | null = null;
   programmeMasterOptions: AdminFieldOption[] = [];
   projectOptions: AdminFieldOption[] = [];
   private organizationDetailsId: string | number | null = null;
@@ -124,11 +126,12 @@ export class AdminContentComponent implements OnInit {
   };
 
   constructor(
-    route: ActivatedRoute,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
     private readonly http: HttpClient,
     private readonly snackBar: MatSnackBar
   ) {
-    this.page = route.snapshot.data['page'] as AdminPageDefinition;
+    this.page = this.route.snapshot.data['page'] as AdminPageDefinition;
   }
 
   ngOnInit(): void {
@@ -152,6 +155,14 @@ export class AdminContentComponent implements OnInit {
     }
     if (this.isCctvDetailsPage() && this.page.table) {
       this.loadAnnualReportRows();
+    }
+
+    if (this.isOpenJobsPage() && this.page.table) {
+      this.loadOpenJobs();
+    }
+
+    if (this.isJobApplicationsPage() && this.page.table) {
+      this.loadJobApplications();
     }
   }
 
@@ -206,6 +217,11 @@ export class AdminContentComponent implements OnInit {
     const columns = this.page.table.columns || [];
     const nonActionColumns = columns.filter((column) => column.key !== 'action');
     const actionColumn = columns.find((column) => column.key === 'action');
+
+    if (this.isJobApplicationsPage()) {
+      return nonActionColumns;
+    }
+
     const normalizedActionColumn: AdminTableColumn = actionColumn
       ? { ...actionColumn, label: '' }
       : { key: 'action', label: '' };
@@ -501,6 +517,133 @@ export class AdminContentComponent implements OnInit {
         this.showToast(`Failed to delete ${this.getReportLabel()}.`, 'error-toast');
       },
     });
+  }
+
+  viewOpenJob(row: AdminTableRow): void {
+    const opportunitiesId = row['opportunities_id'];
+    if (opportunitiesId === null || opportunitiesId === undefined || opportunitiesId === '') {
+      this.showToast('This open job does not have an opportunities ID.', 'warn-toast');
+      return;
+    }
+
+    void this.router.navigate(['/admin/career/job-applications'], {
+      queryParams: { opportunities_id: opportunitiesId },
+    });
+  }
+
+  downloadOpenJobExcel(row: AdminTableRow): void {
+    const headers = ['Position For', 'Closing Date', 'Number of Vacancies', 'Applied Candidates'];
+    const values = [
+      row['position_for'],
+      row['closing_date'],
+      row['number_of_vacancies'],
+      row['applied_candidates'],
+    ].map((value) => `"${String(value ?? '').replace(/"/g, '""')}"`);
+    const csv = `\uFEFF${headers.join(',')}\n${values.join(',')}\n`;
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    const fileName = String(row['position_for'] || 'open_job')
+      .trim()
+      .replace(/[^a-z0-9]+/gi, '_')
+      .replace(/^_+|_+$/g, '');
+
+    anchor.href = url;
+    anchor.download = `${fileName || 'open_job'}_details.csv`;
+    anchor.click();
+    URL.revokeObjectURL(url);
+  }
+
+  viewJobApplication(row: AdminTableRow): void {
+    this.selectedJobApplication = row;
+  }
+
+  closeJobApplicationView(): void {
+    this.selectedJobApplication = null;
+  }
+
+  async downloadJobApplicationResume(row: AdminTableRow): Promise<void> {
+    let resumePath = this.getResumePath(row);
+    if (!resumePath) {
+      const applicationId = row['id'];
+      if (applicationId === null || applicationId === undefined || applicationId === '') {
+        this.showToast('This application does not have an ID.', 'warn-toast');
+        return;
+      }
+
+      try {
+        const params = new HttpParams().set('job_applications_fk', String(applicationId));
+        const response = await firstValueFrom(
+          this.http.get<unknown>(apiEndpoints.jobApplicationResumes, { params })
+        );
+        resumePath = this.extractResumePath(response);
+      } catch {
+        this.showToast('Failed to load the applicant resume.', 'error-toast');
+        return;
+      }
+    }
+
+    if (!resumePath) {
+      this.showToast('No resume is available for this applicant.', 'warn-toast');
+      return;
+    }
+
+    const anchor = document.createElement('a');
+    const applicantName = String(row['applicant_name'] || 'applicant')
+      .trim()
+      .replace(/[^a-z0-9]+/gi, '_')
+      .replace(/^_+|_+$/g, '');
+    const extension = resumePath.split('?')[0].split('.').pop() || 'pdf';
+
+    anchor.href = apiEndpoints.publicAsset(resumePath);
+    anchor.download = `${applicantName || 'applicant'}_resume.${extension}`;
+    anchor.click();
+  }
+
+  downloadJobApplicationsExcel(): void {
+    const rows = this.page.table?.rows || [];
+    if (!rows.length) {
+      return;
+    }
+
+    const columns = Array.from(
+      new Set(rows.flatMap((row) => Object.keys(row).filter((key) => key !== 'action')))
+    );
+    const csvValue = (value: unknown): string =>
+      `"${String(value ?? '').replace(/"/g, '""')}"`;
+    const csv = `\uFEFF${columns.map(csvValue).join(',')}\n${rows
+      .map((row) => columns.map((column) => csvValue(row[column])).join(','))
+      .join('\n')}\n`;
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    const opportunitiesId = this.route.snapshot.queryParamMap.get('opportunities_id');
+
+    anchor.href = url;
+    anchor.download = `job_applications${opportunitiesId ? `_${opportunitiesId}` : ''}.csv`;
+    anchor.click();
+    URL.revokeObjectURL(url);
+  }
+
+  private getResumePath(row: AdminTableRow): string {
+    const path =
+      row['generated_resume_path'] ??
+      row['resume_path'] ??
+      row['file_path'];
+    return typeof path === 'string' ? path.trim() : '';
+  }
+
+  private extractResumePath(response: unknown): string {
+    const records = this.extractOpenJobs(response);
+    if (records.length) {
+      return this.getResumePath(records[0]);
+    }
+
+    if (!response || typeof response !== 'object') {
+      return '';
+    }
+
+    return this.getResumePath(response as AdminTableRow);
   }
 
   isAnnualReportFormValid(): boolean {
@@ -1412,6 +1555,14 @@ export class AdminContentComponent implements OnInit {
       this.page.title === 'Staff List' ||
       this.page.title === 'Food Menu'
     );
+  }
+
+  isOpenJobsPage(): boolean {
+    return this.page.title === 'Open Jobs';
+  }
+
+  isJobApplicationsPage(): boolean {
+    return this.page.title === 'Job Applications';
   }
 
   isSuccessStoryPage(): boolean {
@@ -2486,6 +2637,77 @@ export class AdminContentComponent implements OnInit {
         }
       },
     });
+  }
+
+  private loadOpenJobs(): void {
+    this.http.get<unknown>(apiEndpoints.openJobs).subscribe({
+      next: (response) => {
+        this.page.table!.rows = this.extractOpenJobs(response);
+      },
+      error: () => {
+        this.page.table!.rows = [];
+        this.showToast('Failed to load open jobs.', 'error-toast');
+      },
+    });
+  }
+
+  private loadJobApplications(): void {
+    const opportunitiesId = this.route.snapshot.queryParamMap.get('opportunities_id');
+    this.selectedJobApplication = null;
+    if (!opportunitiesId) {
+      this.page.table!.rows = [];
+      this.showToast('Select an open job to view its applications.', 'warn-toast');
+      return;
+    }
+
+    const params = new HttpParams().set('opportunities_fk', opportunitiesId);
+    this.http.get<unknown>(apiEndpoints.jobApplications, { params }).subscribe({
+      next: (response) => {
+        this.page.table!.rows = this.extractJobApplications(response);
+      },
+      error: () => {
+        this.page.table!.rows = [];
+        this.showToast('Failed to load job applications.', 'error-toast');
+      },
+    });
+  }
+
+  private extractOpenJobs(response: unknown): AdminTableRow[] {
+    if (Array.isArray(response)) {
+      return response as AdminTableRow[];
+    }
+
+    if (!response || typeof response !== 'object') {
+      return [];
+    }
+
+    const payload = response as {
+      data?: unknown;
+      open_jobs?: unknown;
+      openJobs?: unknown;
+    };
+
+    if (Array.isArray(payload.data)) {
+      return payload.data as AdminTableRow[];
+    }
+
+    if (Array.isArray(payload.open_jobs)) {
+      return payload.open_jobs as AdminTableRow[];
+    }
+
+    if (Array.isArray(payload.openJobs)) {
+      return payload.openJobs as AdminTableRow[];
+    }
+
+    return [];
+  }
+
+  private extractJobApplications(response: unknown): AdminTableRow[] {
+    const applications = this.extractOpenJobs(response);
+    return applications.map((application) => ({
+      ...application,
+      applied_on: application['applied_on'] ?? application['created_at'] ?? '',
+    }));
   }
 
   private showToast(message: string, panelClass: string): void {
