@@ -53,11 +53,13 @@
             "nav.donate" | translate
           }}</a>
         </div>
-        <div class="apply-now" routerLink="/career/apply-now">
-          <a mat-flat-button class="apply-btn">{{
-            "nav.applyNow" | translate
-          }}</a>
-        </div>
+        @if (hasOpenOpportunities) {
+          <div class="apply-now" routerLink="/career/apply-now">
+            <a mat-flat-button class="apply-btn">{{
+              "nav.applyNow" | translate
+            }}</a>
+          </div>
+        }
       </div>
     </div>
     <div class="website-header">
@@ -213,9 +215,11 @@
             <a routerLink="/career/opportunities">{{
               "nav.careerOpportunities" | translate
             }}</a>
-            <a routerLink="/career/apply-now">{{
-              "nav.applyNow" | translate
-            }}</a>
+            @if (hasOpenOpportunities) {
+              <a routerLink="/career/apply-now">{{
+                "nav.applyNow" | translate
+              }}</a>
+            }
           </div>
         </div>
 

@@ -1998,6 +1998,7 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
           kind: 'table',
           table: {
             columns: [
+              { key: 'slNo', label: 'Sl No' },
               { key: 'application_number', label: 'Application Number' },
               { key: 'position_applied', label: 'Position Applied' },
               { key: 'applicant_name', label: 'Applicant Name' },
@@ -2005,6 +2006,29 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
               { key: 'date_of_birth', label: 'Date of Birth' },
               { key: 'mobile_no', label: 'Mobile No.' },
               { key: 'applied_on', label: 'Applied On' },
+              { key: 'action', label: 'Action' },
+            ],
+            rows: [],
+          },
+        },
+      },
+      {
+        label: 'Job Aspirants',
+        path: 'job-aspirants',
+        icon: 'person_search',
+        page: {
+          title: 'Job Aspirants',
+          eyebrow: 'Career',
+          summary: 'Candidates who applied through the career application form.',
+          kind: 'table',
+          table: {
+            columns: [
+              { key: 'slNo', label: 'Sl No' },
+              { key: 'name', label: 'Name' },
+              { key: 'email', label: 'Email' },
+              { key: 'phone', label: 'Phone' },
+              { key: 'description', label: 'Description' },
+              { key: 'resume_path', label: 'Resume', type: 'download' },
               { key: 'action', label: 'Action' },
             ],
             rows: [],

@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { KeyValuePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -37,6 +37,10 @@ export class AdminContentComponent implements OnInit {
   programmeMasterOptions: AdminFieldOption[] = [];
   projectOptions: AdminFieldOption[] = [];
   private organizationDetailsId: string | number | null = null;
+  readonly defaultItemsPerPage = 15;
+  readonly jobApplicationsPageSize = this.defaultItemsPerPage;
+  tableCurrentPage = 1;
+  jobApplicationsCurrentPage = 1;
 
   private organizationDetailsForm: OrganizationDetailsFormState = {
     phoneNumber: '',
@@ -135,6 +139,8 @@ export class AdminContentComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.resetTablePagination();
+
     if (this.isOrganizationDetailsPage()) {
       this.loadOrganizationDetails();
     }
@@ -163,6 +169,10 @@ export class AdminContentComponent implements OnInit {
 
     if (this.isJobApplicationsPage() && this.page.table) {
       this.loadJobApplications();
+    }
+
+    if (this.isJobAspirantsPage() && this.page.table) {
+      this.loadJobAspirants();
     }
   }
 
@@ -215,21 +225,66 @@ export class AdminContentComponent implements OnInit {
     }
 
     const columns = this.page.table.columns || [];
-    const nonActionColumns = columns.filter((column) => column.key !== 'action');
     const actionColumn = columns.find((column) => column.key === 'action');
+    const nonActionColumns = columns.filter((column) => column.key !== 'action');
 
-    if (this.isJobApplicationsPage()) {
-      return nonActionColumns;
+    if (this.isJobAspirantsPage()) {
+      return [...nonActionColumns, actionColumn ?? { key: 'action', label: 'Action' }];
     }
 
     const normalizedActionColumn: AdminTableColumn = actionColumn
-      ? { ...actionColumn, label: '' }
-      : { key: 'action', label: '' };
+      ? { ...actionColumn, label: this.isJobApplicationsPage() ? actionColumn.label : '' }
+      : { key: 'action', label: this.isJobApplicationsPage() ? 'Action' : '' };
 
-    return [
-      ...nonActionColumns,
-      normalizedActionColumn,
-    ];
+    return [...nonActionColumns, normalizedActionColumn];
+  }
+
+  getDisplayRows(): AdminTableRow[] {
+    const rows = this.page.table?.rows || [];
+    if (!this.isJobApplicationsPage()) {
+      return rows;
+    }
+
+    const start = (this.jobApplicationsCurrentPage - 1) * this.jobApplicationsPageSize;
+    return rows.slice(start, start + this.jobApplicationsPageSize);
+  }
+
+  getVisibleTableRows(): AdminTableRow[] {
+    if (this.isJobApplicationsPage()) {
+      return this.getDisplayRows();
+    }
+
+    return this.getTablePageRows();
+  }
+
+  getTablePageRows(): AdminTableRow[] {
+    const rows = this.page.table?.rows || [];
+    const start = (this.tableCurrentPage - 1) * this.defaultItemsPerPage;
+    return rows.slice(start, start + this.defaultItemsPerPage);
+  }
+
+  getTableTotalPages(): number {
+    const rows = this.page.table?.rows || [];
+    return Math.max(1, Math.ceil(rows.length / this.defaultItemsPerPage));
+  }
+
+  goToTablePage(pageNumber: number): void {
+    const totalPages = this.getTableTotalPages();
+    this.tableCurrentPage = Math.min(Math.max(pageNumber, 1), totalPages);
+  }
+
+  resetTablePagination(): void {
+    this.tableCurrentPage = 1;
+  }
+
+  jobApplicationsTotalPages(): number {
+    const rows = this.page.table?.rows || [];
+    return Math.max(1, Math.ceil(rows.length / this.jobApplicationsPageSize));
+  }
+
+  goToJobApplicationsPage(pageNumber: number): void {
+    const totalPages = this.jobApplicationsTotalPages();
+    this.jobApplicationsCurrentPage = Math.min(Math.max(pageNumber, 1), totalPages);
   }
 
   onEditRow(row: AdminTableRow): void {
@@ -495,20 +550,47 @@ export class AdminContentComponent implements OnInit {
   }
 
   onDeleteRow(row: AdminTableRow): void {
+    const rowId = row['id'];
+
+    if (this.isJobAspirantsPage()) {
+      if (rowId === null || rowId === undefined || rowId === '') {
+        return;
+      }
+
+      const id = Number(rowId);
+      if (!Number.isFinite(id)) {
+        this.showToast('Unable to delete this aspirant record.', 'warn-toast');
+        return;
+      }
+
+      const token = localStorage.getItem('nsp_admin_auth');
+      const headers = new HttpHeaders(token ? { Authorization: `Bearer ${token}` } : {});
+
+      this.http.delete(`${apiEndpoints.careerApplications}/${id}`, { headers }).subscribe({
+        next: () => {
+          this.loadJobAspirants();
+          this.showToast('Job aspirant deleted successfully.', 'success-toast');
+        },
+        error: () => {
+          this.showToast('Failed to delete job aspirant.', 'error-toast');
+        },
+      });
+      return;
+    }
+
     if (!this.isReportPage()) {
       return;
     }
 
-    const reportId = row['id'];
-    if (reportId === null || reportId === undefined || reportId === '') {
+    if (rowId === null || rowId === undefined || rowId === '') {
       return;
     }
 
-    if (typeof reportId !== 'string' && typeof reportId !== 'number') {
+    if (typeof rowId !== 'string' && typeof rowId !== 'number') {
       return;
     }
 
-    this.http.delete(this.getReportByIdApiUrl(reportId)).subscribe({
+    this.http.delete(this.getReportByIdApiUrl(rowId)).subscribe({
       next: () => {
         this.loadAnnualReportRows();
         this.showToast(`${this.getReportLabelCapitalized()} deleted successfully.`, 'success-toast');
@@ -588,16 +670,7 @@ export class AdminContentComponent implements OnInit {
       return;
     }
 
-    const anchor = document.createElement('a');
-    const applicantName = String(row['applicant_name'] || 'applicant')
-      .trim()
-      .replace(/[^a-z0-9]+/gi, '_')
-      .replace(/^_+|_+$/g, '');
-    const extension = resumePath.split('?')[0].split('.').pop() || 'pdf';
-
-    anchor.href = apiEndpoints.publicAsset(resumePath);
-    anchor.download = `${applicantName || 'applicant'}_resume.${extension}`;
-    anchor.click();
+    window.open(apiEndpoints.publicAsset(resumePath), '_blank', 'noopener');
   }
 
   downloadJobApplicationsExcel(): void {
@@ -1486,6 +1559,14 @@ export class AdminContentComponent implements OnInit {
     return apiEndpoints.publicAsset(path);
   }
 
+  getPublicAssetUrlForRow(value: unknown): string {
+    if (value === null || value === undefined || value === false || value === true) {
+      return '';
+    }
+
+    return this.getPublicAssetUrl(String(value));
+  }
+
   getFileName(path: string): string {
     if (!path) {
       return '';
@@ -1563,6 +1644,10 @@ export class AdminContentComponent implements OnInit {
 
   isJobApplicationsPage(): boolean {
     return this.page.title === 'Job Applications';
+  }
+
+  isJobAspirantsPage(): boolean {
+    return this.page.title === 'Job Aspirants';
   }
 
   isSuccessStoryPage(): boolean {
@@ -1985,7 +2070,7 @@ export class AdminContentComponent implements OnInit {
     }
 
     if (this.isCareerOpportunitiesPage()) {
-      return apiEndpoints.opportunities;
+      return apiEndpoints.adminCareerOpportunities;
     }
 
     if (this.isPartnersPage()) {
@@ -2085,7 +2170,7 @@ export class AdminContentComponent implements OnInit {
     }
 
     if (this.isCareerOpportunitiesPage()) {
-      return apiEndpoints.opportunityById(id);
+      return apiEndpoints.adminCareerOpportunityById(id);
     }
 
     if (this.isPartnersPage()) {
@@ -2626,6 +2711,7 @@ export class AdminContentComponent implements OnInit {
       next: (response) => {
         const reports = this.extractReports(response);
         this.page.table!.rows = this.toTableRows(reports);
+        this.resetTablePagination();
         if (successMessage) {
           this.showToast(successMessage, 'success-toast');
         }
@@ -2643,6 +2729,7 @@ export class AdminContentComponent implements OnInit {
     this.http.get<unknown>(apiEndpoints.openJobs).subscribe({
       next: (response) => {
         this.page.table!.rows = this.extractOpenJobs(response);
+        this.resetTablePagination();
       },
       error: () => {
         this.page.table!.rows = [];
@@ -2654,6 +2741,7 @@ export class AdminContentComponent implements OnInit {
   private loadJobApplications(): void {
     const opportunitiesId = this.route.snapshot.queryParamMap.get('opportunities_id');
     this.selectedJobApplication = null;
+    this.jobApplicationsCurrentPage = 1;
     if (!opportunitiesId) {
       this.page.table!.rows = [];
       this.showToast('Select an open job to view its applications.', 'warn-toast');
@@ -2664,6 +2752,8 @@ export class AdminContentComponent implements OnInit {
     this.http.get<unknown>(apiEndpoints.jobApplications, { params }).subscribe({
       next: (response) => {
         this.page.table!.rows = this.extractJobApplications(response);
+        this.jobApplicationsCurrentPage = 1;
+        this.resetTablePagination();
       },
       error: () => {
         this.page.table!.rows = [];
@@ -2704,9 +2794,36 @@ export class AdminContentComponent implements OnInit {
 
   private extractJobApplications(response: unknown): AdminTableRow[] {
     const applications = this.extractOpenJobs(response);
-    return applications.map((application) => ({
+    return applications.map((application, index) => ({
       ...application,
+      slNo: index + 1,
       applied_on: application['applied_on'] ?? application['created_at'] ?? '',
+    }));
+  }
+
+  private loadJobAspirants(): void {
+    const token = localStorage.getItem('nsp_admin_auth');
+    const headers = new HttpHeaders(
+      token ? { Authorization: `Bearer ${token}` } : {},
+    );
+
+    this.http.get<unknown>(apiEndpoints.careerApplications, { headers }).subscribe({
+      next: (response) => {
+        this.page.table!.rows = this.extractJobAspirants(response);
+        this.resetTablePagination();
+      },
+      error: () => {
+        this.page.table!.rows = [];
+        this.showToast('Failed to load job aspirants.', 'error-toast');
+      },
+    });
+  }
+
+  private extractJobAspirants(response: unknown): AdminTableRow[] {
+    const aspirants = this.extractOpenJobs(response);
+    return aspirants.map((aspirant, index) => ({
+      ...aspirant,
+      slNo: index + 1,
     }));
   }
 

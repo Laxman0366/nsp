@@ -401,6 +401,46 @@
   background: #d32f2f;
 }
 
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  width: 34px;
+  height: 34px;
+}
+
+.pdf-btn {
+  background: #d32f2f;
+}
+
+.table-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 12px 4px 0;
+}
+
+.pagination-btn {
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  background: #fff;
+  padding: 6px 14px;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.pagination-status {
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.65);
+}
+
 .status-pill {
   display: inline-flex;
   align-items: center;

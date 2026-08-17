@@ -65,6 +65,7 @@ export class ApplyNowComponent {
   private readonly http = inject(HttpClient);
 
   postOptions: PostOption[] = [];
+  allOpportunities: any[] = [];
 
   readonly educationSections: EducationSection[] = [
     {
@@ -236,6 +237,7 @@ export class ApplyNowComponent {
     this.http.get<unknown>(apiEndpoints.opportunities).subscribe({
       next: (response) => {
         const opportunities = this.extractOpportunities(response);
+        this.allOpportunities = JSON.parse(JSON.stringify(opportunities));
         this.postOptions = opportunities
           .map((item) => item.name_of_post?.trim() || '')
           .filter(Boolean)
@@ -1101,6 +1103,7 @@ export class ApplyNowComponent {
     };
 
     return {
+      opportunities_fk: this.allOpportunities.find((option: any) => option.name_of_post === this.selectedPostLabel)?.id || '',
       application_number: raw.applicationNumber || '',
       position_applied: this.selectedPostLabel || raw.post || '',
       applicant_name: raw.personal?.applicantName || '',
@@ -1165,7 +1168,7 @@ export class ApplyNowComponent {
         next: async (response:any) => {
           const pdfFile = await this.generateProfessionalResumePdf(response.data);
           const generatedResumeFilePath = await this.uploadFile(pdfFile);
-          this.http.post<unknown>(apiEndpoints.jobApplicationResumes, { file_path: generatedResumeFilePath, job_applications_fk: response.data?.id }).subscribe({
+          this.http.post<unknown>(apiEndpoints.jobApplicationResumes, { generated_resume_path: generatedResumeFilePath, job_applications_fk: response.data?.id }).subscribe({
             next: async (response:any) => {
               this.resetForm();
               this.showSuccessToast('Application submitted successfully.');

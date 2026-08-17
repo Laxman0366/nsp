@@ -20,15 +20,17 @@
 
           <mat-nav-list>
             @for (item of group.items; track item.path) {
-              <a
-                mat-list-item
-                [routerLink]="itemPath(group.path, item.path)"
-                routerLinkActive="active-link"
-                class="sidebar-link sidebar-sub-link"
-              >
-                <mat-icon>{{ item.icon }}</mat-icon>
-                <span>{{ item.label }}</span>
-              </a>
+              @if (item.path !== "job-applications") {
+                <a
+                  mat-list-item
+                  [routerLink]="itemPath(group.path, item.path)"
+                  routerLinkActive="active-link"
+                  class="sidebar-link sidebar-sub-link"
+                >
+                  <mat-icon>{{ item.icon }}</mat-icon>
+                  <span>{{ item.label }}</span>
+                </a>
+              }
             }
           </mat-nav-list>
         </mat-expansion-panel>

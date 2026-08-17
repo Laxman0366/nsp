@@ -17,6 +17,7 @@ export class FullComponent implements OnInit {
   openDropdown: string | null = null;
   programmeMenuItems: ProgrammeMenuItem[] = [];
   isProgrammeMenuLoading = false;
+  hasOpenOpportunities = false;
   topBarEmail = 'nspodisha@gmail.com';
   topBarPhone = '9437524416';
   topBarAddress = 'AT-Benagaon(Dayavihar), P.O-Gadasahi,P.S-Kanas, Dist-Puri, Odisha-752017';
@@ -37,6 +38,7 @@ export class FullComponent implements OnInit {
   ngOnInit(): void {
     this.loadOrganizationDetails();
     this.loadProgrammeMenuItems();
+    this.loadOpenOpportunities();
   }
 
   toggleDropdown(menu: string) {
@@ -98,6 +100,48 @@ export class FullComponent implements OnInit {
         // Keep existing static fallback values if API fails.
       },
     });
+  }
+
+  private loadOpenOpportunities(): void {
+    this.http.get<unknown>(apiEndpoints.opportunities).subscribe({
+      next: (response) => {
+        const opportunities = this.extractOpportunities(response);
+        this.hasOpenOpportunities = opportunities.length > 0;
+      },
+      error: () => {
+        this.hasOpenOpportunities = false;
+      },
+    });
+  }
+
+  private extractOpportunities(response: unknown): unknown[] {
+    if (Array.isArray(response)) {
+      return response;
+    }
+
+    if (!response || typeof response !== 'object') {
+      return [];
+    }
+
+    const payload = response as {
+      data?: unknown;
+      opportunities?: unknown;
+      opportunitiesList?: unknown;
+    };
+
+    if (Array.isArray(payload.data)) {
+      return payload.data;
+    }
+
+    if (Array.isArray(payload.opportunities)) {
+      return payload.opportunities;
+    }
+
+    if (Array.isArray(payload.opportunitiesList)) {
+      return payload.opportunitiesList;
+    }
+
+    return [];
   }
 
   private extractOrganizationDetails(response: unknown): OrganizationDetailsRecord | null {

@@ -1,6 +1,6 @@
 <div class="container career-opportunities-page">
   <section class="hero-section">
-    <h1>{{ 'page.careerOpportunitiesTitle' | translate }}</h1>
+    <p class="eyebrow">{{ 'page.careerOpportunitiesTitle' | translate }}</p>
     <p class="lead-text">
       NSP welcomes people who are passionate about creating lasting impact through education,
       community development, and service. We believe strong teams build strong communities.
@@ -22,7 +22,7 @@
       <div *ngIf="isLoading" class="loading-state">Loading current openings...</div>
 
       <div *ngIf="hasLoaded && opportunities.length; else noOpenings">
-        <h2>Current openings</h2>
+        <p class="eyebrow">Current openings</p>
         <div class="table-wrapper">
           <table>
             <thead>
@@ -57,7 +57,7 @@
 
       <ng-template #noOpenings>
         <div class="no-openings">
-          <h2>No openings at the moment</h2>
+          <p class="eyebrow">No openings at the moment</p>
           <p>
             We are not currently advertising a vacancy, but we welcome thoughtful applications from
             individuals who want to support our mission.
@@ -67,19 +67,19 @@
             <div class="field-grid field-grid-2">
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Full name</mat-label>
-                <input matInput placeholder="Enter your full name" />
+                <input matInput placeholder="Enter your full name" [(ngModel)]="applicationForm.name" name="name" />
               </mat-form-field>
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Email address</mat-label>
-                <input matInput type="email" placeholder="Enter your email address" />
+                <input matInput type="email" placeholder="Enter your email address" [(ngModel)]="applicationForm.email" name="email" />
               </mat-form-field>
-              <mat-form-field appearance="outline" class="w-100">
+              <mat-form-field style="max-height: 60px;" appearance="outline" class="w-100">
                 <mat-label>Phone number</mat-label>
-                <input matInput type="tel" placeholder="Enter your phone number" />
+                <input matInput type="tel" placeholder="Enter your phone number" [(ngModel)]="applicationForm.phone" name="phone" />
               </mat-form-field>
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Describe your experience</mat-label>
-                <textarea matInput rows="5" placeholder="Share a brief summary of your background and interest"></textarea>
+                <textarea matInput rows="5" placeholder="Share a brief summary of your background and interest" [(ngModel)]="applicationForm.description" name="description"></textarea>
               </mat-form-field>
             </div>
 
@@ -89,16 +89,31 @@
                   <p class="upload-title">Upload your resume</p>
                   <p class="upload-note">Attach a PDF or DOC file of your latest resume.</p>
                 </div>
-                <input #resumeInput type="file" accept=".pdf,.doc,.docx" hidden />
+                <input #resumeInput type="file" accept=".pdf,.doc,.docx" hidden (change)="onResumeSelected($event)" />
                 <button mat-stroked-button type="button" (click)="resumeInput.click()">Choose file</button>
               </div>
               <div class="upload-foot">
-                <span>No file chosen</span>
-                <button mat-button type="button">Clear</button>
+                <span>{{ uploadedFileName }}</span>
+                <button
+                  mat-button
+                  type="button"
+                  (click)="applicationForm.resume_path = ''; uploadedFileName = 'No file chosen'"
+                  [disabled]="!applicationForm.resume_path"
+                >
+                  Clear
+                </button>
               </div>
             </div>
 
-            <button mat-raised-button color="accent" type="button">Submit application</button>
+            <button
+              mat-raised-button
+              color="accent"
+              type="button"
+              (click)="onSubmitApplication()"
+              [disabled]="isSubmitting"
+            >
+              {{ isSubmitting ? 'Submitting...' : 'Submit application' }}
+            </button>
           </form>
         </div>
       </ng-template>
