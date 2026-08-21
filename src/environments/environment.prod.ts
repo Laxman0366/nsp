@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'http://localhost/nsp-api/public/api',
-  publicBaseUrl: 'http://localhost/nsp-api/public'
+  apiBaseUrl: 'https://nsp-org-in-v1bb.bom1.mystaging.site/nsp-api/public/api',
+  publicBaseUrl: 'https://nsp-org-in-v1bb.bom1.mystaging.site/nsp-api/public'
 };

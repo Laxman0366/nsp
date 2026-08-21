@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { ProgrammesComponent } from './programmes/programmes.component';
-import { AboutComponent } from './about/about.component';
 import { DonationsComponent } from './donations/donations.component';
 import { AchievementsComponent } from './achievements/achievements.component';
 import { ReportsComponent } from './reports/reports.component';
@@ -19,10 +18,6 @@ export const PagesRoutes: Routes = [
     component: HomeComponent,
   }
   ,
-  {
-    path: 'about',
-    component: AboutComponent,
-  },
   {
     path: 'programmes',
     component: ProgrammesComponent,

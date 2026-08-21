@@ -38,7 +38,7 @@
     <div class="website-logo">
       <a class="brand-block" routerLink="/home">
         <img
-          src="/assets/images/logos/nsp_logo.jpeg"
+          src="/assets/images/logos/nsp_logo.png"
           alt="NSP logo"
           class="logo-image"
         />
@@ -72,9 +72,9 @@
           (mouseenter)="toggleDropdown('about')"
           (mouseleave)="openDropdown = null"
         >
-          <a routerLink="/about" class="dropdown-toggle">{{
+          <span class="dropdown-toggle">{{
             "nav.about" | translate
-          }}</a>
+          }}</span>
           <div class="submenu" *ngIf="openDropdown === 'about'">
             <a routerLink="/about/organization">{{
               "nav.aboutOrganization" | translate
@@ -105,9 +105,9 @@
           (mouseenter)="toggleDropdown('programmes')"
           (mouseleave)="openDropdown = null"
         >
-          <a routerLink="/programmes" class="dropdown-toggle">{{
+          <span class="dropdown-toggle">{{
             "nav.programmes" | translate
-          }}</a>
+          }}</span>
           <div class="submenu" *ngIf="openDropdown === 'programmes'">
             @if (isProgrammeMenuLoading) {
               <span class="submenu-info">Loading programmes...</span>
@@ -128,9 +128,9 @@
           (mouseenter)="toggleDropdown('donations')"
           (mouseleave)="openDropdown = null"
         >
-          <a routerLink="/donations" class="dropdown-toggle">{{
+          <span class="dropdown-toggle">{{
             "nav.donations" | translate
-          }}</a>
+          }}</span>
           <div class="submenu" *ngIf="openDropdown === 'donations'">
             <a routerLink="/donations/donate-now">{{
               "nav.donateNow" | translate
@@ -146,9 +146,9 @@
           (mouseenter)="toggleDropdown('achievements')"
           (mouseleave)="openDropdown = null"
         >
-          <a routerLink="/achievements" class="dropdown-toggle">{{
+          <span class="dropdown-toggle">{{
             "nav.achievements" | translate
-          }}</a>
+          }}</span>
           <div class="submenu" *ngIf="openDropdown === 'achievements'">
             <a routerLink="/achievements/success-story">{{
               "nav.successStory" | translate
@@ -167,9 +167,9 @@
           (mouseenter)="toggleDropdown('reports')"
           (mouseleave)="openDropdown = null"
         >
-          <a routerLink="/reports" class="dropdown-toggle">{{
+          <span class="dropdown-toggle">{{
             "nav.reports" | translate
-          }}</a>
+          }}</span>
           <div class="submenu" *ngIf="openDropdown === 'reports'">
             <a routerLink="/reports/annual-report">{{
               "nav.annualReport" | translate
@@ -194,7 +194,7 @@
           (mouseenter)="toggleDropdown('gallery')"
           (mouseleave)="openDropdown = null"
         >
-          <a routerLink="/gallery" class="dropdown-toggle">{{ "nav.gallery" | translate }}</a>
+          <span class="dropdown-toggle">{{ "nav.gallery" | translate }}</span>
           <div class="submenu" *ngIf="openDropdown === 'gallery'">
             <a routerLink="/gallery/image-gallery">{{
               "nav.imageGallery" | translate
@@ -210,7 +210,7 @@
           (mouseenter)="toggleDropdown('career')"
           (mouseleave)="openDropdown = null"
         >
-          <a routerLink="/career" class="dropdown-toggle">{{ "nav.career" | translate }}</a>
+          <span class="dropdown-toggle">{{ "nav.career" | translate }}</span>
           <div class="submenu" *ngIf="openDropdown === 'career'">
             <a routerLink="/career/opportunities">{{
               "nav.careerOpportunities" | translate

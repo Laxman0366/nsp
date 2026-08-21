@@ -8,7 +8,7 @@ import { RouterModule } from '@angular/router';
   template: `
     <a [routerLink]="['/']">
       <img
-        src="./assets/images/logos/nsp_logo.jpeg"
+        src="./assets/images/logos/nsp_logo.png"
         class="align-middle m-2"
         alt="NSP logo"
       />

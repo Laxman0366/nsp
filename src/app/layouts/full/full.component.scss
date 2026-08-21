@@ -55,12 +55,14 @@
   align-items: center;
 }
 
-.website-nav a {
+.website-nav a,
+.website-nav .dropdown-toggle {
   text-decoration: none;
   color: #ffffff;
   font-size: 15px;
   transition: opacity 0.2s ease;
   padding: 8px 0;
+  cursor: pointer;
 }
 
 .dropdown-toggle::after {
@@ -74,7 +76,8 @@
     border-left: .3em solid transparent;
 }
 
-.website-nav a:hover {
+.website-nav a:hover,
+.website-nav .dropdown-toggle:hover {
   opacity: 0.9;
 }
 
@@ -130,7 +133,8 @@
   border-bottom: 1px solid #dbe4ef;
 }
 
-.website-nav a:hover {
+.website-nav a:hover,
+.website-nav .dropdown-toggle:hover {
     color: #d4272a;
 }
 span.top-bar-item {

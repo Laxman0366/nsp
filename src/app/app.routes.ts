@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { BlankComponent } from './layouts/blank/blank.component';
 import { FullComponent } from './layouts/full/full.component';
-import { AboutComponent } from './pages/about/about.component';
 import { AboutOrganizationComponent } from './pages/about/about-organization/about-organization.component';
 import { BriefProfileComponent } from './pages/about/brief-profile/brief-profile.component';
 import { FounderMessageComponent } from './pages/about/founder-message/founder-message.component';
@@ -72,10 +71,6 @@ export const routes: Routes = [
       {
         path: 'notices/:type',
         component: NoticeListComponent,
-      },
-      {
-        path: 'about',
-        component: AboutComponent,
       },
       {
         path: 'about/organization',

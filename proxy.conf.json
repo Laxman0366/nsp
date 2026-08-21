@@ -1,6 +1,6 @@
 {
   "/api": {
-    "target": "http://localhost",
+    "target": "https://nsp-org-in-v1bb.bom1.mystaging.site",
     "secure": false,
     "changeOrigin": true,
     "pathRewrite": {
