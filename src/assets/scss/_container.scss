@@ -80,6 +80,7 @@ body {
 .pageWrapper {
   padding: 30px;
   min-height: calc(100vh - 100px);
+  min-width: 0;
   margin: 0 auto;
 
   &.maxWidth {
@@ -88,6 +89,8 @@ body {
 }
 
 .container {
+  width: 100%;
+  min-width: 0;
   max-width: $boxedWidth;
   padding-left: 24px;
   padding-right: 24px;
@@ -109,6 +112,17 @@ body {
 .img-fluid {
   max-width: 100%;
   height: auto;
+}
+
+@media (max-width: 767px) {
+  .pageWrapper {
+    padding: 20px 14px;
+  }
+
+  .container {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
 }
 
 .filter-sidebar {

@@ -2,6 +2,9 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+img, video, iframe { max-width: 100%; }
+*, *::before, *::after { min-width: 0; }
+button, input, select, textarea { max-width: 100%; }
 .body-wrapper {
   background-color: #fff !important;
   margin-bottom: 0px !important;
@@ -48,10 +51,35 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .transparent {
   background-color: transparent !important;
 }
-.mat-drawer {
-  width: auto !important;
-}
-mat-sidenav-content {
-  margin-left: 244px;
-  width: -webkit-fill-available;
+
+@media (max-width: 767px) {
+  .hero-panel,
+  .content-grid,
+  .document-grid,
+  .member-grid,
+  .story-grid,
+  .gallery-grid,
+  .notices-grid,
+  .form-grid,
+  .contact-grid,
+  .stats-grid,
+  .card-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .hero-panel img,
+  .hero-panel > img {
+    width: 100%;
+    height: auto;
+  }
+
+  h1, h2, h3, h4, h5, h6, p, li, a, button, label {
+    overflow-wrap: anywhere;
+  }
+
+  .table-wrap,
+  .table-wrapper {
+    max-width: 100%;
+    overflow-x: auto;
+  }
 }

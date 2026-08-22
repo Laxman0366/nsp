@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -18,6 +18,10 @@ export class ProgrammeCategoryComponent implements OnInit {
   programmeName = 'Programme';
   isLoading = false;
   projects: ProgrammeProject[] = [];
+  isLightboxOpen = false;
+  activeProjectImages: string[] = [];
+  activeProjectName = '';
+  activeImageIndex = 0;
   private currentLang: 'en' | 'hi' | 'or' = 'en';
   private selectedProgramme: ProgrammeRecord | null = null;
   private allProjectRecords: ProjectRecord[] = [];
@@ -49,6 +53,58 @@ export class ProgrammeCategoryComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+  }
+
+  get activeImage(): string {
+    return this.activeProjectImages[this.activeImageIndex] || '';
+  }
+
+  openLightbox(project: ProgrammeProject, imageIndex: number): void {
+    this.activeProjectImages = this.getProjectImages(project);
+    this.activeProjectName = project.projectName;
+    this.activeImageIndex = imageIndex;
+    this.isLightboxOpen = this.activeProjectImages.length > 0;
+  }
+
+  closeLightbox(): void {
+    this.isLightboxOpen = false;
+  }
+
+  showPrev(): void {
+    const total = this.activeProjectImages.length;
+    if (!total) {
+      return;
+    }
+
+    this.activeImageIndex = (this.activeImageIndex - 1 + total) % total;
+  }
+
+  showNext(): void {
+    const total = this.activeProjectImages.length;
+    if (!total) {
+      return;
+    }
+
+    this.activeImageIndex = (this.activeImageIndex + 1) % total;
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleLightboxKeydown(event: KeyboardEvent): void {
+    if (!this.isLightboxOpen) {
+      return;
+    }
+
+    if (event.key === 'Escape') {
+      this.closeLightbox();
+    } else if (event.key === 'ArrowLeft') {
+      this.showPrev();
+    } else if (event.key === 'ArrowRight') {
+      this.showNext();
+    } else {
+      return;
+    }
+
+    event.preventDefault();
   }
 
   private loadProgrammeProjects(): void {
@@ -162,6 +218,10 @@ export class ProgrammeCategoryComponent implements OnInit {
         featureImageUrl: this.toAssetUrl(item.image_path || ''),
         otherImageUrls: this.parseOtherImages(item.other_image_paths),
       }));
+  }
+
+  private getProjectImages(project: ProgrammeProject): string[] {
+    return [project.featureImageUrl, ...project.otherImageUrls].filter(Boolean);
   }
 
   private getLocalizedText(

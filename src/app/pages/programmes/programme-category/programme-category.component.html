@@ -19,11 +19,18 @@
           @if (project.featureImageUrl) {
             <figure class="feature-image-wrap">
               <div class="project-rich-text" [innerHTML]="project.projectText"></div>
-              <img
-                class="feature-image"
-                [src]="project.featureImageUrl"
-                [alt]="project.projectName + ' feature image'"
-              />
+              <button
+                type="button"
+                class="image-trigger feature-image-trigger"
+                (click)="openLightbox(project, 0)"
+                [attr.aria-label]="'Open ' + project.projectName + ' feature image'"
+              >
+                <img
+                  class="feature-image"
+                  [src]="project.featureImageUrl"
+                  [alt]="project.projectName + ' feature image'"
+                />
+              </button>
             </figure>
           }
           <div class="project-rich-details" [innerHTML]="project.details"></div>
@@ -33,7 +40,14 @@
               <div class="gallery-grid">
                 @for (img of project.otherImageUrls; track img) {
                   <figure class="gallery-item">
-                    <img [src]="img" [alt]="project.projectName + ' gallery image'" loading="lazy" />
+                    <button
+                      type="button"
+                      class="image-trigger"
+                      (click)="openLightbox(project, $index + (project.featureImageUrl ? 1 : 0))"
+                      [attr.aria-label]="'Open ' + project.projectName + ' gallery image ' + ($index + 1)"
+                    >
+                      <img [src]="img" [alt]="project.projectName + ' gallery image'" loading="lazy" />
+                    </button>
                   </figure>
                 }
               </div>
@@ -41,6 +55,36 @@
           }
         </article>
       }
+    </div>
+  }
+
+  @if (isLightboxOpen) {
+    <div class="lightbox-backdrop" (click)="closeLightbox()">
+      <div class="lightbox-dialog" (click)="$event.stopPropagation()">
+        <button type="button" class="lightbox-close" (click)="closeLightbox()" aria-label="Close image viewer">
+          &times;
+        </button>
+
+        @if (activeProjectImages.length > 1) {
+          <button type="button" class="lightbox-nav left" (click)="showPrev()" aria-label="Previous image">
+            &#10094;
+          </button>
+        }
+
+        <figure class="lightbox-figure">
+          <img [src]="activeImage" [alt]="activeProjectName + ' image'" />
+          <figcaption>
+            {{ activeProjectName }}
+            <span>{{ activeImageIndex + 1 }} / {{ activeProjectImages.length }}</span>
+          </figcaption>
+        </figure>
+
+        @if (activeProjectImages.length > 1) {
+          <button type="button" class="lightbox-nav right" (click)="showNext()" aria-label="Next image">
+            &#10095;
+          </button>
+        }
+      </div>
     </div>
   }
 </section>

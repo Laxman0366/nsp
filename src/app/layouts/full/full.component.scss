@@ -1,5 +1,7 @@
 .website-shell {
   min-height: 100vh;
+  min-width: 0;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   background: #f8faff;
@@ -10,6 +12,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 0px 24px;
+  min-width: 0;
     background: #424e55;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
@@ -18,11 +21,14 @@
     display: flex;
     justify-content: space-between;
     padding: 0 56px;
+  min-width: 0;
     background-color: #FFF;
 }
 
 .logo-image {
+  width: min(450px, 100%);
   max-width: 450px;
+  height: auto;
 }
 
 .brand-block {
@@ -47,6 +53,18 @@
   align-items: center;
   flex: 1;
   margin: 0 32px;
+  min-width: 0;
+}
+
+.mobile-nav-toggle {
+  display: none;
+  border: 0;
+  border-radius: 6px;
+  padding: 10px 12px;
+  background: #1f4d7a;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 18px;
 }
 
 .nav-item {
@@ -106,6 +124,19 @@
   }
 }
 
+@keyframes mobileSubmenuSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 320px;
+  }
+}
+
 .submenu a {
   display: block;
   padding: 7px 10px;
@@ -150,6 +181,7 @@ span.top-bar-item {
     justify-content: space-between;
     padding: 4px 50px 4px 56px;
     font-size: 12px;
+  min-width: 0;
 }
 
 .donate-btn {
@@ -283,16 +315,77 @@ span.top-bar-item {
 }
 
 @media (max-width: 800px) {
+  .top-bar {
+    padding: 6px 14px;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+  }
+
+  .top-bar-right {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+  }
+
+  .website-logo {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 12px 14px;
+  }
+
+  .brand-block {
+    flex: 1 1 180px;
+    min-width: 0;
+  }
+
+  .access-cctv-link,
+  .donate-apply {
+    margin: 0;
+  }
+
   .website-header,
   .website-footer {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 10px;
   }
 
+  .website-header {
+    width: 100%;
+    padding: 0 14px;
+  }
+
+  .mobile-nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-end;
+  }
+
   .website-nav {
-    flex-wrap: wrap;
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
     margin: 0;
+  }
+
+  .website-nav.mobile-open {
+    display: flex;
+  }
+
+  .nav-item {
+    display: block;
+    width: 100%;
+  }
+
+  .website-nav > a,
+  .website-nav .dropdown-toggle {
+    display: block;
+    width: 100%;
+    padding: 12px 8px;
   }
 
   .submenu {
@@ -301,6 +394,35 @@ span.top-bar-item {
     box-shadow: none;
     margin-top: 0;
     border-radius: 0;
+    width: 100%;
+    min-width: 0;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-8px);
+    animation: none;
+    transition: max-height 0.25s ease, opacity 0.2s ease, transform 0.25s ease;
+  }
+
+  .nav-item.dropdown-open .submenu {
+    max-height: 320px;
+    overflow-y: auto;
+    opacity: 1;
+    transform: translateY(0);
+    animation: mobileSubmenuSlideDown 0.25s ease both;
+  }
+
+  .submenu a {
+    width: 100%;
+    padding: 10px 18px;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-col {
+    padding: 8px 0;
   }
 }
 
@@ -349,6 +471,7 @@ span.top-bar-item {
 
 .footer-grid {
   width: 100%;
+  min-width: 0;
   display: grid;
   grid-template-columns: 1.2fr 1fr 1.2fr;
   gap: 18px;

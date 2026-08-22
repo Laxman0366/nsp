@@ -61,7 +61,6 @@
 
 .project-grid {
   margin-top: 22px;
-  display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 16px;
 }
@@ -73,6 +72,7 @@
   box-shadow: 0 10px 20px rgba(24, 44, 67, 0.08);
   padding: 18px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-top: 20px;
 }
 
 .project-card:hover {
@@ -119,6 +119,25 @@
   background: rgba(255, 255, 255, 0.72);
   border-radius: 8px;
   image-rendering: auto;
+  min-width: 350px;
+}
+
+.image-trigger {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.image-trigger:focus-visible {
+  outline: 3px solid #fbbf24;
+  outline-offset: 3px;
+}
+
+.feature-image-trigger {
+  position: relative;
+  z-index: 1;
+  min-width: 350px;
 }
 
 .project-text {
@@ -214,6 +233,85 @@
   padding: 4px;
 }
 
+.lightbox-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: rgba(8, 15, 28, 0.84);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.lightbox-dialog {
+  position: relative;
+  width: min(980px, 100%);
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) 56px;
+  gap: 12px;
+  align-items: center;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: -12px;
+  right: -8px;
+  z-index: 1;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #173153;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.lightbox-nav {
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.lightbox-nav:hover,
+.lightbox-nav:focus-visible {
+  background: rgba(255, 255, 255, 0.32);
+}
+
+.lightbox-figure {
+  margin: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #0d1f38;
+}
+
+.lightbox-figure img {
+  width: 100%;
+  max-height: 78vh;
+  object-fit: contain;
+  display: block;
+}
+
+.lightbox-figure figcaption {
+  padding: 12px 14px;
+  color: #f3f6fb;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.lightbox-figure span {
+  opacity: 0.8;
+  white-space: nowrap;
+}
+
 .back-row {
   margin-top: 18px;
 }
@@ -237,5 +335,20 @@
 
   .programme-hero {
     padding: 20px;
+  }
+
+  .lightbox-backdrop {
+    padding: 14px;
+  }
+
+  .lightbox-dialog {
+    grid-template-columns: 40px minmax(0, 1fr) 40px;
+    gap: 6px;
+  }
+
+  .lightbox-nav {
+    width: 36px;
+    height: 36px;
+    font-size: 1.35rem;
   }
 }

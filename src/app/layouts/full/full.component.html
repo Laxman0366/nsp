@@ -63,14 +63,31 @@
       </div>
     </div>
     <div class="website-header">
-      <nav class="website-nav" aria-label="Primary navigation">
+      <button
+        type="button"
+        class="mobile-nav-toggle"
+        [attr.aria-expanded]="isMobileNavOpen"
+        aria-controls="primary-navigation"
+        aria-label="Toggle navigation"
+        (click)="toggleMobileNav()"
+      >
+        <i class="fa" [class.fa-bars]="!isMobileNavOpen" [class.fa-times]="isMobileNavOpen"></i>
+      </button>
+      <nav
+        id="primary-navigation"
+        class="website-nav"
+        [class.mobile-open]="isMobileNavOpen"
+        aria-label="Primary navigation"
+      >
         <a style="font-size: 20px" class="nav-link" routerLink="/home">
           <i class="fa fa-home"></i>
         </a>
         <div
           class="nav-item"
-          (mouseenter)="toggleDropdown('about')"
-          (mouseleave)="openDropdown = null"
+          [class.dropdown-open]="openDropdown === 'about'"
+          (mouseenter)="toggleDropdownOnDesktop('about')"
+          (click)="toggleDropdownOnMobile('about')"
+          (mouseleave)="closeDropdownOnDesktop()"
         >
           <span class="dropdown-toggle">{{
             "nav.about" | translate
@@ -102,8 +119,10 @@
 
         <div
           class="nav-item"
-          (mouseenter)="toggleDropdown('programmes')"
-          (mouseleave)="openDropdown = null"
+          [class.dropdown-open]="openDropdown === 'programmes'"
+          (mouseenter)="toggleDropdownOnDesktop('programmes')"
+          (click)="toggleDropdownOnMobile('programmes')"
+          (mouseleave)="closeDropdownOnDesktop()"
         >
           <span class="dropdown-toggle">{{
             "nav.programmes" | translate
@@ -125,8 +144,10 @@
 
         <div
           class="nav-item"
-          (mouseenter)="toggleDropdown('donations')"
-          (mouseleave)="openDropdown = null"
+          [class.dropdown-open]="openDropdown === 'donations'"
+          (mouseenter)="toggleDropdownOnDesktop('donations')"
+          (click)="toggleDropdownOnMobile('donations')"
+          (mouseleave)="closeDropdownOnDesktop()"
         >
           <span class="dropdown-toggle">{{
             "nav.donations" | translate
@@ -143,8 +164,10 @@
 
         <div
           class="nav-item"
-          (mouseenter)="toggleDropdown('achievements')"
-          (mouseleave)="openDropdown = null"
+          [class.dropdown-open]="openDropdown === 'achievements'"
+          (mouseenter)="toggleDropdownOnDesktop('achievements')"
+          (click)="toggleDropdownOnMobile('achievements')"
+          (mouseleave)="closeDropdownOnDesktop()"
         >
           <span class="dropdown-toggle">{{
             "nav.achievements" | translate
@@ -164,8 +187,10 @@
 
         <div
           class="nav-item"
-          (mouseenter)="toggleDropdown('reports')"
-          (mouseleave)="openDropdown = null"
+          [class.dropdown-open]="openDropdown === 'reports'"
+          (mouseenter)="toggleDropdownOnDesktop('reports')"
+          (click)="toggleDropdownOnMobile('reports')"
+          (mouseleave)="closeDropdownOnDesktop()"
         >
           <span class="dropdown-toggle">{{
             "nav.reports" | translate
@@ -191,8 +216,10 @@
 
         <div
           class="nav-item"
-          (mouseenter)="toggleDropdown('gallery')"
-          (mouseleave)="openDropdown = null"
+          [class.dropdown-open]="openDropdown === 'gallery'"
+          (mouseenter)="toggleDropdownOnDesktop('gallery')"
+          (click)="toggleDropdownOnMobile('gallery')"
+          (mouseleave)="closeDropdownOnDesktop()"
         >
           <span class="dropdown-toggle">{{ "nav.gallery" | translate }}</span>
           <div class="submenu" *ngIf="openDropdown === 'gallery'">
@@ -207,8 +234,10 @@
 
         <div
           class="nav-item"
-          (mouseenter)="toggleDropdown('career')"
-          (mouseleave)="openDropdown = null"
+          [class.dropdown-open]="openDropdown === 'career'"
+          (mouseenter)="toggleDropdownOnDesktop('career')"
+          (click)="toggleDropdownOnMobile('career')"
+          (mouseleave)="closeDropdownOnDesktop()"
         >
           <span class="dropdown-toggle">{{ "nav.career" | translate }}</span>
           <div class="submenu" *ngIf="openDropdown === 'career'">

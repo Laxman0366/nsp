@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from 'src/app/material.module';
 import { apiEndpoints } from 'src/app/api-endpoints';
@@ -14,6 +14,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   encapsulation: ViewEncapsulation.None,
 })
 export class FullComponent implements OnInit {
+  isMobileNavOpen = false;
   openDropdown: string | null = null;
   programmeMenuItems: ProgrammeMenuItem[] = [];
   isProgrammeMenuLoading = false;
@@ -29,6 +30,7 @@ export class FullComponent implements OnInit {
 
   constructor(
     private readonly http: HttpClient,
+    private readonly router: Router,
     private readonly translate: TranslateService
   ) {
     this.translate.setDefaultLang('en');
@@ -36,6 +38,12 @@ export class FullComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.isMobileNavOpen = false;
+        this.openDropdown = null;
+      }
+    });
     this.loadOrganizationDetails();
     this.loadProgrammeMenuItems();
     this.loadOpenOpportunities();
@@ -43,6 +51,31 @@ export class FullComponent implements OnInit {
 
   toggleDropdown(menu: string) {
     this.openDropdown = this.openDropdown === menu ? null : menu;
+  }
+
+  toggleDropdownOnDesktop(menu: string): void {
+    if (window.innerWidth > 800) {
+      this.toggleDropdown(menu);
+    }
+  }
+
+  toggleDropdownOnMobile(menu: string): void {
+    if (window.innerWidth <= 800) {
+      this.toggleDropdown(menu);
+    }
+  }
+
+  closeDropdownOnDesktop(): void {
+    if (window.innerWidth > 800) {
+      this.openDropdown = null;
+    }
+  }
+
+  toggleMobileNav(): void {
+    this.isMobileNavOpen = !this.isMobileNavOpen;
+    if (!this.isMobileNavOpen) {
+      this.openDropdown = null;
+    }
   }
 
   switchLanguage(lang: string): void {
