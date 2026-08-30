@@ -128,6 +128,7 @@
             "nav.programmes" | translate
           }}</span>
           <div class="submenu" *ngIf="openDropdown === 'programmes'">
+            <a routerLink="/programmes/overview">Programme Overview</a>
             @if (isProgrammeMenuLoading) {
               <span class="submenu-info">Loading programmes...</span>
             } @else if (!programmeMenuItems.length) {

@@ -80,7 +80,7 @@
   box-shadow: 0 12px 32px rgba(24, 49, 83, 0.06);
 }
 .profile-card {
-
+  text-align: justify;
   background-color: #f4f7fb !important;
 }
 .profile-card dl {
@@ -118,6 +118,9 @@
   color: rgba(255, 255, 255, 0.85);
 }
 
+.row-copy, .row-card {
+  text-align: justify;
+}
 .media-card img {
   width: 100%;
   height: 220px;

@@ -36,6 +36,7 @@ export class AdminContentComponent implements OnInit {
   selectedJobApplication: AdminTableRow | null = null;
   programmeMasterOptions: AdminFieldOption[] = [];
   projectOptions: AdminFieldOption[] = [];
+  private programmeProjectRecords: AnnualReportApiItem[] = [];
   private organizationDetailsId: string | number | null = null;
   readonly defaultItemsPerPage = 15;
   readonly jobApplicationsPageSize = this.defaultItemsPerPage;
@@ -178,10 +179,6 @@ export class AdminContentComponent implements OnInit {
 
   getFieldOptions(field: AdminField): AdminFieldOption[] {
     if (field.label === 'programme_name' && (this.isProgrammeDetailsPage() || this.isProgrammeOverviewPage())) {
-      return this.programmeMasterOptions;
-    }
-
-    if (field.label === 'project_name' && this.isProgrammeOverviewPage()) {
       return this.programmeMasterOptions;
     }
 
@@ -859,6 +856,15 @@ export class AdminContentComponent implements OnInit {
       );
     }
 
+    if (this.isBeneficiaryListPage()) {
+      return Boolean(
+        this.annualReportForm.projectName.trim() &&
+          this.annualReportForm.noOfBeneficiaries.trim() &&
+          this.annualReportForm.displayOrder.trim() &&
+          this.getAnnualReportFilePathForSave()
+      );
+    }
+
     if (this.isSuccessStoryPage()) {
       return Boolean(
         this.annualReportForm.title.trim() &&
@@ -970,6 +976,10 @@ export class AdminContentComponent implements OnInit {
     ) {
       if (label === 'programme_name' && (this.isProgrammeDetailsPage() || this.isProgrammeOverviewPage())) {
         this.annualReportForm.programmeMasterFk = value;
+        if (this.isProgrammeOverviewPage()) {
+          this.annualReportForm.projectFk = '';
+          this.updateProjectOptions(value);
+        }
       } else if (label === 'programme_name' && this.isProgrammeMasterPage()) {
         this.annualReportForm.programmeName = value;
         this.annualReportForm.title = value;
@@ -2520,7 +2530,7 @@ export class AdminContentComponent implements OnInit {
       payload.append('details_odia', this.annualReportForm.detailsOdia.trim());
       payload.append('image_path', filePath);
     } else if (this.isBeneficiaryListPage()) {
-      payload.append('project_name', this.annualReportForm.title.trim());
+      payload.append('project_name', this.annualReportForm.projectName.trim());
       payload.append('no_of_beneficiaries', this.annualReportForm.noOfBeneficiaries.trim());
     } else if (this.isCareerOpportunitiesPage()) {
       payload.append('name_of_post', this.annualReportForm.nameOfPost.trim());
@@ -3704,6 +3714,9 @@ export class AdminContentComponent implements OnInit {
               ? ''
               : String(report.id),
         })).filter((option) => Boolean(option.value));
+        if (this.isProgrammeOverviewPage()) {
+          this.updateProjectOptions(this.annualReportForm.programmeMasterFk);
+        }
       },
       error: () => {
         this.programmeMasterOptions = [];
@@ -3714,18 +3727,41 @@ export class AdminContentComponent implements OnInit {
   private loadProjectOptions(): void {
     this.http.get<unknown>(apiEndpoints.programmeDetails).subscribe({
       next: (response) => {
-        const reports = this.extractReports(response);
-        this.projectOptions = reports
-          .map((report) => ({
-            label: report.project_name || '',
-            value: report.id === null || report.id === undefined || report.id === '' ? '' : String(report.id),
-          }))
-          .filter((option) => Boolean(option.value));
+        this.programmeProjectRecords = this.extractReports(response);
+        this.updateProjectOptions(this.annualReportForm.programmeMasterFk);
       },
       error: () => {
+        this.programmeProjectRecords = [];
         this.projectOptions = [];
       },
     });
+  }
+
+  private updateProjectOptions(programmeMasterFk: string): void {
+    if (!programmeMasterFk) {
+      this.projectOptions = [];
+      return;
+    }
+
+    const selectedProgramme = this.programmeMasterOptions.find(
+      (option) => option.value === programmeMasterFk
+    );
+    const selectedProgrammeName = (selectedProgramme?.label || '').trim().toLowerCase();
+
+    this.projectOptions = this.programmeProjectRecords
+      .filter((project) => {
+        const projectProgrammeFk = project.programme_master_fk ?? project.Programme_master_fk;
+        if (projectProgrammeFk !== null && projectProgrammeFk !== undefined && projectProgrammeFk !== '') {
+          return String(projectProgrammeFk) === programmeMasterFk;
+        }
+
+        return (project.programme_name || '').trim().toLowerCase() === selectedProgrammeName;
+      })
+      .map((project) => ({
+        label: project.project_name || '',
+        value: project.id === null || project.id === undefined || project.id === '' ? '' : String(project.id),
+      }))
+      .filter((option) => Boolean(option.value));
   }
 
   private resolveProgrammeMasterSelectionValue(report: AnnualReportApiItem): string {
@@ -3944,6 +3980,7 @@ interface AnnualReportApiItem {
   report_id?: number | string | null;
   reportId?: number | string | null;
   programme_master_fk?: number | string | null;
+  Programme_master_fk?: number | string | null;
   projects_fk?: number | string | null;
   programme_name?: string;
   programme_name_hindi?: string;

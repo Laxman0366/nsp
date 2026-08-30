@@ -1,8 +1,46 @@
 <div class="container">
   <h1>Programme Overview</h1>
-  <mat-card>
+  <mat-card class="overview-card">
     <mat-card-content>
-      <p>Overview of all programmes run by NSP.</p>
+      <div class="table-wrap">
+        <table class="overview-table">
+          <caption class="sr-only">Programme overview</caption>
+          <thead>
+            <tr>
+              <th scope="col">Sl.No</th>
+              <th scope="col">Programme Name</th>
+              <th scope="col">Project Name</th>
+              <th scope="col">Starting Year</th>
+              <th scope="col">Supported By</th>
+              <th scope="col">Status</th>
+              <th scope="col">Strength</th>
+              <th scope="col">Beneficiaries Covered</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="isLoading">
+              <td colspan="8" class="state-cell">Loading programme overview...</td>
+            </tr>
+            <tr *ngFor="let row of rows">
+              <td class="serial-cell">{{ row.slNo }}</td>
+              <td class="programme-cell">{{ row.programmeName }}</td>
+              <td>{{ row.projectName }}</td>
+              <td>{{ row.startingYear }}</td>
+              <td>{{ row.supportedBy }}</td>
+              <td>
+                <span class="status" [class.status-complete]="row.status.toLowerCase() === 'completed'">
+                  {{ row.status }}
+                </span>
+              </td>
+              <td>{{ row.strength }}</td>
+              <td>{{ row.beneficiariesCovered }}</td>
+            </tr>
+            <tr *ngIf="!isLoading && !rows.length">
+              <td colspan="8" class="state-cell">{{ loadError ? 'Unable to load programme overview.' : 'No programme records found.' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </mat-card-content>
   </mat-card>
 </div>

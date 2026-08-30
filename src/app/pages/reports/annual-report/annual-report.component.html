@@ -10,7 +10,6 @@
             <tr>
               <th>{{ 'common.slNo' | translate }}</th>
               <th>{{ 'common.titleCol' | translate }}</th>
-              <th>{{ 'common.createdDate' | translate }}</th>
               <th>{{ 'common.download' | translate }}</th>
             </tr>
           </thead>
@@ -18,7 +17,6 @@
             <tr *ngFor="let row of rows">
               <td>{{ row.slNo }}</td>
               <td>{{ row.title }}</td>
-              <td>{{ row.createdDate }}</td>
               <td>
                 <a
                   class="download-btn"

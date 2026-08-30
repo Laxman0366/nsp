@@ -1,10 +1,100 @@
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 24px;
+  padding: 32px 20px 40px;
 }
 
 h1 {
-  color: #e63946;
-  margin-bottom: 24px;
+  margin: 0 0 20px;
+  color: #173153;
+  font-size: clamp(1.7rem, 3vw, 2.25rem);
+  font-weight: 750;
+}
+
+.overview-card {
+  overflow: hidden;
+  border: 1px solid #dbe6f3;
+  border-radius: 14px;
+  box-shadow: 0 12px 28px rgba(23, 49, 83, 0.08);
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.overview-table {
+  width: 100%;
+  min-width: 980px;
+  border-collapse: collapse;
+  color: #42566d;
+}
+
+.overview-table th,
+.overview-table td {
+  padding: 15px 14px;
+  border-bottom: 1px solid #e7eef5;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.overview-table th {
+  background: #f4f8fb;
+  color: #173153;
+  font-size: 0.78rem;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.overview-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.overview-table tbody tr:hover {
+  background: #fff9f5;
+}
+
+.serial-cell {
+  color: #e05a3f;
+  font-weight: 750;
+}
+
+.programme-cell {
+  color: #173153;
+  font-weight: 700;
+}
+
+.status {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 5px 10px;
+  background: #fff1e9;
+  color: #b84b32;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.status-complete {
+  background: #e8f5ef;
+  color: #18704e;
+}
+
+.state-cell {
+  padding: 34px 16px !important;
+  color: #718399;
+  text-align: center !important;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
