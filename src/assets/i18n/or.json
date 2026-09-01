@@ -35,7 +35,7 @@
     "accessCctv": "CCTV ଆକ୍ସେସ",
     "locateUs": "ଆମର ଅବସ୍ଥାନ",
     "quickLinks": "ଶୀଘ୍ର ଲିଙ୍କ",
-    "studentFacilities": "ଛାତ୍ର ସୁବିଧା",
+    "importantLinks": "ମହତ୍ତ୍ୱପୂର୍ଣ୍ଣ ଲିଙ୍କ",
     "usefulLinks": "ଉପଯୋଗୀ ଲିଙ୍କ",
     "contactUs": "ଆମ ସହ ଯୋଗାଯୋଗ କରନ୍ତୁ",
     "allRightsReserved": "ସମସ୍ତ ଅଧିକାର ସଂରକ୍ଷିତ"
@@ -324,7 +324,7 @@
   },
   "footer": {
     "tagline": "ଓଡ଼ିଶାର ସମୁଦାୟଗୁଡ଼ିକୁ ସାମାଜିକ ବିକାଶ, ଶିକ୍ଷା, ସ୍ୱାସ୍ଥ୍ୟ ଓ ଜୀବିକା ମାଧ୍ୟମରେ ସେବା।",
-    "careerDevelopment": "କ୍ୟାରିୟର ବିକାଶ",
-    "campusInformation": "କ୍ୟାମ୍ପସ୍ ତଥ୍ୟ"
+    "careerDevelopment": "କ୍ୟାରିୟର",
+    "campusInformation": "NSP ବିଷୟରେ"
   }
 }

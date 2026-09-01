@@ -2,6 +2,11 @@
   <header>
     <div class="top-bar">
       <div class="top-bar-left">
+        <span class="top-bar-item">✉ {{ topBarEmail }}</span>
+        <span class="top-bar-item">☎ {{ topBarPhone }}</span>
+        <span class="top-bar-item">📍 {{ topBarAddress }}</span>
+      </div>
+      <div class="top-bar-right">
         <div class="lang-switcher">
           <button
             class="lang-btn"
@@ -28,11 +33,6 @@
             <span class="lang-label">ଓଡ଼ି</span>
           </button>
         </div>
-      </div>
-      <div class="top-bar-right">
-        <span class="top-bar-item">✉ {{ topBarEmail }}</span>
-        <span class="top-bar-item">☎ {{ topBarPhone }}</span>
-        <span class="top-bar-item">📍 {{ topBarAddress }}</span>
       </div>
     </div>
     <div class="website-logo">
@@ -272,9 +272,7 @@
           alt="Nilachal Seva Pratisthan logo"
           class="footer-logo"
         />
-        <p class="proverb">
-          {{ "footer.tagline" | translate }}
-        </p>
+        <p class="eyebrow">{{ "page.briefProfileLegalNameValue" | translate }}</p>
         <p class="footer-contact">
           {{ topBarAddress }}
         </p>
@@ -299,11 +297,8 @@
         <div class="footer-links-grid">
           <div>
             <p class="footer-links-title">
-              {{ "nav.studentFacilities" | translate }}
+              {{ "nav.importantLinks" | translate }}
             </p>
-            <a routerLink="/career">{{
-              "footer.careerDevelopment" | translate
-            }}</a>
             <a routerLink="/about/brief-profile">{{
               "footer.campusInformation" | translate
             }}</a>
@@ -312,6 +307,9 @@
             }}</a>
             <a routerLink="/reports/annual-report">{{
               "nav.annualReport" | translate
+            }}</a>
+            <a routerLink="/reports/audit-report">{{
+              "nav.auditReport" | translate
             }}</a>
             <a routerLink="/donations/donor-list">{{
               "nav.donorList" | translate
@@ -322,37 +320,24 @@
             <p class="footer-links-title">
               {{ "nav.usefulLinks" | translate }}
             </p>
-            <a
-              href="https://www.ugc.gov.in/"
-              target="_blank"
-              rel="noopener noreferrer"
-              >UGC</a
-            >
-            <a
-              href="http://naac.gov.in/index.php/en/"
-              target="_blank"
-              rel="noopener noreferrer"
-              >NAAC</a
-            >
-            <a
-              href="https://odisha.gov.in/"
-              target="_blank"
-              rel="noopener noreferrer"
-              >Govt. of Odisha</a
-            >
-            <a routerLink="/about/legal-status">RTI</a>
-            <a
-              href="https://www.education.gov.in/"
-              target="_blank"
-              rel="noopener noreferrer"
-              >MHRD</a
-            >
-            <a
-              href="https://swayam.gov.in/"
-              target="_blank"
-              rel="noopener noreferrer"
-              >SWAYAM</a
-            >
+            <a routerLink="/career">{{
+              "footer.careerDevelopment" | translate
+            }}</a>
+            <a routerLink="/access-cctv">{{
+              "nav.accessCctv" | translate
+            }}</a>
+            <a routerLink="/donations/donor-list">{{
+              "nav.donorList" | translate
+            }}</a>
+            <a routerLink="/achievements/success-story">{{
+              "nav.successStory" | translate
+            }}</a>
+            <a routerLink="/achievements/media-coverage">{{
+              "nav.mediaCoverage" | translate
+            }}</a>
+            <a routerLink="/achievements/awards-recognition">{{
+              "nav.awardsRecognition" | translate
+            }}</a>
           </div>
         </div>
       </div>

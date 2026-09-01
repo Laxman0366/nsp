@@ -35,7 +35,7 @@
     "accessCctv": "Access CCTV",
     "locateUs": "Locate us",
     "quickLinks": "Quick Links",
-    "studentFacilities": "Student Facilities",
+    "importantLinks": "Important Links",
     "usefulLinks": "Useful Links",
     "contactUs": "Contact Us",
     "allRightsReserved": "All rights reserved"
@@ -324,7 +324,7 @@
   },
   "footer": {
     "tagline": "Serving communities across Odisha with social development, education, health, and livelihood initiatives.",
-    "careerDevelopment": "Career Development",
-    "campusInformation": "Campus Information"
+    "careerDevelopment": "Career",
+    "campusInformation": "About NSP"
   }
 }
