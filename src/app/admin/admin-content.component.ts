@@ -716,6 +716,10 @@ export class AdminContentComponent implements OnInit {
     return this.getResumePath(response as AdminTableRow);
   }
 
+  private hasFormText(value: string | null | undefined): boolean {
+    return value !== null && value !== undefined && value !== '';
+  }
+
   isAnnualReportFormValid(): boolean {
     if (this.isGoverningBodyPage()) {
       return Boolean(
@@ -825,9 +829,9 @@ export class AdminContentComponent implements OnInit {
         this.annualReportForm.title.trim() &&
           this.annualReportForm.titleHindi.trim() &&
           this.annualReportForm.titleOdia.trim() &&
-          this.annualReportForm.description.trim() &&
-          this.annualReportForm.descriptionHindi.trim() &&
-          this.annualReportForm.descriptionOdia.trim() &&
+          this.hasFormText(this.annualReportForm.description) &&
+          this.hasFormText(this.annualReportForm.descriptionHindi) &&
+          this.hasFormText(this.annualReportForm.descriptionOdia) &&
           this.annualReportForm.openingDate.trim() &&
           this.annualReportForm.closingDate.trim() &&
           this.annualReportForm.displayOrder.trim()
@@ -839,9 +843,9 @@ export class AdminContentComponent implements OnInit {
         this.annualReportForm.title.trim() &&
           this.annualReportForm.titleHindi.trim() &&
           this.annualReportForm.titleOdia.trim() &&
-          this.annualReportForm.description.trim() &&
-          this.annualReportForm.descriptionHindi.trim() &&
-          this.annualReportForm.descriptionOdia.trim() &&
+          this.hasFormText(this.annualReportForm.description) &&
+          this.hasFormText(this.annualReportForm.descriptionHindi) &&
+          this.hasFormText(this.annualReportForm.descriptionOdia) &&
           this.annualReportForm.displayOrder.trim()
       );
     }
@@ -2503,9 +2507,9 @@ export class AdminContentComponent implements OnInit {
       payload.append('title', this.annualReportForm.title.trim());
       payload.append('title_hindi', this.annualReportForm.titleHindi.trim());
       payload.append('title_odia', this.annualReportForm.titleOdia.trim());
-      payload.append('description', this.annualReportForm.description.trim());
-      payload.append('description_hindi', this.annualReportForm.descriptionHindi.trim());
-      payload.append('description_odia', this.annualReportForm.descriptionOdia.trim());
+      payload.append('description', this.annualReportForm.description);
+      payload.append('description_hindi', this.annualReportForm.descriptionHindi);
+      payload.append('description_odia', this.annualReportForm.descriptionOdia);
       payload.append('opening_date', this.annualReportForm.openingDate.trim());
       payload.append('closing_date', this.annualReportForm.closingDate.trim());
       const detailFilePath = this.getAnnualReportFilePathForSave('detail_file_path');

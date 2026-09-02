@@ -792,8 +792,32 @@ section#about {
   overflow: hidden;
 }
 
-.notice-headline {
+.notice-headline-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
   margin-bottom: 8px;
+}
+
+.notice-headline {
+  margin: 0;
+  flex: 1;
+}
+
+.notice-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #eaf7ee;
+  color: #1b8c53;
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .notice-desc {

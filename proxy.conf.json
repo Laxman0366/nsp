@@ -1,6 +1,6 @@
 {
   "/api": {
-    "target": "https://nsp-org-in-v1bb.bom1.mystaging.site",
+    "target": "https://nsp.org.in",
     "secure": false,
     "changeOrigin": true,
     "pathRewrite": {

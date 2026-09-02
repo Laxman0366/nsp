@@ -378,6 +378,24 @@ export class HomeComponent implements OnInit, AfterViewInit {
     return this.getLocalizedText(item.description, item.description_hindi, item.description_odia, '');
   }
 
+  isNoticeNew(item: NoticeItem): boolean {
+    const dateValue = item.closingDate || item.date || '';
+    if (!dateValue) {
+      return false;
+    }
+
+    const targetDate = new Date(dateValue);
+    if (Number.isNaN(targetDate.getTime())) {
+      return false;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    targetDate.setHours(0, 0, 0, 0);
+
+    return targetDate >= today;
+  }
+
   private getLocalizedText(
     english?: string | null,
     hindi?: string | null,

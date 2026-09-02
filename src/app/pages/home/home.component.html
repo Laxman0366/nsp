@@ -64,7 +64,12 @@
           <div class="notice-marquee">
             @for (item of advertisements; track item.id) {
               <div class="notice-item">
-                <p class="notice-text notice-headline">{{ getNoticeTitle(item) }}</p>
+                <div class="notice-headline-row">
+                  <p class="notice-text notice-headline">{{ getNoticeTitle(item) }}</p>
+                  @if (isNoticeNew(item)) {
+                    <span class="notice-tag">New</span>
+                  }
+                </div>
                 <p class="notice-desc">{{ getNoticeDescription(item) }}</p>
                 <div class="notice-meta">
                   <div class="notice-dates">
@@ -90,7 +95,12 @@
             }
             @for (item of advertisements; track item.id) {
               <div class="notice-item">
-                <p class="notice-text notice-headline">{{ getNoticeTitle(item) }}</p>
+                <div class="notice-headline-row">
+                  <p class="notice-text notice-headline">{{ getNoticeTitle(item) }}</p>
+                  @if (isNoticeNew(item)) {
+                    <span class="notice-tag">New</span>
+                  }
+                </div>
                 <p class="notice-desc">{{ getNoticeDescription(item) }}</p>
                 <div class="notice-meta">
                   <div class="notice-dates">
@@ -130,7 +140,12 @@
           <div class="notice-marquee">
             @for (item of tendersNotice; track item.id) {
               <div class="notice-item">
-                <p class="notice-text notice-headline">{{ getNoticeTitle(item) }}</p>
+                <div class="notice-headline-row">
+                  <p class="notice-text notice-headline">{{ getNoticeTitle(item) }}</p>
+                  @if (isNoticeNew(item)) {
+                    <span class="notice-tag">New</span>
+                  }
+                </div>
                 <p class="notice-desc">{{ getNoticeDescription(item) }}</p>
                 <div class="notice-meta">
                   <div class="notice-dates">
@@ -155,7 +170,12 @@
             }
             @for (item of tendersNotice; track item.id) {
               <div class="notice-item">
-                <p class="notice-text notice-headline">{{ getNoticeTitle(item) }}</p>
+                <div class="notice-headline-row">
+                  <p class="notice-text notice-headline">{{ getNoticeTitle(item) }}</p>
+                  @if (isNoticeNew(item)) {
+                    <span class="notice-tag">New</span>
+                  }
+                </div>
                 <p class="notice-desc">{{ getNoticeDescription(item) }}</p>
                 <div class="notice-meta">
                   <div class="notice-dates">
@@ -194,7 +214,12 @@
           <div class="notice-marquee">
             @for (item of newsAndEvents; track item.id) {
               <div class="notice-item">
-                <p class="notice-text notice-headline">{{ getNoticeTitle(item) }}</p>
+                <div class="notice-headline-row">
+                  <p class="notice-text notice-headline">{{ getNoticeTitle(item) }}</p>
+                  @if (isNoticeNew(item)) {
+                    <span class="notice-tag">New</span>
+                  }
+                </div>
                 <p class="notice-desc">{{ getNoticeDescription(item) }}</p>
                 <div class="notice-meta">
                   <span class="notice-date"
@@ -206,7 +231,12 @@
             }
             @for (item of newsAndEvents; track item.id) {
               <div class="notice-item">
-                <p class="notice-text notice-headline">{{ getNoticeTitle(item) }}</p>
+                <div class="notice-headline-row">
+                  <p class="notice-text notice-headline">{{ getNoticeTitle(item) }}</p>
+                  @if (isNoticeNew(item)) {
+                    <span class="notice-tag">New</span>
+                  }
+                </div>
                 <p class="notice-desc">{{ getNoticeDescription(item) }}</p>
                 <div class="notice-meta">
                   <span class="notice-date"
