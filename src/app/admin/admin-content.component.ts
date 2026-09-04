@@ -428,9 +428,13 @@ export class AdminContentComponent implements OnInit {
         }
 
         this.annualReportForm = {
-          programmeMasterFk: this.resolveProgrammeMasterSelectionValue(report),
+          programmeMasterFk: this.isProgrammeOverviewPage()
+            ? ''
+            : this.resolveProgrammeMasterSelectionValue(report),
           projectFk: this.resolveProjectSelectionValue(report),
-          programmeName: report.programme_name || '',
+          programmeName: this.isProgrammeOverviewPage()
+            ? this.resolveProgrammeMasterSelectionValue(report)
+            : report.programme_name || '',
           programmeNameHindi: report.programme_name_hindi || '',
           programmeNameOdia: report.programme_name_odia || '',
           projectName: report.project_name || '',
@@ -770,8 +774,7 @@ export class AdminContentComponent implements OnInit {
 
     if (this.isProgrammeOverviewPage()) {
       return Boolean(
-        this.annualReportForm.programmeMasterFk.trim() &&
-          this.annualReportForm.projectFk.trim() &&
+        this.annualReportForm.programmeName.trim() &&
           /^\d{4}$/.test(this.annualReportForm.startingYear.trim()) &&
           this.annualReportForm.supportedBy.trim() &&
           this.annualReportForm.status.trim() &&
@@ -979,7 +982,11 @@ export class AdminContentComponent implements OnInit {
       label === 'programme_name'
     ) {
       if (label === 'programme_name' && (this.isProgrammeDetailsPage() || this.isProgrammeOverviewPage())) {
-        this.annualReportForm.programmeMasterFk = value;
+        if (this.isProgrammeOverviewPage()) {
+          this.annualReportForm.programmeName = value;
+        } else {
+          this.annualReportForm.programmeMasterFk = value;
+        }
         if (this.isProgrammeOverviewPage()) {
           this.annualReportForm.projectFk = '';
           this.updateProjectOptions(value);
@@ -1236,7 +1243,9 @@ export class AdminContentComponent implements OnInit {
       label === 'programme_name'
     ) {
       if (label === 'programme_name' && (this.isProgrammeDetailsPage() || this.isProgrammeOverviewPage())) {
-        return this.annualReportForm.programmeMasterFk;
+        return this.isProgrammeOverviewPage()
+          ? this.annualReportForm.programmeName
+          : this.annualReportForm.programmeMasterFk;
       }
 
       if (label === 'programme_name' && this.isProgrammeMasterPage()) {
@@ -2463,8 +2472,7 @@ export class AdminContentComponent implements OnInit {
 
     const payload = new FormData();
     if (this.isProgrammeOverviewPage()) {
-      payload.append('programme_master_fk', this.annualReportForm.programmeMasterFk.trim());
-      payload.append('projects_fk', this.annualReportForm.projectFk.trim());
+      payload.append('programme_name', this.annualReportForm.programmeName.trim());
       payload.append('starting_year', this.annualReportForm.startingYear.trim());
       payload.append('supported_by', this.annualReportForm.supportedBy.trim());
       payload.append('status', this.annualReportForm.status.trim());
@@ -3719,7 +3727,7 @@ export class AdminContentComponent implements OnInit {
               : String(report.id),
         })).filter((option) => Boolean(option.value));
         if (this.isProgrammeOverviewPage()) {
-          this.updateProjectOptions(this.annualReportForm.programmeMasterFk);
+          this.updateProjectOptions(this.annualReportForm.programmeName);
         }
       },
       error: () => {
@@ -3732,7 +3740,11 @@ export class AdminContentComponent implements OnInit {
     this.http.get<unknown>(apiEndpoints.programmeDetails).subscribe({
       next: (response) => {
         this.programmeProjectRecords = this.extractReports(response);
-        this.updateProjectOptions(this.annualReportForm.programmeMasterFk);
+        this.updateProjectOptions(
+          this.isProgrammeOverviewPage()
+            ? this.annualReportForm.programmeName
+            : this.annualReportForm.programmeMasterFk
+        );
       },
       error: () => {
         this.programmeProjectRecords = [];

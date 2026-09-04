@@ -18,6 +18,7 @@ function toPublicAssetUrl(path: string): string {
 
 export const apiEndpoints = {
   login: `${apiBaseUrl}/login`,
+  changePassword: `${apiBaseUrl}/change-password`,
   programmeMasters: `${apiBaseUrl}/programme_master`,
   programmeMasterById: (id: string | number) => `${apiBaseUrl}/programme_master/${id}`,
   programmeDetails: `${apiBaseUrl}/projects`,

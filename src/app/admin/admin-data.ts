@@ -1084,12 +1084,6 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
               { key: 'project_name', label: 'project_name' },
               { key: 'project_name_hindi', label: 'project_name_hindi' },
               { key: 'project_name_odia', label: 'project_name_odia' },
-              { key: 'project_details', label: 'project_details' },
-              { key: 'project_details_hindi', label: 'project_details_hindi' },
-              { key: 'project_details_odia', label: 'project_details_odia' },
-              { key: 'achievement_details', label: 'achievement_details' },
-              { key: 'achievement_details_hindi', label: 'achievement_details_hindi' },
-              { key: 'achievement_details_odia', label: 'achievement_details_odia' },
               { key: 'image_path', label: 'image_path' },
               { key: 'other_image_paths', label: 'other_image_paths' },
               { key: 'display_order', label: 'display_order' },
@@ -1118,13 +1112,8 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
                 fields: [
                   {
                     label: 'programme_name',
-                    type: 'select',
+                    type: 'text',
                     placeholder: 'Select programme name',
-                  },
-                  {
-                    label: 'project_name',
-                    type: 'select',
-                    placeholder: 'Select project name',
                   },
                   {
                     label: 'starting_year',
@@ -1133,12 +1122,7 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
                   },
                   {
                     label: 'supported_by',
-                    type: 'select',
-                    options: [
-                      { label: 'Own Funding', value: 'Own Funding' },
-                      { label: 'Ministry', value: 'Ministry' },
-                      { label: 'Foreign Funding', value: 'Foreign Funding' },
-                    ],
+                    type: 'text'
                   },
                   {
                     label: 'status',
@@ -1173,7 +1157,6 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
             columns: [
               { key: 'slNo', label: 'Sl No' },
               { key: 'programme_name', label: 'programme_name' },
-              { key: 'project_name', label: 'project_name' },
               { key: 'starting_year', label: 'starting_year' },
               { key: 'supported_by', label: 'supported_by' },
               { key: 'status', label: 'status' },

@@ -8,8 +8,7 @@
           <thead>
             <tr>
               <th scope="col">Sl.No</th>
-              <th scope="col">Programme Name</th>
-              <th scope="col">Project Name</th>
+              <th scope="col">Programme/Project Name</th>
               <th scope="col">Starting Year</th>
               <th scope="col">Supported By</th>
               <th scope="col">Status</th>
@@ -24,7 +23,6 @@
             <tr *ngFor="let row of rows">
               <td class="serial-cell">{{ row.slNo }}</td>
               <td class="programme-cell">{{ row.programmeName }}</td>
-              <td>{{ row.projectName }}</td>
               <td>{{ row.startingYear }}</td>
               <td>{{ row.supportedBy }}</td>
               <td>
