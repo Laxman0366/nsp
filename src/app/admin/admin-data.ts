@@ -237,6 +237,16 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
                     label: 'linkedin_url',
                     type: 'text',
                     optional: true,
+                  },
+                  {
+                    label: 'instagram_url',
+                    type: 'text',
+                    optional: true,
+                  },
+                  {
+                    label: 'youtube_url',
+                    type: 'text',
+                    optional: true,
                   }
                 ],
               },

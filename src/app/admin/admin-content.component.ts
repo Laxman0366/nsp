@@ -52,6 +52,8 @@ export class AdminContentComponent implements OnInit {
     facebookUrl: '',
     twitterUrl: '',
     linkedinUrl: '',
+    instagramUrl: '',
+    youtubeUrl: '',
   };
 
   private annualReportForm: AnnualReportFormState = {
@@ -1809,6 +1811,8 @@ export class AdminContentComponent implements OnInit {
           facebookUrl: this.getOrganizationFieldValue(details.facebook_url, details.facebookUrl),
           twitterUrl: this.getOrganizationFieldValue(details.twitter_url, details.twitterUrl),
           linkedinUrl: this.getOrganizationFieldValue(details.linkedin_url, details.linkedinUrl),
+          instagramUrl: this.getOrganizationFieldValue(details.instagram_url, details.instagramUrl),
+          youtubeUrl: this.getOrganizationFieldValue(details.youtube_url, details.youtubeUrl),
         };
       },
       error: () => {
@@ -1829,6 +1833,8 @@ export class AdminContentComponent implements OnInit {
       facebook_url: this.organizationDetailsForm.facebookUrl.trim(),
       twitter_url: this.organizationDetailsForm.twitterUrl.trim(),
       linkedin_url: this.organizationDetailsForm.linkedinUrl.trim(),
+      instagram_url: this.organizationDetailsForm.instagramUrl.trim(),
+      youtube_url: this.organizationDetailsForm.youtubeUrl.trim(),
     };
 
     this.isSavingOrganizationDetails = true;
@@ -1861,6 +1867,8 @@ export class AdminContentComponent implements OnInit {
       facebookUrl: '',
       twitterUrl: '',
       linkedinUrl: '',
+      instagramUrl: '',
+      youtubeUrl: '',
     };
   }
 
@@ -1902,6 +1910,16 @@ export class AdminContentComponent implements OnInit {
 
     if (label === 'linkedin_url') {
       this.organizationDetailsForm.linkedinUrl = value;
+      return;
+    }
+
+    if (label === 'instagram_url') {
+      this.organizationDetailsForm.instagramUrl = value;
+      return;
+    }
+
+    if (label === 'youtube_url') {
+      this.organizationDetailsForm.youtubeUrl = value;
     }
   }
 
@@ -1936,6 +1954,14 @@ export class AdminContentComponent implements OnInit {
 
     if (label === 'linkedin_url') {
       return this.organizationDetailsForm.linkedinUrl;
+    }
+
+    if (label === 'instagram_url') {
+      return this.organizationDetailsForm.instagramUrl;
+    }
+
+    if (label === 'youtube_url') {
+      return this.organizationDetailsForm.youtubeUrl;
     }
 
     return '';
@@ -4186,6 +4212,10 @@ interface OrganizationDetailsApiItem {
   twitterUrl?: string;
   linkedin_url?: string;
   linkedinUrl?: string;
+  instagram_url?: string;
+  instagramUrl?: string;
+  youtube_url?: string;
+  youtubeUrl?: string;
 }
 
 interface OrganizationDetailsFormState {
@@ -4197,4 +4227,6 @@ interface OrganizationDetailsFormState {
   facebookUrl: string;
   twitterUrl: string;
   linkedinUrl: string;
+  instagramUrl: string;
+  youtubeUrl: string;
 }

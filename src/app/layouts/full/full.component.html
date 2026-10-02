@@ -348,10 +348,32 @@
         {{ "nav.allRightsReserved" | translate }}.
       </div>
       <div class="social">
-          <a href="#">f</a>
-          <a href="#">𝕏</a>
-          <a href="#">◎</a>
-        </div>
+        @if (facebookUrl) {
+          <a [href]="facebookUrl" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+            <i class="fa fa-facebook" aria-hidden="true"></i>
+          </a>
+        }
+        @if (twitterUrl) {
+          <a [href]="twitterUrl" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+            <i class="fa fa-twitter" aria-hidden="true"></i>
+          </a>
+        }
+        @if (linkedinUrl) {
+          <a [href]="linkedinUrl" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+            <i class="fa fa-linkedin" aria-hidden="true"></i>
+          </a>
+        }
+        @if (instagramUrl) {
+          <a [href]="instagramUrl" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <i class="fa fa-instagram" aria-hidden="true"></i>
+          </a>
+        }
+        @if (youtubeUrl) {
+          <a [href]="youtubeUrl" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+            <i class="fa fa-youtube" aria-hidden="true"></i>
+          </a>
+        }
+      </div>
     </div>
   </footer>
 </div>

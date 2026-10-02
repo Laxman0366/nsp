@@ -22,6 +22,11 @@ export class FullComponent implements OnInit {
   topBarEmail = 'nspodisha@gmail.com';
   topBarPhone = '9437524416';
   topBarAddress = 'AT-Benagaon(Dayavihar), P.O-Gadasahi,P.S-Kanas, Dist-Puri, Odisha-752017';
+  facebookUrl = '';
+  twitterUrl = '';
+  linkedinUrl = '';
+  instagramUrl = '';
+  youtubeUrl = '';
   private officeAddressEnglish = this.topBarAddress;
   private officeAddressHindi = '';
   private officeAddressOdia = '';
@@ -126,6 +131,21 @@ export class FullComponent implements OnInit {
           details.office_address_odia,
           details.office_address_or,
           details.officeAddressOdia
+        );
+        this.facebookUrl = this.normalizeSocialUrl(
+          this.getOrganizationFieldValue(details.facebook_url, details.facebookUrl)
+        );
+        this.twitterUrl = this.normalizeSocialUrl(
+          this.getOrganizationFieldValue(details.twitter_url, details.twitterUrl)
+        );
+        this.linkedinUrl = this.normalizeSocialUrl(
+          this.getOrganizationFieldValue(details.linkedin_url, details.linkedinUrl)
+        );
+        this.instagramUrl = this.normalizeSocialUrl(
+          this.getOrganizationFieldValue(details.instagram_url, details.instagramUrl)
+        );
+        this.youtubeUrl = this.normalizeSocialUrl(
+          this.getOrganizationFieldValue(details.youtube_url, details.youtubeUrl)
         );
         this.updateLocalizedAddress();
       },
@@ -244,7 +264,12 @@ export class FullComponent implements OnInit {
       details.office_address_hindi !== undefined ||
       details.officeAddressHindi !== undefined ||
       details.office_address_odia !== undefined ||
-      details.officeAddressOdia !== undefined
+      details.officeAddressOdia !== undefined ||
+      details.facebook_url !== undefined ||
+      details.twitter_url !== undefined ||
+      details.linkedin_url !== undefined ||
+      details.instagram_url !== undefined ||
+      details.youtube_url !== undefined
     );
   }
 
@@ -270,6 +295,15 @@ export class FullComponent implements OnInit {
     }
 
     return '';
+  }
+
+  private normalizeSocialUrl(value: string): string {
+    const url = value.trim();
+    if (!url) {
+      return '';
+    }
+
+    return /^https?:\/\//i.test(url) ? url : `https://${url}`;
   }
 
   private extractProgrammeMenuItems(response: unknown): ProgrammeMenuItem[] {
@@ -386,4 +420,14 @@ interface OrganizationDetailsRecord {
   office_address_odia?: string;
   office_address_or?: string;
   officeAddressOdia?: string;
+  facebook_url?: string;
+  facebookUrl?: string;
+  twitter_url?: string;
+  twitterUrl?: string;
+  linkedin_url?: string;
+  linkedinUrl?: string;
+  instagram_url?: string;
+  instagramUrl?: string;
+  youtube_url?: string;
+  youtubeUrl?: string;
 }
