@@ -1981,6 +1981,27 @@ export const ADMIN_MENU: AdminMenuGroup[] = [
         },
       },
       {
+        label: 'Closed Jobs',
+        path: 'closed-jobs',
+        icon: 'work_history',
+        page: {
+          title: 'Closed Jobs',
+          eyebrow: 'Career',
+          summary: 'Previously listed job openings and application totals.',
+          kind: 'table',
+          table: {
+            columns: [
+              { key: 'position_for', label: 'Position For' },
+              { key: 'closing_date', label: 'Closing Date' },
+              { key: 'number_of_vacancies', label: 'Number of Vacancies' },
+              { key: 'applied_candidates', label: 'Applied Candidates' },
+              { key: 'action', label: 'Action' },
+            ],
+            rows: [],
+          },
+        },
+      },
+      {
         label: 'Job Applications',
         path: 'job-applications',
         icon: 'assignment',

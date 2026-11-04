@@ -56,6 +56,7 @@ export const apiEndpoints = {
   adminCareerOpportunities: `${apiBaseUrl}/opportunities`,
   adminCareerOpportunityById: (id: string | number) => `${apiBaseUrl}/opportunities/${id}`,
   openJobs: `${apiBaseUrl}/open_jobs`,
+  closedJobs: `${apiBaseUrl}/closed_jobs`,
   partners: `${apiBaseUrl}/partners/`,
   partnerById: (id: string | number) => `${apiBaseUrl}/partners/${id}/`,
   cctvDetails: `${apiBaseUrl}/cctv_details/`,

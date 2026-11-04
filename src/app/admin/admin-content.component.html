@@ -287,7 +287,7 @@
                             >
                               @if (column.key === "action") {
                                 <div class="action-buttons">
-                                  @if (isOpenJobsPage()) {
+                                  @if (isOpenJobsPage() || isClosedJobsPage()) {
                                     <button
                                       type="button"
                                       class="table-action-btn edit-btn"
@@ -503,7 +503,7 @@
                                 >
                                   Delete
                                 </button>
-                              } @else if (isOpenJobsPage()) {
+                              } @else if (isOpenJobsPage() || isClosedJobsPage()) {
                                 <button
                                   type="button"
                                   class="table-action-btn edit-btn"

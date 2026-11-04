@@ -170,6 +170,10 @@ export class AdminContentComponent implements OnInit {
       this.loadOpenJobs();
     }
 
+    if (this.isClosedJobsPage() && this.page.table) {
+      this.loadClosedJobs();
+    }
+
     if (this.isJobApplicationsPage() && this.page.table) {
       this.loadJobApplications();
     }
@@ -1667,6 +1671,10 @@ export class AdminContentComponent implements OnInit {
     return this.page.title === 'Open Jobs';
   }
 
+  isClosedJobsPage(): boolean {
+    return this.page.title === 'Closed Jobs';
+  }
+
   isJobApplicationsPage(): boolean {
     return this.page.title === 'Job Applications';
   }
@@ -2786,6 +2794,19 @@ export class AdminContentComponent implements OnInit {
     });
   }
 
+  private loadClosedJobs(): void {
+    this.http.get<unknown>(apiEndpoints.closedJobs).subscribe({
+      next: (response) => {
+        this.page.table!.rows = this.extractClosedJobs(response);
+        this.resetTablePagination();
+      },
+      error: () => {
+        this.page.table!.rows = [];
+        this.showToast('Failed to load closed jobs.', 'error-toast');
+      },
+    });
+  }
+
   private loadJobApplications(): void {
     const opportunitiesId = this.route.snapshot.queryParamMap.get('opportunities_id');
     this.selectedJobApplication = null;
@@ -2835,6 +2856,36 @@ export class AdminContentComponent implements OnInit {
 
     if (Array.isArray(payload.openJobs)) {
       return payload.openJobs as AdminTableRow[];
+    }
+
+    return [];
+  }
+
+  private extractClosedJobs(response: unknown): AdminTableRow[] {
+    if (Array.isArray(response)) {
+      return response as AdminTableRow[];
+    }
+
+    if (!response || typeof response !== 'object') {
+      return [];
+    }
+
+    const payload = response as {
+      data?: unknown;
+      closed_jobs?: unknown;
+      closedJobs?: unknown;
+    };
+
+    if (Array.isArray(payload.data)) {
+      return payload.data as AdminTableRow[];
+    }
+
+    if (Array.isArray(payload.closed_jobs)) {
+      return payload.closed_jobs as AdminTableRow[];
+    }
+
+    if (Array.isArray(payload.closedJobs)) {
+      return payload.closedJobs as AdminTableRow[];
     }
 
     return [];
